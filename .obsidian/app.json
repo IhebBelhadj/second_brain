@@ -1,0 +1,21 @@
+{
+  "attachmentFolderPath": "Attachments",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "Inbox",
+  "newLinkFormat": "shortest",
+  "useMarkdownLinks": false,
+  "alwaysUpdateLinks": true,
+  "trashOption": "local",
+  "readableLineLength": true,
+  "showLineNumber": true,
+  "strictLineBreaks": false,
+  "foldHeading": true,
+  "foldIndent": true,
+  "spellcheck": true,
+  "propertiesInDocument": "visible",
+  "livePreview": true,
+  "defaultViewMode": "source",
+  "tabSize": 2,
+  "showUnsupportedFiles": false,
+  "vimMode": true
+}

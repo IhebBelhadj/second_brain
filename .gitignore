@@ -1,0 +1,15 @@
+# Obsidian per-machine state — never sync these
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/graph.json
+.obsidian/cache
+
+# Plugin binaries (reinstall from the community browser instead)
+.obsidian/plugins/*/main.js
+.obsidian/plugins/*/styles.css
+.obsidian/plugins/*/manifest.json
+
+# Local trash & OS noise
+.trash/
+.directory
+.DS_Store

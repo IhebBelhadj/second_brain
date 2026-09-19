@@ -1,0 +1,8 @@
+{
+  "templater-obsidian:insert-templater": [{ "modifiers": ["Alt"], "key": "T" }],
+  "obsidian-spaced-repetition:srs-review-flashcards": [{ "modifiers": ["Alt"], "key": "R" }],
+  "daily-notes": [{ "modifiers": ["Alt"], "key": "D" }],
+  "obsidian-excalidraw-plugin:excalidraw-autocreate": [{ "modifiers": ["Alt"], "key": "E" }],
+  "obsidian-git:push": [{ "modifiers": ["Alt"], "key": "G" }],
+  "graph:open": [{ "modifiers": ["Alt"], "key": "M" }]
+}

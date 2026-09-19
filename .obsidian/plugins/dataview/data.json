@@ -1,0 +1,19 @@
+{
+  "renderNullAs": "—",
+  "taskCompletionTracking": true,
+  "taskCompletionText": "completion",
+  "warnOnEmptyResult": false,
+  "refreshEnabled": true,
+  "refreshInterval": 2500,
+  "defaultDateFormat": "yyyy-MM-dd",
+  "defaultDateTimeFormat": "yyyy-MM-dd HH:mm",
+  "maxRecursiveRenderDepth": 4,
+  "tableIdColumnName": "Note",
+  "tableGroupColumnName": "Group",
+  "enableDataviewJs": true,
+  "enableInlineDataviewJs": false,
+  "prettyRenderInlineFields": true,
+  "inlineQueryPrefix": "=",
+  "inlineJsQueryPrefix": "$=",
+  "dataviewJsKeyword": "dataviewjs"
+}

@@ -42,6 +42,36 @@ In the VPC service you will find the transit gateways section where you can crea
 
 <span style="color:rgb(255, 192, 0)"><b>ASN (Autonomous System Number):</b> </span>  its a number that defines an ==Autonomous system== (**AS**) over the network . These autonomous systems route traffic between each others through protocols like **BGP** (Border Gateway Protocol) for more about this see [[AS and BGP]]
 
+> AWS automatically assigns an ASN for you if you leave it blank (I think its the ASN number for amazon by default)
+
+
+![[Pasted image 20260920184519.png]]
+
+The transit gateway CIDR block is optional you can leave it blank if you want to 
+
+> After creating the Gateway you need to create its attachements (being the VPCs that connect to it) for that you need to go to the **Transit Gateway Attachements** tab inside the VPC service
+
+![[Pasted image 20260920184844.png]]
+
+This is the form for creating a new transit gateway: 
+![[Pasted image 20260920185011.png]]
+
+for attachements types the transit gateway not only works with VPCs but also with VPNs , other peering connections and <span style="color:rgb(192, 0, 0)">Connect</span> (which i still don't know about)
+
+![[Pasted image 20260920185116.png]]
+
+In the case the VPC option is selected you can select your VPC as well as all its connected subnets 
+![[Pasted image 20260920185421.png]]
+
+> Note: you create a transit gateway attachement per connection : 
+> **Example :** 3 VPCs connecting to a transit gateway -> you need 3 attachements
+
+after connecting the 3 VPCS you would need to change the routing table for each to connect to the other 2 VPCs you want to connect (Transit gateway attachement enables the connection but you would still to define a route in the routing table for each connection you need)
+
+> Note : make sure to put transit gateway in the connection type when adding the other VPCs IP ranges
+
+
+![[Pasted image 20260920191008.png]]
 
 
 ## Comparision VPC peering VS transit routing 

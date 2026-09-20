@@ -40,7 +40,7 @@ In the VPC service you will find the transit gateways section where you can crea
 
 ![[Pasted image 20260920161731.png]]
 
-<span style="color:rgb(255, 192, 0)"><b>ASN (Amazon Autonomous System Number):</b> </span> 
+<span style="color:rgb(255, 192, 0)"><b>ASN (Autonomous System Number):</b> </span>  its a number that defines an ==Autonomous system== (**AS**) over the network . These autonomous systems route traffic between each others through protocols like **BGP** (Border Gateway Protocol) for more about this see [[AS and BGP]]
 
 
 

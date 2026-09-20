@@ -26,14 +26,8 @@ Here is the basic interface for the **IAM Service**
 When creating users you'll be prompted to add the user to a group or assign permissions directly to it, please not that in production systems its highly recommended to organize policies and access grants into groups and assign the created users to these groups 
  ![[Pasted image 20260920193901.png]]
 
-> Note: Please note that when creating a user , just like with any resource you create on AWS you get a unique resource identifier which is the <span style="color:rgb(255, 192, 0)">ARN</span> (**Amazon Resource Name**)
+> Note: Please note that when creating a user , just like with any resource you create on AWS you get a unique resource identifier which is the <span style="color:rgb(255, 192, 0)">ARN</span> (**Amazon Resource Name**) for more informations about ARN see [[ARN]]
 
 ![[Pasted image 20260920194115.png]]
-## In my own words
 
-
-## Why it matters
-
-
-## Links
-- 
+to enable access to this user you would need to add access to the console to this user in the security and 

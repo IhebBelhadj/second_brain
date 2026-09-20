@@ -42,6 +42,8 @@ COLOR MAP :
 ## Open questions
 
 - [ ] How would a service like a web service in a public subnet connect to a db or other cluster of backend services sitting behind a private subnet which has its own routing table ?
+- [ ] What are the naming conventions for service instances in AWS
+- [ ] What are the norms of availaibilty zones for disaster recoveries
 
 ## Services
 
@@ -69,7 +71,22 @@ NAT Gateways are useful when private resources, such as EC2 instances or applica
 > You can click on add subnet button to add a subnet (batch subnet creation form)
 
 ![[Pasted image 20260920091146.png]]
-## Why it matters
+
+
+<span style="color:rgb(255, 192, 0); font-weight: bold">Availability Zone</span> : AZs are discrete data centers within AWS regions physically seperated with the goal of failure isolation (a flood , a fire event , etc ... should not take down a service from another availability zone)
+
+### Route tables
+
+![[Pasted image 20260920092453.png]]
+
+> Route table creation is very simple just add a name 
+> ==Route definitions are set after the creation process ==
+
+![[Pasted image 20260920093146.png]]
+
+<span style="color:rgb(255, 192, 0)">Subnet Association</span> : 
+
+![[Pasted image 20260920093403.png]]
 
 
 ## Links

@@ -23,7 +23,7 @@ Your Computer                         Google
   Connection works!
 ```
 
-> **Important:** A failed ping does not necessarily mean that a server is down. Firewalls can block ICMP while allowing HTTP, HTTPS, or SSH traffic.
+> **Important:** A failed ping does not necessarily mean that a server is down. ==Firewalls can block ICMP while allowing HTTP, HTTPS, or SSH traffic==.
 
 | Feature                   | ICMP                                | TCP                             | UDP                                    |
 | ------------------------- | ----------------------------------- | ------------------------------- | -------------------------------------- |

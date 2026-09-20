@@ -6,6 +6,8 @@ tags: []
 ---
 # How to connect multiple VPCs
 
+> Prerequisites :  This guide is how to connect VPCs together , prior knowledge about VPCs is required , please refer to [[VPC]] for details
+
 ### The standard Peering connection option in the VPC service
 
 ![[Pasted image 20260920155305.png]]

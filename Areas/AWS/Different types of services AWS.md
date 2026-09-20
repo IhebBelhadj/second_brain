@@ -66,7 +66,7 @@ tags: []
 |                         | CloudFormation                 | Infrastructure as code from declarative templates                                                                                       |
 |                         | Config                         | Records resource configuration and flags non-compliance                                                                                 |
 |                         | Systems Manager                | Patching, remote access and automation across fleets                                                                                    |
-|                         | Organizations                  | Manages many accounts under one billing and policy umbrella                                                                             |
+|                         | Organizations                  | Manages many accounts under one billing and policy umbrella (Service guide in [[AWS Organizations]])                                    |
 |                         | Control Tower                  | Sets up a governed multi-account environment for you                                                                                    |
 |                         | Trusted Advisor                | Recommendations on cost, security, limits and performance                                                                               |
 |                         | Service Catalog                | Approved templates that teams can deploy themselves                                                                                     |

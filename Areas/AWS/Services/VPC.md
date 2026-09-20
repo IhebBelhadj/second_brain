@@ -75,6 +75,8 @@ NAT Gateways are useful when private resources, such as EC2 instances or applica
 
 <span style="color:rgb(255, 192, 0); font-weight: bold">Availability Zone</span> : AZs are discrete data centers within AWS regions physically seperated with the goal of failure isolation (a flood , a fire event , etc ... should not take down a service from another availability zone)
 
+> <span style="color:rgb(192, 0, 0)">Important note : </span> A network subnet can only be assigned to a single route table where as a route table can have multiple subnets assigned to it
+
 ### Route tables
 
 ![[Pasted image 20260920092453.png]]

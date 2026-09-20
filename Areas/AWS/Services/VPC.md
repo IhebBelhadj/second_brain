@@ -9,23 +9,27 @@ tags: []
 > **One sentence: what is this?**
   Its an isolated virtual network
 
+![[Pasted image 20260920090454.png]]
 ## Different services VPC provides
 
-| Service                                               | Role                                                         |
-| ----------------------------------------------------- | ------------------------------------------------------------ |
-| Subnets                                               | Creating network subnets                                     |
-| Routing tables                                        | Used to define how routing would work inside a network       |
-| Internet Gateways                                     | Define an internet connection gateway per VPC                |
-| NAT Gateway                                           | Enables outbound IPv4 internet access from private resources |
-| Security Group                                        | Controls traffic at the resource level                       |
-| <span style="color:rgb(192, 0, 0)">Network ACL</span> | Controls traffic at the subnet level                         |
-| Elastic IP                                            | Provides a static public IPv4 address                        |
+| Service                                               | Role                                                                        |
+| ----------------------------------------------------- | --------------------------------------------------------------------------- |
+| VPC                                                   | Defined by a primary IPv4 CIDR (/16–/28); supports secondary CIDRs and IPv6 |
+| Subnets                                               | Creating network subnets                                                    |
+| Routing tables                                        | Used to define how routing would work inside a network                      |
+| Internet Gateways                                     | Define an internet connection gateway per VPC                               |
+| NAT Gateway                                           | Enables outbound IPv4 internet access from private resources                |
+| Security Group                                        | Controls traffic at the resource level                                      |
+| <span style="color:rgb(192, 0, 0)">Network ACL</span> | Controls traffic at the subnet level                                        |
+| Elastic IP                                            | Provides a static public IPv4 address                                       |
+| MORE                                                  | ==These are only the important ones==                                       |
 
 COLOR MAP : 
 - <span style="color:rgb(192, 0, 0)">Not learned yet</span>
 - <span style="color:rgb(255, 192, 0)">Just a small encounter</span>
 - <span style="color:rgb(146, 208, 80)">Mid knowledge</span>
 - <span style="color:rgb(0, 112, 192)">Good Grasp</span>
+- Not sure
 
 
 
@@ -49,7 +53,22 @@ It translates the private source IP addresses of outgoing traffic into a public 
 
 NAT Gateways are useful when private resources, such as EC2 instances or application servers, need internet access to download packages, install dependencies, retrieve updates, or communicate with external APIs.
 
+### Internet Gateway
 
+> Creating an internet gateway requires only a name with optional tags
+><span style="color:rgb(0, 112, 192)"> IMPORTANT NOTE: </span> The IGW needs to be attached to a VPC
+
+
+![[Pasted image 20260920090600.png]]
+
+![[Pasted image 20260920090821.png]]
+
+### Subnets
+
+> To create a subnet you need to assign VPC (Since subnets should fall under the IP range of that VPC)
+> You can click on add subnet button to add a subnet (batch subnet creation form)
+
+![[Pasted image 20260920091146.png]]
 ## Why it matters
 
 

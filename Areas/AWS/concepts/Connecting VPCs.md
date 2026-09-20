@@ -62,11 +62,11 @@ In the VPC service you will find the transit gateways section where you can crea
 
 ## What would you do in the case you want to connect overlapping IP ranges of VPCs
 
-|Situation|Potential solution|
-|---|---|
-|You control both VPCs and can redesign them|Change CIDR ranges|
-|You only need access to a specific service|AWS PrivateLink|
-|You need outbound connectivity to an overlapping network|Private NAT Gateway, if the architecture supports it|
-|You need HTTP/HTTPS communication|Application proxy or gateway|
-|You are merging networks with overlapping addresses|NAT appliance or address-translation architecture|
-|You need full, bidirectional connectivity between overlapping networks|Redesign the IP ranges or use a carefully engineered translation architecture|
+| Situation                                                              | Potential solution                                                            |
+| ---------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| You control both VPCs and can redesign them                            | Change CIDR ranges                                                            |
+| You only need access to a specific service                             | AWS PrivateLink                                                               |
+| You need outbound connectivity to an overlapping network               | Private NAT Gateway, if the architecture supports it                          |
+| You need HTTP/HTTPS communication                                      | Application proxy or gateway                                                  |
+| You are merging networks with overlapping addresses                    | NAT appliance or address-translation architecture                             |
+| You need full, bidirectional connectivity between overlapping networks | Redesign the IP ranges or use a carefully engineered translation architecture |

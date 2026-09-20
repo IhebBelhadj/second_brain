@@ -89,6 +89,34 @@ after connecting the 3 VPCS you would need to change the routing table for each 
 | Routing control           | VPC route tables                                      | VPC route tables + TGW route tables                         |
 | Network isolation         | Through VPC routing and security controls             | Through routing domains and TGW route tables                |
 | Complexity                | Simple for a few VPCs                                 | More components, but easier to scale                        |
+> The biggest difference: Transitive routing
+> <span style="color:rgb(255, 192, 0)">This is the most important concept for AWS Solutions Architect exams.</span>
+#### VPC Peering: No transitive routing
+
+Suppose you have:
+
+```
+VPC A ◄──────► VPC B ◄──────► VPC C
+```
+
+You create:
+- A peering connection between A and B.
+- A peering connection between B and C.
+
+<span style="color:rgb(255, 192, 0)">Can VPC A communicate with VPC C through VPC B?</span> **No.**
+
+VPC peering does not allow transitive routing.
+
+You would need a separate peering connection:
+
+```
+VPC A ◄──────► VPC B
+  ▲             │
+  │             │
+  └─────────────┘
+        VPC C
+```
+
 
 ## What would you do in the case you want to connect overlapping IP ranges of VPCs
 
@@ -100,3 +128,55 @@ after connecting the 3 VPCS you would need to change the routing table for each 
 | You need HTTP/HTTPS communication                                      | Application proxy or gateway                                                  |
 | You are merging networks with overlapping addresses                    | NAT appliance or address-translation architecture                             |
 | You need full, bidirectional connectivity between overlapping networks | Redesign the IP ranges or use a carefully engineered translation architecture |
+### Important exam traps
+
+**Transit Gateway automatically connects every VPC**
+<span style="color:rgb(255, 192, 0)">Not necessarily.</span>
+
+```
+You must configure:
+- VPC route tables.
+- Transit Gateway route tables.
+- Route propagation or static routes.
+- Security groups and network ACLs where applicable.
+```
+
+**VPC Peering requires an Internet Gateway**
+<span style="color:rgb(255, 192, 0)">No.</span>
+
+```
+VPC peering uses private AWS networking.
+You do not need an Internet Gateway or NAT Gateway for communication between peered VPCs.
+```
+
+
+**Transit Gateway replaces VPC route tables**
+<span style="color:rgb(255, 192, 0)">No.</span>
+
+```
+You still need routes in the VPC subnet route tables.
+```
+Example:
+```
+Private Subnet Route Table
+──────────────────────────
+10.2.0.0/16 → tgw-xxxxxxxx
+```
+
+
+The subnet sends the traffic to the Transit Gateway, which then uses its own routing configuration to determine where the traffic goes.
+
+**You can use overlapping CIDR ranges**
+<span style="color:rgb(255, 192, 0)">NO</span>
+
+```
+Generally, **VPC Peering and Transit Gateway VPC attachments require non-overlapping VPC CIDR ranges** for the VPCs involved.
+```
+For example:
+```
+VPC A: 10.0.0.0/16
+VPC B: 10.0.0.0/16
+```
+
+These overlapping ranges create routing ambiguity and prevent standard VPC-to-VPC connectivity through these mechanisms.
+

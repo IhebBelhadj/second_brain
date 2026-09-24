@@ -50,6 +50,25 @@ a standard LB that you use typically when building:
 
 ![[Pasted image 20260924200600.png]]
 
+![[Pasted image 20260924202521.png]]
+
+In the network mapping making sure to connect to the right VPC and select the subnets in the AZs where your instances are connected
+
+in the listeners and routing you select the target group to balance between its instances
+
+![[Pasted image 20260924201513.png]]
+
+![[Pasted image 20260924202108.png]]
+
+<span style="color:rgb(255, 192, 0)">Note : </span>
+To change the load balancing strategy you change it per target group 
+
+--> ==the load-balancing strategy is configured on the Target Group==, 
+
+The main options are:
+
+1. **Round robin** — distributes requests sequentially across healthy targets.
+2. **Least outstanding requests** — sends the next request to the target with the fewest outstanding requests.
 
 ### Network Load Balancer — NLB
 

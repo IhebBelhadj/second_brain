@@ -199,10 +199,35 @@ Security Account
 
 but in **Modern approach**
 
-```
-```
 using the <span style="color:rgb(255, 192, 0)">IAM Identity Center</span> (more on that here [[AWS Identity Center]])
 a user can have one central identity and access multiple AWS accounts
+
+```
+                 IAM Identity Center
+                         │
+                       Alice
+                         │
+             ┌───────────┼───────────┐
+             ▼           ▼           ▼
+       Production    Development   Security
+         Account       Account     Account
+             │           │           │
+          ReadOnly      Admin       No access
+          Role          Role
+```
+
+```
+Alice
+  │
+  ▼
+Identity Center
+  │
+  ▼
+Assumes a role in Production
+  │
+  ▼
+Uses AWS resources
+```
 
 ### AWS Control Tower vs Organizations
 
@@ -220,15 +245,14 @@ Conceptually:
       OUs          SCPs      Accounts
 ```
 
-
 ### Quick summary 
 
-|Component| Responsibility### Destinction between a user and an account |Example|
-| ----------------------- | ----------------------------------------------------------- | --------------------------------- |
-|**OU**| Groups AWS accounts                                         |Production accounts|
-|**SCP**| Restricts maximum permissions for accounts                  |Block EC2 termination|
-|**IAM**| Manages permissions within an account                       |Allow Alice to read S3|
-|**IAM Identity Center**| Centrally assigns user access to accounts                   |Alice gets ReadOnly in Production|
+| Component               | **Responsibility**                         | Example                           |
+| ----------------------- | ------------------------------------------ | --------------------------------- |
+| **OU**                  | Groups AWS accounts                        | Production accounts               |
+| **SCP**                 | Restricts maximum permissions for accounts | Block EC2 termination             |
+| **IAM**                 | Manages permissions within an account      | Allow Alice to read S3            |
+| **IAM Identity Center** | Centrally assigns user access to accounts  | Alice gets ReadOnly in Production |
 ### Creating and managing Organizations
 
 inside the organization you will find all the **organization units** (**OUs**) you have defined : 

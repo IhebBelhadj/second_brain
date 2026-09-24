@@ -44,7 +44,72 @@ Now to create a new EC2 instance based on the newly created launch template you 
 
 ### Target groups
 
+> In short : a **Target Group** is a collection of destinations—such as EC2 instances, containers, or IP addresses—that receive traffic from a **load balancer**
+
+> This is an abstraction created so that you separate concern between handling routing itself and handling other concerns like instances health and maintaining the group instances in general (you also have a generic abstraction that you can use anywhere when it comes to load balancing and potentially other concerns (need to verify that))
+
+
+![[Pasted image 20260924194236.png]]
+
+as you can see you can add a taget group of : 
+
+| Target type  | Example                                                             |
+| ------------ | ------------------------------------------------------------------- |
+| **Instance** | EC2 instances                                                       |
+| **IP**       | Private IP addresses, commonly containers/services                  |
+| **Lambda**   | Lambda functions                                                    |
+| **ALB**      | An Application Load Balancer as a target in supported architectures |
+
+After defining such a group you can forward traffic to it through  a load balancer : example 
+
+```
+
+                     ┌── EC2 Instance A : port 8080
+Internet             │
+   │                 │
+   ▼                 ▼
+Application  →  Target Group
+Load Balancer        ▲
+   (ALB)             │
+                     └── EC2 Instance B : port 8080
+                     
+
+Listener:
+HTTPS :443
+     │
+     ▼
+Forward to → my-app-tg
+```
+
+Important: Health checks are important
+
+The target group also defines how AWS determines whether your application instances are healthy.
+
+AWS periodically requests:
+```
+http://EC2-A:8080/health
+http://EC2-B:8080/health
+http://EC2-C:8080/health
+```
+
+if an instance becomes unhealthy the load balancer stops sending normal traffic to EC2-B until it becomes healthy again.
+
+![[Pasted image 20260924195037.png]]
+
+after adding insteances they will be included as pending
+
+**Here is the interface for a target group**
+![[Pasted image 20260924195127.png]]
+
+![[Pasted image 20260924195206.png]]
+
+note for the instances we included the health check is unused because we did not yet create a load balancer that targets this target group 
+
+
+
+
 ## Open questions 
+
 
 - [ ] What is the difference between RSA and ED25519 and what is also the difference between OpenSSH and PuTTY ? 
 - [ ] If my EC2 instance sits behind a private IP then how come I can SSH into it ?

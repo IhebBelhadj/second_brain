@@ -77,6 +77,7 @@ Browser ──HTTPS:443──► ALB (ACM cert here) ──HTTP:8080──► EC
 ```
 
 ## Connects to
+- [[TLS]]: what the certificate is actually used for (handshake, termination, mTLS)
 - [[Route 53]]: DNS validation records, one click
 - [[Load balancers]]: the ALB's HTTPS listener is where the cert goes (NLB TLS listeners too)
 - CloudFront: works too, but the cert **must be in `us-east-1`**

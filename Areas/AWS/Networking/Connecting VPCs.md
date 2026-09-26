@@ -125,6 +125,8 @@ With N VPCs, full mesh = N×(N-1)/2 peerings. With 10 VPCs that's 45! That's whe
 | Merging networks | A NAT / address-translation setup |
 | Full two-way connectivity | Redesign the IPs, or a carefully engineered translation layer |
 
+Why routing alone can't solve it, and how NAT / policy routing work → [[Overlapping address spaces]]
+
 ## Exam traps
 
 **"A transit gateway automatically connects every VPC."**
@@ -152,6 +154,8 @@ VPC B: 10.0.0.0/16   ← which 10.0.1.5 do you mean?
 ## Connects to
 - [[VPC]]: route tables, CIDRs, subnets
 - [[AS and BGP]]: the ASN on the transit gateway
+- [[IPsec and IKE]]: how the Site-to-Site VPN attachments work (two tunnels, BGP)
+- [[VPN]]: VPN types, AWS Client VPN
 - [[Lightsail]]: Lightsail's "VPC peering" checkbox is this same idea, done for me
 - [[AWS Organizations]]: in multi-account setups, the TGW is usually shared across accounts
 - Big picture → [[How AWS services connect]]

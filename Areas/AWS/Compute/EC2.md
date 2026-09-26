@@ -192,7 +192,7 @@ stateDiagram-v2
   - **cluster**: instances packed close together for low latency (HPC)
   - **spread**: each instance on different hardware (a few critical instances)
   - **partition**: groups of instances on separate racks (Kafka, HDFS, Cassandra)
-- **Elastic Network Interface (ENI)**: the instance's virtual network card. Security groups are really attached to the ENI
+- **Elastic Network Interface (ENI)**: the instance's virtual network card. Security groups are really attached to the ENI. More in [[Network interfaces#In AWS: the ENI]]
 - **Status checks**: *system* (AWS's hardware) vs *instance* (my OS). Failed system check → stop/start moves the instance to new hardware
 - **Naming**: IDs like `i-0abc…`, and the human name is the `Name` tag. See [[AWS naming conventions]]
 

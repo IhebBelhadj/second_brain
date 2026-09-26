@@ -38,7 +38,7 @@ tags: [topic]
 - [[AWS naming conventions]]: ID prefixes (`vpc-`, `sg-`…), naming rules, and my `project-env-resource` convention
 
 ## Related areas
-- [[Networking]]: protocols behind all this (BGP, ICMP)
+- [[Networking]]: protocols behind all this (BGP, ICMP), routing, VPNs (IPsec/IKE), TLS
 
 ## Weakest first
 ```dataview

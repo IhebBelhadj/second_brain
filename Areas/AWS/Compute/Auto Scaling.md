@@ -14,6 +14,8 @@ tags: [aws, compute]
 
 > Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
 
+![[aws-console auto scaling sidebar.png|250]]
+
 Found in **EC2 console → Auto Scaling → Auto Scaling Groups**. Each group has these tabs/features:
 
 | Feature | What it's for |

@@ -17,9 +17,10 @@ tags: [topic]
 - [[Connecting VPCs]]: peering vs transit gateway
 - [[Route 53]]: DNS, turns `myapp.com` into an address
 - [[Bastion host]]: how I get into servers sitting in a private subnet
+- [[Security groups]]: the firewall on each resource, and how it differs from NACLs
 
 ## Compute (what runs my code)
-- [[EC2]]: virtual machines, launch templates, security groups
+- [[EC2]]: virtual machines, launch templates
 - [[Load balancers]]: ALB / NLB and **target groups**
 - [[Auto Scaling]]: grows and shrinks the number of EC2 instances
 - [[Lambda]]: run code without a server

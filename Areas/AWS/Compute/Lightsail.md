@@ -22,6 +22,8 @@ Under the hood **it is EC2**, running in a VPC that AWS manages for me and that 
 
 > Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
 
+![[aws-console lightsail sidebar.png|250]]
+
 The Lightsail console has its own top-level tabs:
 
 | Tab | Sub-service | What it's for |

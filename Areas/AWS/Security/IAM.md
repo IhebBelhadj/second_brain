@@ -14,6 +14,8 @@ tags: [aws, security]
 
 > Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
 
+![[aws-console iam sidebar.png|250]]
+
 | Menu group | Sub-service | What it's for |
 |---|---|---|
 | **Dashboard** | | Security recommendations (MFA on root, etc.) |

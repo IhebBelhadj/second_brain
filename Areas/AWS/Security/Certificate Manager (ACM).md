@@ -14,6 +14,8 @@ tags: [aws, security, https]
 
 > Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
 
+![[aws-console acm sidebar.png|250]]
+
 ACM itself is small:
 
 | Sub-feature | What it's for |

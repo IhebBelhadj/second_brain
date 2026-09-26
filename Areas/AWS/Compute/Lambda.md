@@ -14,6 +14,8 @@ tags: [aws, compute, serverless]
 
 > Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
 
+![[aws-console lambda sidebar.png|250]]
+
 | Menu / tab | Sub-feature | What it's for |
 |---|---|---|
 | **Console menu** | Dashboard | Account-wide metrics and concurrency |

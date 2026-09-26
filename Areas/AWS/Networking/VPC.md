@@ -21,7 +21,7 @@ tags: [aws, networking]
 | **Route tables** | Decide where traffic from a subnet goes |
 | **Internet gateway (IGW)** | The VPC's door to the internet (one per VPC) |
 | **NAT gateway** | Lets private subnets go *out* to the internet, but not be reached from it |
-| **Security group** | Firewall at the **resource** level (see [[EC2]]) |
+| **Security group** | Firewall at the **resource** level (see [[Security groups]]) |
 | <span style="color:rgb(192, 0, 0)">Network ACL</span> | Firewall at the **subnet** level (stateless, has allow *and* deny rules) |
 | **Elastic IP** | A static public IPv4 address I keep until I release it |
 | …more | These are only the important ones |
@@ -36,6 +36,8 @@ COLOR MAP (how well I know things):
 ## Sub-services & features (full console menu)
 
 > Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
+
+![[aws-console vpc sidebar.png|250]]
 
 The table above is the core. The full VPC console menu has much more:
 

@@ -14,6 +14,8 @@ tags: [aws, compute]
 
 > Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
 
+![[aws-console ec2 sidebar.png|250]]
+
 | Menu group | Sub-service | What it's for |
 |---|---|---|
 | **Overview** | Dashboard / EC2 Global View | Counts of resources, and a view of **all regions** at once (handy to find forgotten instances) |
@@ -95,6 +97,8 @@ The **network settings** part of the form is where the instance meets the networ
 - which **security group(s)** it wears
 
 ### Security groups
+> Full note → [[Security groups]]
+
 > A security group is a set of **firewall rules** attached to the instance (not the subnet). It says which traffic is allowed in and out.
 
 - Only **allow** rules. Anything not allowed is blocked

@@ -14,6 +14,8 @@ tags: [aws, security]
 
 > Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
 
+![[aws-console waf sidebar.png|250]]
+
 WAF shares a console with Shield and Firewall Manager (**WAF & Shield**). The console was redesigned in 2025, so some names differ (e.g. web ACLs can appear as **protection packs**).
 
 | Area | Sub-feature | What it's for |
@@ -35,7 +37,7 @@ WAF shares a console with Shield and Firewall Manager (**WAF & Shield**). The co
 
 *Starter note, to fill in when I study it properly.*
 
-A [[EC2#Security groups|security group]] only sees IPs and ports ("port 443 open"). It has no idea *what's inside* the request. WAF works at **Layer 7**: it reads the URL, headers, body, and decides.
+A [[Security groups|security group]] only sees IPs and ports ("port 443 open"). It has no idea *what's inside* the request. WAF works at **Layer 7**: it reads the URL, headers, body, and decides.
 
 - **Web ACL**: the list of rules I attach to a resource
 - **Rules**: e.g. "block if the body looks like SQL injection", "block IPs from this list", "max 100 requests per 5 minutes per IP" (**rate-based rule**)

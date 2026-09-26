@@ -16,6 +16,8 @@ tags: [aws, networking, dns]
 
 > Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
 
+![[aws-console route 53 sidebar.png|250]]
+
 | Menu group | Sub-service | What it's for |
 |---|---|---|
 | **Dashboard** | | Quick links: register domain, create zone… |

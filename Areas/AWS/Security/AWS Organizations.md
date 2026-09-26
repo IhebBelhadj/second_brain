@@ -19,6 +19,8 @@ Instead of 20 AWS accounts managed separately, they all go under one organizatio
 
 > Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
 
+![[aws-console organizations sidebar.png|250]]
+
 | Menu | Sub-feature | What it's for |
 |---|---|---|
 | **AWS accounts** | Root, OUs, accounts | The tree: create/invite/move/close accounts |

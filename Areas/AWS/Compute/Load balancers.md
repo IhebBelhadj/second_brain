@@ -17,6 +17,8 @@ tags: [aws, compute, networking]
 
 > Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
 
+![[aws-console load balancers sidebar.png|250]]
+
 ELB has no console of its own. It lives in the **EC2 console → Load Balancing** menu.
 
 | Part | What it's for |

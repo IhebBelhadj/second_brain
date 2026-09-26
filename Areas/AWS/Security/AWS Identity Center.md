@@ -14,6 +14,8 @@ tags: [aws, security]
 
 > Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
 
+![[aws-console identity center sidebar.png|250]]
+
 | Menu | Sub-feature | What it's for |
 |---|---|---|
 | **Dashboard** | | Setup checklist + the **AWS access portal URL** |

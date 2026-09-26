@@ -126,7 +126,10 @@ The **scaling policy belongs to the ASG**, but the **metric usually comes from <
 
 ![[Pasted image 20260924205626.png]]
 
-The notification step is the step where you can push to an SNS topic 
+The notification step is the step where you can push to an <span style="color:rgb(0, 112, 192)">SNS topic</span> events from the auto scale group
+
+### Load balancers and auto scale groups
+
 <span style="color:rgb(255, 192, 0)">Important Note :</span> lets understand the relationship between load balancers , target groups , and auto scaling groups 
 
 ```
@@ -243,6 +246,50 @@ Here is an example architecture of how all this is connected together in a real 
                         └───────────────┘
 ```
 
+<span style="color:rgb(255, 192, 0)">One important distinction</span> : A scaling policy **doesn't create EC2 instances itself**
+
+```
+Scaling Policy
+      ↓
+changes desired capacity
+      ↓
+Auto Scaling Group
+      ↓
+uses Launch Template
+      ↓
+creates/terminates EC2 instances
+      ↓
+instances register/deregister
+      ↓
+Target Group
+      ↓
+ALB sends traffic to healthy instances
+```
+
+### Relationship between desired , min , max and instantiation logic
+
+#### Core idea
+
+An **Auto Scaling Group (ASG)** continuously tries to make the **actual number of healthy EC2 instances match the desired capacity**.
+
+A **scaling policy** changes the desired capacity. The ASG then takes care of launching or 
+terminating EC2 instances to reach that desired capacity
+
+```
+Scaling Policy
+      │
+      │ changes desired capacity
+      ▼
+     ASG
+      │
+      │ reconciles actual capacity
+      ▼
+ EC2 Instances
+```
+
+The fundamental constraint is:  <span style="color:rgb(146, 208, 80)"><b>Min ≤ Desired ≤ Max</b></span>
+
+This means the ASG is currently trying to maintain **4 instances**, but automatic scaling can only move the desired capacity between <span style="color:rgb(146, 208, 80)"><b>Min and max</b></span>
 
 ## Links
 * Docs link : [What is Amazon EC2 Auto Scaling? - Amazon EC2 Auto Scaling](https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html)

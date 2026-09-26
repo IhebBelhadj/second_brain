@@ -14,24 +14,24 @@ tags: [aws, security]
 
 > Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
 
-![[aws-console waf sidebar.png|250]]
+![[Pasted image 20260926193804.png]]
 
 WAF shares a console with Shield and Firewall Manager (**WAF & Shield**). The console was redesigned in 2025, so some names differ (e.g. web ACLs can appear as **protection packs**).
 
-| Area | Sub-feature | What it's for |
-|---|---|---|
-| **AWS WAF** | Web ACLs / protection packs | The rule sets attached to ALB, CloudFront, API Gateway… |
-| | Rule groups | My reusable groups of rules |
-| | AWS managed rules | Ready-made: core rule set, SQL injection, known bad inputs, IP reputation… |
-| | Marketplace managed rules | Rule sets sold by security vendors |
-| | IP sets / Regex pattern sets | Reusable lists referenced by rules |
-| | Bot Control | Detect and manage bots (paid add-on) |
-| | Fraud Control | Account takeover / fake account creation protection (paid add-on) |
-| | CAPTCHA / Challenge | Make suspicious clients prove they're human/browsers |
-| | Application integration SDKs | Client-side tokens for web/mobile apps |
-| | Logging & metrics | Full request logs to CloudWatch Logs / S3 / Firehose, sampled requests |
-| **AWS Shield** | Standard (free, automatic) / Advanced (paid) | DDoS protection. Advanced adds a response team + cost protection |
-| **Firewall Manager** | Security policies | Push WAF/Shield/security group rules across all accounts of an [[AWS Organizations\|organization]] |
+| Area                 | Sub-feature                                  | What it's for                                                                                      |
+| -------------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| **AWS WAF**          | Web ACLs / protection packs                  | The rule sets attached to ALB, CloudFront, API Gateway…                                            |
+|                      | Rule groups                                  | My reusable groups of rules                                                                        |
+|                      | AWS managed rules                            | Ready-made: core rule set, SQL injection, known bad inputs, IP reputation…                         |
+|                      | Marketplace managed rules                    | Rule sets sold by security vendors                                                                 |
+|                      | IP sets / Regex pattern sets                 | Reusable lists referenced by rules                                                                 |
+|                      | Bot Control                                  | Detect and manage bots (paid add-on)                                                               |
+|                      | Fraud Control                                | Account takeover / fake account creation protection (paid add-on)                                  |
+|                      | CAPTCHA / Challenge                          | Make suspicious clients prove they're human/browsers                                               |
+|                      | Application integration SDKs                 | Client-side tokens for web/mobile apps                                                             |
+|                      | Logging & metrics                            | Full request logs to CloudWatch Logs / S3 / Firehose, sampled requests                             |
+| **AWS Shield**       | Standard (free, automatic) / Advanced (paid) | DDoS protection. Advanced adds a response team + cost protection                                   |
+| **Firewall Manager** | Security policies                            | Push WAF/Shield/security group rules across all accounts of an [[AWS Organizations\|organization]] |
 
 ## In my own words
 
@@ -45,6 +45,8 @@ A [[Security groups|security group]] only sees IPs and ports ("port 443 open"). 
 - Each rule: **Allow / Block / Count** (Count = just watch, handy for testing a rule before enforcing it)
 
 ## Where it plugs in
+
+![[Pasted image 20260926194303.png]]
 
 WAF doesn't stand alone. It attaches to something that receives HTTP:
 
@@ -60,6 +62,21 @@ User ──► CloudFront ──► ALB ──► app
 
 **Not** on an NLB (that one doesn't understand HTTP) and not directly on EC2.
 
+### How to create a Web ACL
+
+![[Pasted image 20260926193956.png]]
+
+![[Pasted image 20260926194142.png]]
+
+![[Pasted image 20260926194357.png]]
+
+![[Pasted image 20260926194457.png]]
+
+![[Pasted image 20260926194607.png]]
+
+![[Pasted image 20260926194747.png]]
+
+![[Pasted image 20260926195349.png]]
 ## Related
 - **Shield**: DDoS protection. Standard is free and automatic. WAF handles the application-level stuff
 - [[Certificate Manager (ACM)]]: HTTPS on the same ALB/CloudFront

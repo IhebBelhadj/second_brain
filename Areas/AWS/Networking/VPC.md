@@ -22,7 +22,7 @@ tags: [aws, networking]
 | **Internet gateway (IGW)** | The VPC's door to the internet (one per VPC) |
 | **NAT gateway** | Lets private subnets go *out* to the internet, but not be reached from it |
 | **Security group** | Firewall at the **resource** level (see [[Security groups]]) |
-| <span style="color:rgb(192, 0, 0)">Network ACL</span> | Firewall at the **subnet** level (stateless, has allow *and* deny rules) |
+| <span style="color:rgb(192, 0, 0)">Network ACL</span> | Firewall at the **subnet** level (stateless, has allow *and* deny rules, see [[ACL]]) |
 | **Elastic IP** | A static public IPv4 address I keep until I release it |
 | …more | These are only the important ones |
 

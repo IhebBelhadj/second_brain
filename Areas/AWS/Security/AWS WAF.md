@@ -35,6 +35,10 @@ WAF shares a console with Shield and Firewall Manager (**WAF & Shield**). The co
 | **AWS Shield**       | Standard (free, automatic) / Advanced (paid) | DDoS protection. Advanced adds a response team + cost protection                                   |
 | **Firewall Manager** | Security policies                            | Push WAF/Shield/security group rules across all accounts of an [[AWS Organizations\|organization]] |
 
+## What's an ACL?
+
+An **ACL (Access Control List)** is an ordered list of rules: "if it matches this → allow / block". The first match wins, and a **default action** handles anything that matches nothing. A WAF **web ACL** is that idea applied to HTTP requests. It has nothing to do with a VPC **Network ACL**, which filters IPs and ports on a subnet, even though the names look alike. → Full note: [[ACL]]
+
 ## In my own words
 
 *Starter note, to fill in when I study it properly.*

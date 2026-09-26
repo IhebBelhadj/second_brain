@@ -62,6 +62,8 @@ flowchart LR
 
 ## Security group vs Network ACL
 
+> More on how ACLs work (rule order, ephemeral ports) → [[ACL]]
+
 | | **Security group** | **Network ACL** |
 |---|---|---|
 | Attached to | A resource (its network interface) | A **subnet** |

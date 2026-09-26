@@ -18,6 +18,28 @@ Lightsail hides all of that. I pick a plan (like "2 GB RAM, 2 vCPU, 60 GB SSD"),
 
 Under the hood **it is EC2**, running in a VPC that AWS manages for me and that I can't see.
 
+## Sub-services & features
+
+> Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
+
+The Lightsail console has its own top-level tabs:
+
+| Tab | Sub-service | What it's for |
+|---|---|---|
+| **Instances** | Instances | Virtual servers from blueprints (OS only or apps: WordPress, LAMP, Node.js…) |
+| **Containers** | Container services | Run Docker images with a public HTTPS endpoint |
+| **Databases** | Managed databases | MySQL / PostgreSQL, with backups handled for me |
+| **Networking** | Static IPs | Fixed public IPs, free while attached |
+| | Load balancers | With free TLS certificates |
+| | Distributions | CDN (CloudFront under the hood) |
+| **Storage** | Block storage disks | Extra disks for instances |
+| | Buckets | Object storage (S3 under the hood) |
+| **Domains & DNS** | DNS zones / registered domains | DNS and domain registration |
+| **Snapshots** | Snapshots | Manual + automatic backups, **export to EC2** |
+| **Account** (settings) | SSH keys, VPC peering, tags | Default key per region, peering with the default VPC |
+
+Per instance: Connect (browser SSH), Metrics + alarms, Snapshots, Storage, Networking (firewall, IPs), Domains, Tags, History.
+
 ## Lightsail's mini-world
 
 Lightsail has its own simplified versions of the "real" services:

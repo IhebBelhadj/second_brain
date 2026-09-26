@@ -10,6 +10,27 @@ tags: [aws, security]
 > [!abstract] In one sentence
 > WAF (**Web Application Firewall**) inspects **HTTP requests** before they reach my app and blocks the bad ones: SQL injection, XSS, known bad bots, too many requests from one IP…
 
+## Sub-services & features
+
+> Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
+
+WAF shares a console with Shield and Firewall Manager (**WAF & Shield**). The console was redesigned in 2025, so some names differ (e.g. web ACLs can appear as **protection packs**).
+
+| Area | Sub-feature | What it's for |
+|---|---|---|
+| **AWS WAF** | Web ACLs / protection packs | The rule sets attached to ALB, CloudFront, API Gateway… |
+| | Rule groups | My reusable groups of rules |
+| | AWS managed rules | Ready-made: core rule set, SQL injection, known bad inputs, IP reputation… |
+| | Marketplace managed rules | Rule sets sold by security vendors |
+| | IP sets / Regex pattern sets | Reusable lists referenced by rules |
+| | Bot Control | Detect and manage bots (paid add-on) |
+| | Fraud Control | Account takeover / fake account creation protection (paid add-on) |
+| | CAPTCHA / Challenge | Make suspicious clients prove they're human/browsers |
+| | Application integration SDKs | Client-side tokens for web/mobile apps |
+| | Logging & metrics | Full request logs to CloudWatch Logs / S3 / Firehose, sampled requests |
+| **AWS Shield** | Standard (free, automatic) / Advanced (paid) | DDoS protection. Advanced adds a response team + cost protection |
+| **Firewall Manager** | Security policies | Push WAF/Shield/security group rules across all accounts of an [[AWS Organizations\|organization]] |
+
 ## In my own words
 
 *Starter note, to fill in when I study it properly.*

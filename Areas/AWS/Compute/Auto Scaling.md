@@ -10,6 +10,29 @@ tags: [aws, compute]
 > [!abstract] In one sentence
 > An **Auto Scaling group (ASG)** keeps the right number of [[EC2]] instances running: it replaces the ones that die, and adds or removes instances as traffic goes up and down, always staying between a **min** and a **max**.
 
+## Sub-services & features
+
+> Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
+
+Found in **EC2 console → Auto Scaling → Auto Scaling Groups**. Each group has these tabs/features:
+
+| Feature | What it's for |
+|---|---|
+| **Details** | Min / desired / max, launch template, subnets, instance type mix (On-Demand + Spot) |
+| **Integrations** | Attach [[Load balancers\|target groups]] or VPC Lattice |
+| **Automatic scaling → dynamic policies** | Target tracking, step, simple scaling (driven by CloudWatch alarms) |
+| **Automatic scaling → predictive scaling** | Scales ahead of time from past patterns |
+| **Automatic scaling → scheduled actions** | "Weekdays 8am: desired = 10" |
+| **Instance management** | See instances, set **scale-in protection**, put one in **standby**, detach one |
+| **Lifecycle hooks** | Pause an instance at launch/terminate to run custom actions |
+| **Warm pools** | Pre-initialized stopped instances, ready to join fast |
+| **Instance refresh** | Rolling replacement after changing the AMI/template (with canary checkpoints) |
+| **Activity** | History of every launch/terminate and why. First place to look when scaling misbehaves |
+| **Monitoring** | Group metrics in CloudWatch |
+| **Notifications** | Send launch/terminate events to SNS |
+
+Needed from elsewhere: **Launch templates** (in [[EC2]]).
+
 ## The three numbers
 
 Every ASG has:

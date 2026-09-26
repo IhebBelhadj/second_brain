@@ -13,6 +13,26 @@ tags: [aws, compute, networking]
 > [!question] Are load balancers part of EC2?
 > Sort of. **Elastic Load Balancing (ELB)** is technically its own service, but its console lives **inside the EC2 console** (left menu → Load Balancing → Load Balancers / Target Groups). That's why I thought it was part of EC2.
 
+## Sub-services & features
+
+> Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
+
+ELB has no console of its own. It lives in the **EC2 console → Load Balancing** menu.
+
+| Part | What it's for |
+|---|---|
+| **Load balancers** | ALB, NLB, Gateway LB, Classic (see types below) |
+| ↳ **Listeners** | Protocol + port the LB accepts (HTTP :80, HTTPS :443, TCP…) |
+| ↳ **Listener rules** (ALB) | Conditions (path, host, header, method, query, source IP) → actions (forward, **redirect**, **fixed response**, authenticate with Cognito/OIDC) |
+| ↳ **SSL/TLS certificates & security policies** | Certificates from [[Certificate Manager (ACM)\|ACM]], plus which TLS versions/ciphers are allowed |
+| ↳ **Attributes** | Idle timeout, deletion protection, access logs (to S3), cross-zone load balancing, HTTP/2… |
+| **Target groups** | The pools of targets + health checks (see below) |
+| ↳ Stickiness | Keep a user on the same target (cookie-based) |
+| ↳ Deregistration delay | Let in-flight requests finish before removing a target |
+| ↳ Algorithm | Round robin / least outstanding requests / weighted random |
+| **Trust stores** | CA certificates for **mutual TLS** (clients also present a certificate) |
+| **Integrations** | [[AWS WAF]] (ALB), Global Accelerator, [[Route 53]] alias, CloudWatch metrics |
+
 ## Types of load balancers
 
 ![[Pasted image 20260924195606.png]]

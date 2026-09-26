@@ -10,6 +10,27 @@ tags: [aws, security]
 > [!abstract] In one sentence
 > IAM (**Identity and Access Management**) decides **who** (a user, or a service like EC2/Lambda) can do **what** on **which** resources inside one AWS account.
 
+## Sub-services & features
+
+> Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
+
+| Menu group | Sub-service | What it's for |
+|---|---|---|
+| **Dashboard** | | Security recommendations (MFA on root, etc.) |
+| **Access management** | User groups | Groups of users sharing policies |
+| | Users | People/apps with long-term credentials. Per user: console password, **MFA**, **access keys**, **Access Advisor** (last accessed) |
+| | Roles | Identities assumed temporarily (EC2, Lambda, cross-account, SSO) |
+| | Policies | AWS-managed + my own (customer-managed) policies |
+| | Identity providers | Trust an external login (SAML / OIDC, e.g. GitHub Actions, Google) |
+| | Account settings | Password policy, STS regions |
+| | Root access management | Centrally manage/remove root credentials of member accounts (with [[AWS Organizations\|Organizations]]) |
+| **Access reports** | **Access Analyzer** | Finds resources shared **outside** my account, **unused** permissions, and validates/generates policies |
+| | Credential report | CSV of every user + password/key age and MFA status |
+| | Organization activity | Last-accessed info at the org level |
+| | Service control policies | Read-only view of SCPs (managed in Organizations) |
+
+Policy types to know: **identity-based** (on users/groups/roles), **resource-based** (on the resource, e.g. S3 bucket policy, Lambda policy), **permissions boundaries** (cap for a user/role), **SCPs/RCPs** (cap for accounts, from Organizations), **session policies**.
+
 ## Root user vs IAM users
 
 The first time I log into AWS, I'm the **root user** (the email I signed up with). Root can do *everything*, including closing the account. So:

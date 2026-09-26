@@ -10,6 +10,22 @@ tags: [aws, security]
 > [!abstract] In one sentence
 > **IAM Identity Center** (formerly AWS SSO) gives a person **one login** that opens the door to **many AWS accounts**, each with the right level of access.
 
+## Sub-services & features
+
+> Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
+
+| Menu | Sub-feature | What it's for |
+|---|---|---|
+| **Dashboard** | | Setup checklist + the **AWS access portal URL** |
+| **Users / Groups** | | People (when Identity Center is the identity source) |
+| **Settings** | Identity source | Built-in directory, **Active Directory**, or an **external IdP** (Entra ID, Okta, Google…) with SCIM sync |
+| | Authentication | MFA rules, session duration |
+| **Multi-account permissions** | AWS accounts | Assign user/group + permission set to accounts |
+| | Permission sets | Reusable permission bundles → become IAM roles |
+| **Application assignments** | Applications | SSO into apps (Salesforce, Slack, custom SAML apps, AWS apps like QuickSight) |
+| | Trusted token issuers | Let external tokens be exchanged for AWS access |
+| **AWS access portal** | *(for users)* | Where people log in and pick an account + role, and get CLI credentials |
+
 ## In my own words
 
 *Starter note, to fill in once I actually set it up.*

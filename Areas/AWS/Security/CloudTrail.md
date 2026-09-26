@@ -10,6 +10,24 @@ tags: [aws, security, governance]
 > [!abstract] In one sentence
 > CloudTrail records **every API call** made in my AWS account (who did what, on which resource, from where, when), whether it came from the console, the CLI, an SDK, or another AWS service.
 
+## Sub-services & features
+
+> Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
+
+| Menu | Sub-feature | What it's for |
+|---|---|---|
+| **Dashboard** | | Trails status, recent events, Insights |
+| **Event history** | | Last 90 days of management events, free, searchable |
+| **Insights** | | Detects **unusual activity** (e.g. a sudden spike of `TerminateInstances` calls) |
+| **Lake** | Event data stores | Store events in a queryable store (up to years) |
+| | Query | Search events with **SQL** |
+| | Dashboards | Built-in/custom dashboards over Lake data |
+| | Integrations (channels) | Bring in events from outside AWS |
+| **Trails** | | Deliver events to S3 (+ CloudWatch Logs). Can be **organization trails** |
+| | Event types | **Management** (default), **Data** (S3 object/Lambda invoke…, paid), **Network activity** (calls through VPC endpoints), **Insights** |
+| | Log file validation | Detect if log files were tampered with |
+| **Settings** | | Org delegated admin, etc. |
+
 ## In my own words
 
 *Starter note.*

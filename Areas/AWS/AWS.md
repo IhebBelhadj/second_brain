@@ -34,6 +34,7 @@ tags: [topic]
 - [[AWS WAF]]: blocks bad HTTP requests
 - [[CloudTrail]]: who did what, when
 - [[ARN]]: how every resource gets its unique name
+- [[AWS naming conventions]]: ID prefixes (`vpc-`, `sg-`…), naming rules, and my `project-env-resource` convention
 
 ## Related areas
 - [[Networking]]: protocols behind all this (BGP, ICMP)

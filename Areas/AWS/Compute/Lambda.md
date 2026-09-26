@@ -10,6 +10,36 @@ tags: [aws, compute, serverless]
 > [!abstract] In one sentence
 > I upload a function, AWS runs it **only when something triggers it** (an HTTP request, a file landing in S3, a message in a queue…), and I pay only for the milliseconds it runs. There's no server to manage.
 
+## Sub-services & features
+
+> Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
+
+| Menu / tab | Sub-feature | What it's for |
+|---|---|---|
+| **Console menu** | Dashboard | Account-wide metrics and concurrency |
+| | Functions | My functions |
+| | Applications | Groups of functions + resources deployed together (SAM/CloudFormation) |
+| | Layers | Shared code/libraries reused by many functions |
+| | Event source mappings | The pollers that read SQS, Kinesis, DynamoDB Streams, Kafka and invoke functions |
+| | Code signing configurations | Only allow code signed by trusted publishers |
+| **Inside a function: Code** | Code editor / deploy | Edit + **Deploy** (see walkthrough) |
+| | Runtime settings | Runtime (Node, Python…), handler name, architecture (x86 / arm64) |
+| **Test** | Test events | Fake events to run the function by hand |
+| **Monitor** | Metrics, logs, traces | CloudWatch metrics + Logs, X-Ray traces |
+| **Configuration** | General | Memory, timeout (max 15 min), ephemeral storage |
+| | Triggers | What invokes it (S3, API Gateway, ALB, EventBridge…) |
+| | Permissions | **Execution role** + **resource-based policy** |
+| | Destinations | Where to send the result of async invocations (success/failure → SQS, SNS, EventBridge, another Lambda) |
+| | Function URL | A built-in HTTPS endpoint, no API Gateway needed |
+| | Environment variables | Config, encrypted with KMS |
+| | VPC | Attach to private subnets (see below) |
+| | Concurrency | **Reserved** (cap/guarantee) and **provisioned** (pre-warmed, no cold start) |
+| | SnapStart | Snapshot-based fast start (Java, Python, .NET) |
+| | File systems | Mount EFS |
+| **Aliases / Versions** | | Immutable **versions** + **aliases** (`prod` → v7) for safe releases and traffic shifting |
+
+Related: **Lambda@Edge** (run at CloudFront locations), **Step Functions** (chain Lambdas into workflows), **API Gateway** (the usual HTTP front door).
+
 ## In my own words
 
 With [[EC2]] I rent a machine that's on 24/7 whether anyone uses it or not, and I patch it, scale it and so on.

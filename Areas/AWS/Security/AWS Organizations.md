@@ -15,6 +15,26 @@ Instead of 20 AWS accounts managed separately, they all go under one organizatio
 > [!question] Why do I need this if IAM already manages users?
 > Because IAM works **inside one account**, and Organizations works **across accounts**. An account is much more than a user (see below). Companies split things into many accounts (prod, dev, security, one per team…), and IAM alone can't govern them all consistently.
 
+## Sub-services & features
+
+> Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
+
+| Menu | Sub-feature | What it's for |
+|---|---|---|
+| **AWS accounts** | Root, OUs, accounts | The tree: create/invite/move/close accounts |
+| **Invitations** | | Invite existing accounts to join |
+| **Policies** | **Service control policies (SCPs)** | Cap what **principals** in accounts can do (see below) |
+| | **Resource control policies (RCPs)** | Cap what can be done **to resources** (e.g. no S3 access from outside the org) |
+| | **Declarative policies** | Enforce service settings (e.g. EC2: block public AMI sharing, require IMDSv2) |
+| | Tag policies | Enforce tag keys/values → [[AWS naming conventions]] |
+| | Backup policies | Org-wide AWS Backup plans |
+| | AI services opt-out policies | Opt out of AWS using data to improve AI services |
+| | Chat applications policies | Control access from Slack/Teams (Amazon Q Developer) |
+| **Services** | Trusted access | Let services work org-wide: [[CloudTrail]] org trail, [[AWS Identity Center\|Identity Center]], Config, GuardDuty, Security Hub… |
+| | Delegated administrator | Let a member account (e.g. Security) manage a service instead of the management account |
+| **Settings** | | Org ID, feature set (**all features** vs consolidated billing only) |
+| *(Billing)* | Consolidated billing | One bill, volume discounts shared across accounts |
+
 ## The hierarchy
 
 ```

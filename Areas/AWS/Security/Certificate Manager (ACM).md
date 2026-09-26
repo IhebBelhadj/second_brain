@@ -10,6 +10,23 @@ tags: [aws, security, https]
 > [!abstract] In one sentence
 > ACM gives me **free TLS/SSL certificates** (the thing behind the 🔒 in the browser) and **renews them automatically**, but only for AWS services that can hold them, like load balancers and CloudFront.
 
+## Sub-services & features
+
+> Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
+
+ACM itself is small:
+
+| Sub-feature | What it's for |
+|---|---|
+| **Request certificate → public** | Free, publicly trusted certs (DNS or email validation) |
+| **Request certificate → private** | Certs for internal names, issued by **AWS Private CA** (a separate, paid service) |
+| **Import certificate** | Bring a cert bought elsewhere. ⚠️ ACM **won't renew** imported certs |
+| **Exportable public certificates** | Paid option to get the private key and use the cert on my own servers |
+| **Managed renewal** | Automatic renewal of ACM-issued certs |
+| **Monitoring** | CloudWatch metric `DaysToExpiry` + EventBridge "expiring soon" events |
+
+Related: **AWS Private CA**: run my own private certificate authority (internal TLS, mTLS, IoT devices).
+
 ## In my own words
 
 To serve `https://myapp.com`, the server has to show the browser a certificate saying "I really am myapp.com", signed by an authority the browser trusts. Normally you buy one or use Let's Encrypt, then install it and remember to renew it.

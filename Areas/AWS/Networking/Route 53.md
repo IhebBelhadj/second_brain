@@ -12,6 +12,26 @@ tags: [aws, networking, dns]
 
 (The name comes from **port 53**, the port DNS runs on.)
 
+## Sub-services & features
+
+> Everything this service contains, grouped the way the console's left menu groups it. Linked = I have a note on it.
+
+| Menu group | Sub-service | What it's for |
+|---|---|---|
+| **Dashboard** | | Quick links: register domain, create zone… |
+| **Hosted zones** | Public / private hosted zones | The DNS records of my domains (see below) |
+| | DNSSEC signing | Cryptographically sign my zone against DNS spoofing |
+| **Health checks** | Health checks | Monitor endpoints, used by failover routing and CloudWatch alarms |
+| **Traffic flow** | Traffic policies / policy records | A visual editor to combine routing policies (e.g. latency *then* failover) |
+| **IP-based routing** | CIDR collections | Lists of client IP ranges for IP-based routing |
+| **Profiles** | Profiles | Share DNS config (private zones, resolver rules) across VPCs/accounts |
+| **Domains** | Registered domains / requests | Buy, renew and transfer domains |
+| **Resolver** | VPCs | The built-in DNS server of every VPC (`.2` address) |
+| | Inbound / outbound endpoints + rules | **Hybrid DNS**: on-prem ↔ VPC name resolution |
+| | Query logging | Log DNS queries made from my VPCs |
+| **DNS Firewall** | Rule groups, domain lists | Block lookups of malicious domains from my VPCs |
+| **Application Recovery Controller** | *(now its own console)* | Readiness checks + routing controls for multi-region failover |
+
 ## How DNS works (and where Route 53 fits)
 
 ![[aws-docs route53 how dns routes.png]]

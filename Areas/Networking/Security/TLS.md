@@ -80,7 +80,7 @@ TLS 1.0 and 1.1 are deprecated: browsers refuse them, and AWS APIs require TLS 1
 | **ECH** (Encrypted Client Hello) | Encrypts the ClientHello, including SNI | Hides which site I'm visiting. Still being rolled out |
 | **ALPN** | Negotiates the app protocol inside TLS (`h2`, `http/1.1`) | How HTTP/2 is chosen without an extra round trip |
 | **OCSP stapling** | The server attaches a fresh "not revoked" proof | Faster, more private revocation check |
-| **mTLS** (mutual TLS) | The **client** also sends a certificate | The server knows exactly which machine/service is calling. Used for service-to-service, IoT, zero trust, B2B APIs |
+| **[[mTLS]]** (mutual TLS) | The **client** also sends a certificate | The server knows exactly which machine/service is calling. Used for service-to-service, IoT, zero trust, B2B APIs |
 
 ## Where TLS is terminated (in AWS and elsewhere)
 
@@ -139,7 +139,8 @@ Common errors:
 - Forgetting the **intermediate** certificate in the chain
 
 ## Related
-- Depends on:: [[Encryption basics]]
+- Depends on:: [[Encryption basics]], [[Certificates and PKI]]
+- Extended by:: [[mTLS]]
 - Compared:: [[IPsec vs TLS vs WireGuard vs SSH]]
 - Used in:: [[VPN]] (SSL VPNs, OpenVPN, AWS Client VPN), [[Load balancers]], [[Certificate Manager (ACM)]]
 - Lifecycle:: [[Certificate rotation]]

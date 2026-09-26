@@ -219,9 +219,10 @@ Typical setup: EventBridge rule on the expiration / action-required events → S
 - Old **clocks** on devices: a brand-new certificate looks "not yet valid"
 
 ## Related
-- Depends on:: [[TLS]], [[Encryption basics]] (certificates, chains, trust stores)
+- Depends on:: [[TLS]], [[Certificates and PKI]] (chains, trust stores, CAs)
 - AWS:: [[Certificate Manager (ACM)]], [[Load balancers]], [[Route 53]] (DNS validation)
-- Used in:: [[IPsec and IKE]] (certificate-authenticated tunnels), [[VPN]]
+- Used in:: [[IPsec and IKE]] (certificate-authenticated tunnels), [[VPN]], [[mTLS]]
+- Short-lived certificates at scale:: [[Service mesh]], [[Workload identity (SPIFFE)]]
 
 ## Flashcards
 #flashcards

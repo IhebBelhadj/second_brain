@@ -79,6 +79,8 @@ If DH keys are **ephemeral** (new random ones for every session, deleted afterwa
 
 ## Certificates and PKI
 
+> Short version here. Full note (X.509 fields, trust stores, formats, public vs private CAs) → [[Certificates and PKI]]
+
 How do I trust that a public key really belongs to `bank.com`? Someone I already trust vouches for it:
 
 ```mermaid

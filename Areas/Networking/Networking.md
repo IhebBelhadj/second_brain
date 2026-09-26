@@ -22,7 +22,12 @@ tags: [topic]
 
 ## Security (protecting traffic)
 - [[Encryption basics]]: symmetric vs asymmetric, Diffie-Hellman, forward secrecy, certificates
-- [[TLS]]: protects one application's connection (HTTPS, mTLS, termination at the ALB)
+- [[TLS]]: protects one application's connection (HTTPS, termination at the ALB)
+- [[mTLS]]: both sides show certificates. Service-to-service auth, IoT, B2B, ALB/API Gateway mTLS
+- [[Certificates and PKI]]: what's in a certificate, chains, trust stores, public vs private CAs, file formats
+- [[Workload identity (SPIFFE)]]: identities for services without stored secrets (SPIFFE/SPIRE, IAM Roles Anywhere)
+- [[Service mesh]]: proxies + control plane doing mTLS, authorization, retries and traffic splitting for every service
+- [[Certificate rotation]]: renewing certificates automatically (ACME, ACM, CA rotation)
 - [[ACL]]: ordered allow/deny rule lists
 
 ## VPNs (joining networks over the internet)

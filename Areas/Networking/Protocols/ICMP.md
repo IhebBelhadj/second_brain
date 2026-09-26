@@ -1,16 +1,26 @@
 ---
-type: note
+type: concept
 created: 2026-09-20
-topic:
-tags: []
+topic: Networking
+confidence: 2
+tags: [networking, protocol]
 ---
-## What is ICMP 
+# ICMP
 
-**ICMP (Internet Control Message Protocol)** is a network protocol used by devices to **send control messages and report network errors**. It's part of the IP protocol suite and operates at **Layer 3 (Network Layer)** of the OSI model. Unlike TCP and UDP, ICMP is not used to transport application data. It's primarily used to communicate information about network connectivity and problems. --- ## 1. A real-world example: `ping` The most common use of ICMP is the `ping` command. When you run: ```bash ping google.com``` 
+> [!abstract] In one sentence
+> **ICMP (Internet Control Message Protocol)** is how network devices send **control messages and error reports** to each other. It's what `ping` and `traceroute` use.
 
+## What it is
 
-Your computer sends an **ICMP Echo Request** to Google's server.
-If the server responds, you receive an **ICMP Echo Reply**.
+ICMP is part of the IP suite and works at **Layer 3 (network layer)**. Unlike TCP and UDP, it doesn't carry application data. It carries information *about* the network: "this host is reachable", "destination unreachable", "TTL expired"…
+
+## A real-world example: `ping`
+
+```bash
+ping google.com
+```
+
+My computer sends an **ICMP Echo Request**, and if the server answers, I get an **ICMP Echo Reply**:
 
 ```
 Your Computer                         Google
@@ -23,13 +33,29 @@ Your Computer                         Google
   Connection works!
 ```
 
-> **Important:** A failed ping does not necessarily mean that a server is down. ==Firewalls can block ICMP while allowing HTTP, HTTPS, or SSH traffic==.
+> [!warning] A failed ping doesn't mean the server is down
+> ==Firewalls often block ICMP while allowing HTTP, HTTPS or SSH.==
+> On AWS: a new [[EC2]] instance **doesn't answer ping** until its security group allows **ICMP** inbound.
 
-| Feature                   | ICMP                                | TCP                             | UDP                                    |
-| ------------------------- | ----------------------------------- | ------------------------------- | -------------------------------------- |
-| Main purpose              | Network control and error reporting | Reliable data transmission      | Fast, connectionless data transmission |
-| OSI layer                 | Layer 3                             | Layer 4                         | Layer 4                                |
-| Uses ports?               | ❌ No                                | ✅ Yes                           | ✅ Yes                                  |
-| Establishes a connection? | ❌ No                                | ✅ Yes (handshake)               | ❌ No                                   |
-| Example                   | `ping`                              | HTTP, SSH, database connections | DNS, streaming, VoIP                   |
-| Guarantees delivery?      | ❌ No                                | ✅ Yes, generally                | ❌ No                                   |
+## ICMP vs TCP vs UDP
+
+| Feature | ICMP | TCP | UDP |
+|---|---|---|---|
+| Main purpose | Network control & error reporting | Reliable data transfer | Fast, connectionless data transfer |
+| OSI layer | Layer 3 | Layer 4 | Layer 4 |
+| Uses ports? | ❌ No | ✅ Yes | ✅ Yes |
+| Connection (handshake)? | ❌ No | ✅ Yes | ❌ No |
+| Example | `ping`, `traceroute` | HTTP, SSH, databases | DNS, streaming, VoIP |
+| Guaranteed delivery? | ❌ No | ✅ Yes, generally | ❌ No |
+
+## Connects to
+- [[EC2]]: security group rule "All ICMP - IPv4" to allow ping
+- [[VPC]]: network ACLs can block it too
+- [[Networking]]
+
+## Flashcards
+#flashcards
+
+What layer is ICMP? :: Layer 3 (network)
+Does ICMP use ports? :: No
+My EC2 instance doesn't answer ping but HTTP works. Why? :: The security group (or NACL) doesn't allow ICMP inbound

@@ -2,18 +2,20 @@
 type: note
 created: 2026-09-19
 topic: AWS
-tags: []
+tags: [aws]
 ---
-# Types of AWS services
+# AWS services overview
+
+> The map of what exists, grouped by category. Services with a note of their own are linked. For how they plug together see [[How AWS services connect]], and for the index see [[AWS]].
 
 | Type                    | Service                        | What it does                                                                                                                            |
 | ----------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| **Compute**             | EC2                            | Virtual machines you size, patch and scale yourself ==see link== : [[EC2]]                                                              |
-|                         | Lambda                         | Runs your code on demand, no servers to manage, billed per request                                                                      |
-|                         | EC2 Auto Scaling               | Adds and removes instances automatically to match demand                                                                                |
+| **Compute**             | [[EC2]]                        | Virtual machines you size, patch and scale yourself                                                              |
+|                         | [[Lambda]]                     | Runs your code on demand, no servers to manage, billed per request                                                                      |
+|                         | [[Auto Scaling\|EC2 Auto Scaling]] | Adds and removes instances automatically to match demand                                                                                |
 |                         | Elastic Beanstalk              | Takes your code and provisions the whole stack for you                                                                                  |
 |                         | Batch                          | Queues and runs batch jobs across managed compute                                                                                       |
-|                         | Lightsail                      | Simplified virtual server with fixed monthly pricing                                                                                    |
+|                         | [[Lightsail]]                  | Simplified virtual server with fixed monthly pricing (vs EC2: [[EC2 vs Lightsail vs Lambda]])                                                                                    |
 |                         | App Runner                     | Runs a container or repo as a scaled web service, zero setup                                                                            |
 | **Containers**          | ECS                            | AWS's own container orchestrator                                                                                                        |
 |                         | EKS                            | Managed Kubernetes                                                                                                                      |
@@ -37,36 +39,36 @@ tags: []
 |                         | Neptune                        | Graph database for highly connected data                                                                                                |
 |                         | Timestream                     | Purpose-built time-series database                                                                                                      |
 |                         | Keyspaces                      | Managed Cassandra-compatible database                                                                                                   |
-| **Networking**          | VPC                            | Your private virtual network: subnets, routing, gateways                                                                                |
-|                         | Route 53                       | DNS, domain registration, and health-checked traffic routing                                                                            |
+| **Networking**          | [[VPC]]                        | Your private virtual network: subnets, routing, gateways                                                                                |
+|                         | [[Route 53]]                   | DNS, domain registration, and health-checked traffic routing                                                                            |
 |                         | CloudFront                     | CDN that caches content at edge locations worldwide                                                                                     |
-|                         | Elastic Load Balancing         | Spreads incoming traffic across targets (ALB, NLB, GWLB)                                                                                |
+|                         | [[Load balancers\|Elastic Load Balancing]] | Spreads incoming traffic across targets (ALB, NLB, GWLB)                                                                                |
 |                         | API Gateway                    | Front door for APIs — auth, throttling, routing to backends                                                                             |
 |                         | NAT Gateway                    | Lets private subnets reach the internet outbound only                                                                                   |
 |                         | Direct Connect                 | Dedicated private line from your datacentre to AWS                                                                                      |
 |                         | Site-to-Site VPN               | Encrypted tunnel to your VPC over the public internet                                                                                   |
-|                         | Transit Gateway                | Central hub connecting many VPCs and on-prem networks<br><br>(view Guide on connecting VPCs with Transit gateways [[Connecting VPCs]] ) |
+|                         | Transit Gateway                | Central hub connecting many VPCs and on-prem networks (guide: [[Connecting VPCs]]) |
 |                         | Global Accelerator             | Sends users over the AWS backbone to the nearest healthy endpoint                                                                       |
 |                         | PrivateLink                    | Private access to a service without crossing the internet                                                                               |
-| **Security & Identity** | IAM                            | Users, roles and policies deciding who can do what (Service guide in [[IAM]])                                                           |
-|                         | IAM Identity Center            | Single sign-on across accounts, federated with your directory                                                                           |
+| **Security & Identity** | [[IAM]]                        | Users, roles and policies deciding who can do what                                                           |
+|                         | [[AWS Identity Center\|IAM Identity Center]] | Single sign-on across accounts, federated with your directory                                                                           |
 |                         | Cognito                        | Sign-up and sign-in for your application's end users                                                                                    |
 |                         | KMS                            | Creates and controls encryption keys                                                                                                    |
 |                         | CloudHSM                       | Dedicated hardware security modules you control                                                                                         |
 |                         | Secrets Manager                | Stores and automatically rotates credentials                                                                                            |
-|                         | ACM                            | Issues and renews TLS certificates                                                                                                      |
-|                         | WAF                            | Filters malicious HTTP requests before they reach your app                                                                              |
+|                         | [[Certificate Manager (ACM)\|ACM]] | Issues and renews TLS certificates                                                                                                      |
+|                         | [[AWS WAF\|WAF]]              | Filters malicious HTTP requests before they reach your app                                                                              |
 |                         | Shield                         | DDoS protection                                                                                                                         |
 |                         | GuardDuty                      | Continuously detects threats from your logs                                                                                             |
 |                         | Inspector                      | Scans workloads for known vulnerabilities                                                                                               |
 |                         | Macie                          | Finds sensitive data sitting in S3                                                                                                      |
 |                         | Security Hub                   | Aggregates findings from the other security services                                                                                    |
 | **Management**          | CloudWatch                     | Metrics, logs, alarms and dashboards                                                                                                    |
-|                         | CloudTrail                     | Records every API call for audit (Service guide in [[CloudTrail]])                                                                      |
+|                         | [[CloudTrail]]                 | Records every API call for audit                                                                      |
 |                         | CloudFormation                 | Infrastructure as code from declarative templates                                                                                       |
 |                         | Config                         | Records resource configuration and flags non-compliance                                                                                 |
-|                         | Systems Manager                | Patching, remote access and automation across fleets                                                                                    |
-|                         | Organizations                  | Manages many accounts under one billing and policy umbrella (Service guide in [[AWS Organizations]])                                    |
+|                         | Systems Manager                | Patching, remote access (Session Manager, an alternative to a [[Bastion host]]) and automation across fleets                                                                                    |
+|                         | [[AWS Organizations\|Organizations]] | Manages many accounts under one billing and policy umbrella                                    |
 |                         | Control Tower                  | Sets up a governed multi-account environment for you                                                                                    |
 |                         | Trusted Advisor                | Recommendations on cost, security, limits and performance                                                                               |
 |                         | Service Catalog                | Approved templates that teams can deploy themselves                                                                                     |

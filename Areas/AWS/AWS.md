@@ -32,6 +32,7 @@ tags: [topic]
 - [[AWS Organizations]]: many accounts, SCPs
 - [[AWS Identity Center]]: one login for many accounts
 - [[Certificate Manager (ACM)]]: free HTTPS certificates
+- [[Certificate rotation]]: keeping certificates renewed (ACME, ACM managed renewal, imported certs, CA rotation)
 - [[AWS WAF]]: blocks bad HTTP requests
 - [[CloudTrail]]: who did what, when
 - [[ARN]]: how every resource gets its unique name

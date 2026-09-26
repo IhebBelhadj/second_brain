@@ -142,6 +142,7 @@ Common errors:
 - Depends on:: [[Encryption basics]]
 - Compared:: [[IPsec vs TLS vs WireGuard vs SSH]]
 - Used in:: [[VPN]] (SSL VPNs, OpenVPN, AWS Client VPN), [[Load balancers]], [[Certificate Manager (ACM)]]
+- Lifecycle:: [[Certificate rotation]]
 
 ## Flashcards
 #flashcards

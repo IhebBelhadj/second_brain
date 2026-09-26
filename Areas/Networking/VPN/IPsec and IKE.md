@@ -8,18 +8,18 @@ tags: [networking, security, vpn, protocol]
 # IPsec and IKE
 
 > [!abstract] In one sentence
-> **IPsec** encrypts and authenticates traffic **at the IP layer**, so every application is protected without knowing it. **IKE** is its companion protocol that authenticates the two peers and negotiates the keys and settings IPsec uses. Together they're the standard for **site-to-site VPNs** (office ↔ cloud, AWS Site-to-Site VPN, firewall ↔ firewall).
+> **IPsec** (Internet Protocol Security) encrypts and authenticates traffic **at the IP layer**, so every application is protected without knowing it. **IKE** is its companion protocol that authenticates the two peers and negotiates the keys and settings IPsec uses. Together they're the standard for **site-to-site VPNs** (office ↔ cloud, AWS Site-to-Site VPN, firewall ↔ firewall).
 
 ## The pieces
 
-| Piece | What it does | On the wire |
-|---|---|---|
-| **IKE** (Internet Key Exchange, v1 or **v2**) | Control plane: authenticate the peers, run Diffie-Hellman, negotiate algorithms, create and rekey the SAs | **UDP 500**, then **UDP 4500** if NAT is detected |
-| **ESP** (Encapsulating Security Payload) | Data plane: encrypts + integrity-protects the packets | **IP protocol 50** (not TCP/UDP!), or inside UDP 4500 with NAT-T |
-| **AH** (Authentication Header) | Integrity only, no encryption. Also protects the outer IP header, so it **breaks through NAT** | IP protocol 51. Almost never used now |
-| **SA** (Security Association) | One agreed set of keys + algorithms, for **one direction** | Identified by a 32-bit **SPI** in each ESP packet |
-| **SPD** (Security Policy Database) | "Which traffic must be protected, bypassed or dropped" | Local config |
-| **SAD** (Security Association Database) | The live SAs and their keys | Local state |
+| Piece                                         | What it does                                                                                              | On the wire                                                      |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| **IKE** (Internet Key Exchange, v1 or **v2**) | Control plane: authenticate the peers, run Diffie-Hellman, negotiate algorithms, create and rekey the SAs | **UDP 500**, then **UDP 4500** if NAT is detected                |
+| **ESP** (Encapsulating Security Payload)      | Data plane: encrypts + integrity-protects the packets                                                     | **IP protocol 50** (not TCP/UDP!), or inside UDP 4500 with NAT-T |
+| **AH** (Authentication Header)                | Integrity only, no encryption. Also protects the outer IP header, so it **breaks through NAT**            | IP protocol 51. Almost never used now                            |
+| **SA** (Security Association)                 | One agreed set of keys + algorithms, for **one direction**                                                | Identified by a 32-bit **SPI** in each ESP packet                |
+| **SPD** (Security Policy Database)            | "Which traffic must be protected, bypassed or dropped"                                                    | Local config                                                     |
+| **SAD** (Security Association Database)       | The live SAs and their keys                                                                               | Local state                                                      |
 
 Firewalls between the peers must allow **UDP 500, UDP 4500 and IP protocol 50**. Forgetting protocol 50 is a classic: IKE comes up, but no data flows.
 

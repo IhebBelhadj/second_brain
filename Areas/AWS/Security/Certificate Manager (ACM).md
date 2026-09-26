@@ -52,6 +52,20 @@ The catch: **I never get the private key** (for the normal free certs), so I can
 
 If my domain is in [[Route 53]], DNS validation is a single **"Create records in Route 53"** button.
 
+## Renewal in short
+
+| Certificate | Who renews it |
+|---|---|
+| ACM public, **DNS-validated**, in use | ACM, automatically. Same ARN, attached services update with no downtime |
+| ACM public, email-validated | ACM, but someone must click the approval emails |
+| **Imported** | **Me**: re-import the new cert into the **same ARN** |
+| Exportable public | ACM renews it, but I must re-export and redeploy my copy |
+| Private (requested through ACM) | ACM, automatically |
+
+Monitoring: EventBridge "approaching expiration" events, the `DaysToExpiry` metric, AWS Config `acm-certificate-expiration-check`.
+
+→ The whole topic (why rotate, ACME, CA rotation, RDS, zero-downtime deploys): [[Certificate rotation]]
+
 ## Console walkthrough
 
 > [!note] The ACM docs have no console screenshots. The steps are written out; I'll add my own screenshots when I do it.
@@ -78,6 +92,7 @@ Browser ──HTTPS:443──► ALB (ACM cert here) ──HTTP:8080──► EC
 
 ## Connects to
 - [[TLS]]: what the certificate is actually used for (handshake, termination, mTLS)
+- [[Certificate rotation]]: renewal mechanisms, in and outside AWS
 - [[Route 53]]: DNS validation records, one click
 - [[Load balancers]]: the ALB's HTTPS listener is where the cert goes (NLB TLS listeners too)
 - CloudFront: works too, but the cert **must be in `us-east-1`**

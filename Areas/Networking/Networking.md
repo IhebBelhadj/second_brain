@@ -45,7 +45,7 @@ flowchart TD
 ## 4. Routing and translation (Layer 3)
 - [[Routing tables]]: longest prefix match, metrics, administrative distance, Linux's multiple tables
 - [[Policy-based routing]]: `ip rule`, marks, VRFs and namespaces. Choosing *which* table before choosing the route
-- [[NAT and PAT]]: static/dynamic NAT, PAT tables, SNAT vs DNAT, NAT behaviors and hole punching, CGNAT, why NAT isn't a firewall
+- [[NAT and PAT]]: static/dynamic NAT, PAT tables, SNAT vs DNAT, NAT behaviors and hole punching, CGNAT, UPnP/NAT-PMP/PCP, why NAT isn't a firewall
 - [[Overlapping address spaces]]: two networks using the same IPs, and the ways out (separate routing domains, NAT, exposing services, renumbering)
 - [[AS and BGP]]: how independent networks route between each other, the protocol the internet runs on
 - Not written yet: *[[OSPF]]* (routing inside one organization) · *[[First-hop redundancy (VRRP)]]* (two gateways, one IP)

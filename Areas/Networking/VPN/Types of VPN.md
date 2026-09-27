@@ -240,7 +240,7 @@ sequenceDiagram
 
 ---
 
-## Stage 6: the application needs the *same subnet* on both sides
+## Stage 6: the application needs the same subnet on both sides
 
 **The problem.** The company adds a second data center. The virtualization team wants to **live-migrate** a VM from DC1 to DC2 without changing its IP. An old clustered app uses Layer 2 heartbeats and needs its nodes in the same broadcast domain. Everything so far was Layer 3: two different subnets connected by routing. That won't do.
 

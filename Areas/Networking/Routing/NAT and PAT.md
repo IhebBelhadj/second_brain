@@ -4,7 +4,7 @@ created: 2026-09-27
 topic: Networking
 confidence: 1
 tags: [networking, routing, nat, security]
-aliases: [NAT, PAT, NAPT, Masquerade, SNAT, DNAT, Port forwarding, CGNAT]
+aliases: [NAT, PAT, NAPT, Masquerade, SNAT, DNAT, Port forwarding, CGNAT, UPnP, NAT-PMP]
 ---
 # NAT and PAT
 
@@ -108,7 +108,7 @@ What matters is how the NAT picks the **outside port** for a new destination (RF
 
 Home routers are usually cone-like. Corporate firewalls and **CGNAT** are often symmetric.
 
-### 3. Protocols that put IP addresses *inside* the payload
+### 3. Protocols that put IP addresses inside the payload
 
 NAT rewrites headers, not data. Protocols that write IPs or ports in their messages break:
 - **FTP** (active mode): the client tells the server "connect back to me at `192.168.1.10` port X", a private address the server can't reach
@@ -136,13 +136,54 @@ The ISP runs its own NAT (**CGNAT**, `100.64.0.0/10` between them and my router)
 - Hundreds of customers share one public IP: one abuser gets it banned or CAPTCHA'd for everyone, and logs need **IP + port + timestamp** to identify a user
 - P2P and self-hosting get much harder → mesh VPNs with relays, or tunnels that dial out (see [[Connecting AWS to a private network]])
 
+### 7. Apps that open ports on the router by themselves: UPnP, NAT-PMP, PCP
+
+**The problem:** problem 1 says nothing comes in unless an inside machine asked for it. But a game console needs other players to connect **to** it, a torrent client wants inbound peers, a video call wants direct media. Asking every user to log into their router and set up port forwarding by hand doesn't work.
+
+**The fix: let the app ask the router for a port forward.** Three protocols do this:
+
+| Protocol | From | How it works | Where |
+|---|---|---|---|
+| **UPnP IGD** (Universal Plug and Play, Internet Gateway Device) | Microsoft & co, ~2000 | The app finds the router by multicasting **SSDP** discovery (`239.255.255.250`, UDP **1900**), downloads its XML description over HTTP, then calls `AddPortMapping` (a SOAP request): "forward public TCP 3074 to me, 192.168.1.20:3074" | Almost every home router, consoles, Windows, torrent clients |
+| **NAT-PMP** (NAT Port Mapping Protocol) | Apple | A small binary request to the default gateway on UDP **5351**: "map a port for me for N seconds". Also tells the app the router's public IP | Apple devices, many routers |
+| **PCP** (Port Control Protocol, RFC 6887) | IETF, NAT-PMP's successor | Same idea, same port, plus IPv6 firewall pinholes, and it can address a **carrier's** NAT, not just the home router | Newer routers, rarely supported by ISPs |
+
+"UPnP" as a whole is a larger family (device discovery for printers, media servers, smart TVs). The part that matters for networking is **IGD**: automatic port forwarding.
+
+```mermaid
+sequenceDiagram
+    participant C as Console 192.168.1.20
+    participant R as Home router (UPnP IGD)<br/>public 198.51.100.7
+    participant P as Another player on the internet
+    C->>R: SSDP M-SEARCH (multicast 239.255.255.250:1900)<br/>"any Internet Gateway Device here?"
+    R-->>C: "yes, my description is at http://192.168.1.1:5000/desc.xml"
+    C->>R: AddPortMapping: public UDP 3074 → 192.168.1.20:3074, lease 3600 s
+    Note over R: adds a DNAT rule, no questions asked
+    P->>R: UDP to 198.51.100.7:3074 (unsolicited)
+    R->>C: forwarded to 192.168.1.20:3074
+```
+
+**Why it's a security problem:**
+- **No authentication.** Any program on the LAN can open any port to any internal machine, including **malware**, which uses it to expose an infected machine (or a camera, or an admin panel) to the internet. The "NAT protects me" assumption is gone without anyone noticing
+- **Buggy routers expose UPnP on the WAN side**, so people on the internet can add mappings or use the router as an **SSDP reflector** for amplification DDoS (small request, big answer, like DNS amplification in [[DNS security]]). The **CallStranger** flaw (2020) abused UPnP event subscriptions to make devices send data to arbitrary addresses
+- Mappings are invisible: nothing in the router UI tells the user a port is open unless they look for it
+
+**Limits:**
+- Behind **CGNAT**, UPnP only opens the port on my **home** router. The ISP's NAT in front of it still drops everything, so it does nothing useful. Only PCP could ask the carrier's NAT, and few ISPs support it
+- It only works when the router implements it (and it's often disabled on purpose)
+
+**What to do:**
+- **Business and server networks: disable UPnP/NAT-PMP.** Inbound access should be an explicit, reviewed firewall/DNAT rule
+- **Home:** it's a trade-off (consoles and calls work better). Check what's mapped from time to time: the router's UPnP page, or `upnpc -l` (from miniupnpc) on a Linux machine in the LAN
+- Mesh VPNs like Tailscale use UPnP, NAT-PMP and PCP when available, **as one more way to get a direct connection** before falling back to hole punching or relays (see [[Types of VPN#Stage 5: machines behind NAT need to reach each other]])
+
 ## NAT is not a firewall
 
 **Wrong mental model:** "NAT protects my network, because nobody can reach my private IPs."
 
 **What's actually true:** the protection comes from the **stateful connection tracking** that NAT happens to need, not from the address rewriting:
 - A real **stateful firewall** gives the same "only replies to what I started" behavior without any NAT, and with explicit rules
-- NAT without filtering can still be bypassed: DNAT rules, UPnP (apps opening ports on the router by themselves), a machine on the ISP's side routing directly to my inside range
+- NAT without filtering can still be bypassed: DNAT rules, **UPnP** (apps opening ports on the router by themselves, see [[#7. Apps that open ports on the router by themselves: UPnP, NAT-PMP, PCP|problem 7]]), a machine on the ISP's side routing directly to my inside range
 - **IPv6** has enough addresses for everything, so there's **no NAT**: every device has a global address, and a stateful firewall on the router provides the "no unsolicited inbound" rule. In AWS that's the **egress-only internet gateway**
 
 And NAT costs something: it breaks end-to-end addressing, hides who really made a connection (logs show the NAT's IP), and complicates every protocol in the list above.
@@ -157,6 +198,31 @@ And NAT costs something: it breaks end-to-end addressing, hides who really made 
 | **Private NAT gateway** | SNAT to a private IP, no internet | Connecting to a network with **overlapping** ranges: the other side sees a non-overlapping address (see [[Overlapping address spaces]]) |
 | **Egress-only internet gateway** | No NAT (IPv6) | Stateful "outbound only" for IPv6, the firewall-without-NAT idea |
 | **Gateway VPC endpoints** (S3, DynamoDB) | Avoid NAT entirely | Private subnets reach S3 without paying NAT gateway per-GB fees |
+
+### "The NAT gateway blocks inbound traffic": that's firewall behavior, not translation
+
+The AWS docs and exam questions say a NAT gateway lets private instances **out** to the internet but stops the internet from **starting** connections **in**. It's tempting to file that under "what NAT does", but the address rewriting isn't what blocks anything.
+
+**Where the blocking really comes from:** the same state table a **stateful firewall** keeps. An unsolicited packet from the internet reaches the NAT gateway's Elastic IP, matches **no entry**, so there's no inside machine to send it to, and it's dropped. That's exactly the "only replies to connections I started" rule of a stateful firewall. NAT just needs that table to do its job, so it gets the rule for free.
+
+The comparison inside AWS makes it obvious:
+
+| | Rewrites addresses? | Blocks connections started from outside? | So the blocking comes from… |
+|---|---|---|---|
+| **Internet gateway** (1:1 static NAT) | ✅ | ❌ An instance with a public IP is reachable, if its security group allows it | Nothing: translation alone blocks nothing |
+| **NAT gateway** (PAT) | ✅ | ✅ | **State tracking**: no entry = drop |
+| **Egress-only internet gateway** (IPv6) | ❌ No NAT at all | ✅ | **State tracking** again, with no translation |
+
+So:
+- The internet gateway **translates without blocking**
+- The egress-only internet gateway **blocks without translating**
+
+Translation and "outbound only" are two separate features, and the NAT gateway happens to bundle both.
+
+What this means in practice:
+- A NAT gateway is **not a security control I configure**: no rules, no allow/deny, no logging of what it refused. It filters **nothing going out**: every private instance can reach any IP and port on the internet (see [[Proxies, load balancing and discovery in AWS#Forward proxies and egress control in AWS]] for real egress control)
+- Real filtering in a VPC comes from **[[Security groups]]** (stateful, per interface), **network ACLs** (stateless, per subnet, see [[ACL]]), and **AWS Network Firewall**. Those are what I design and audit
+- If private instances must stay unreachable, that has to hold because of their **security groups and routing** (no route from the internet gateway, no public IP), not just because they sit behind a NAT. Then it stays true if someone adds a public IP or a load balancer later
 
 ## Easy to get wrong
 - Thinking NAT is a security feature. It's the stateful tracking that protects, and IPv6 does it without NAT
@@ -193,8 +259,16 @@ Why does IPsec need NAT-T? :: ESP has no ports to translate, and AH breaks when 
 What limits PAT scale? :: ~64k simultaneous connections per public IP to one destination (IP, port, protocol)
 What is hairpin NAT? :: Reaching my own port-forwarded service via the public IP from inside, which needs extra SNAT or split DNS
 Two consequences of CGNAT? :: No port forwarding, and a shared public IP (bans, logging by port)
+What does UPnP IGD do? :: Lets an app on the LAN ask the router to create a port forward automatically (SSDP discovery on UDP 1900, then AddPortMapping)
+NAT-PMP and PCP? :: Simpler port-mapping protocols (UDP 5351). PCP is NAT-PMP's successor, supports IPv6 pinholes and carrier NATs
+Main security problem with UPnP? :: No authentication: any program, including malware, can open ports to any internal machine
+Why is UPnP useless behind CGNAT? :: It only opens a port on the home router, the ISP's NAT still blocks inbound traffic
+Should UPnP be on in a company network? :: No: inbound access should be explicit, reviewed firewall/DNAT rules
 Is NAT a firewall? :: No. The stateful connection tracking protects. IPv6 uses a stateful firewall without NAT
 Why doesn't an EC2 instance see its public IP? :: The internet gateway does 1:1 NAT outside the instance
 AWS NAT gateway limit per destination? :: About 55 000 simultaneous connections per unique destination
 What is a private NAT gateway for? :: Translating to a private IP, for networks with overlapping ranges
 IPv6 equivalent of "outbound only" in AWS? :: Egress-only internet gateway
+Why does an AWS NAT gateway block connections started from the internet? :: State tracking (a firewall behavior): unsolicited packets match no entry and are dropped. Translation alone blocks nothing
+Which AWS gateway translates without blocking, and which blocks without translating? :: Internet gateway (1:1 NAT, reachable if the SG allows). Egress-only internet gateway (IPv6, no NAT, stateful outbound only)
+Does a NAT gateway filter outbound traffic? :: No, no rules at all. Egress filtering needs security groups, NACLs, Network Firewall or a proxy

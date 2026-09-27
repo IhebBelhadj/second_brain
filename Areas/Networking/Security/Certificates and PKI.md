@@ -44,17 +44,17 @@ openssl x509 -in cert.pem -noout -text
 
 The extensions that matter:
 
-| Extension | What it says |
-|---|---|
-| **Subject Alternative Name (SAN)** | The names it's valid for: `DNS:myapp.com, DNS:*.myapp.com`, IPs, emails, **URIs** (SPIFFE IDs). **Clients check the SAN**, not the CN |
-| **Key Usage** | What the key may do: `digitalSignature`, `keyEncipherment`, `keyCertSign` (CAs only) |
-| **Extended Key Usage (EKU)** | `serverAuth`, `clientAuth` (see [[mTLS]]), `codeSigning`, `emailProtection` |
-| **Basic Constraints** | `CA:TRUE` / `CA:FALSE`, and `pathlen` (how many CAs may sit below it) |
-| **Authority / Subject Key Identifier** | Links a certificate to the key of its issuer (helps chain building) |
-| **CRL Distribution Points** | Where to download the revocation list |
-| **Authority Information Access** | Where to get the issuer's certificate (and OCSP, if any) |
-| **SCTs** | Proof the certificate was logged in Certificate Transparency |
-| **Name Constraints** | On a CA: "may only sign names under `*.corp.example.com`" |
+| Extension                              | What it says                                                                                                                          |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **Subject Alternative Name (SAN)**     | The names it's valid for: `DNS:myapp.com, DNS:*.myapp.com`, IPs, emails, **URIs** (SPIFFE IDs). **Clients check the SAN**, not the CN |
+| **Key Usage**                          | What the key may do: `digitalSignature`, `keyEncipherment`, `keyCertSign` (CAs only)                                                  |
+| **Extended Key Usage (EKU)**           | `serverAuth`, `clientAuth` (see [[mTLS]]), `codeSigning`, `emailProtection`                                                           |
+| **Basic Constraints**                  | `CA:TRUE` / `CA:FALSE`, and `pathlen` (how many CAs may sit below it)                                                                 |
+| **Authority / Subject Key Identifier** | Links a certificate to the key of its issuer (helps chain building)                                                                   |
+| **CRL Distribution Points**            | Where to download the revocation list                                                                                                 |
+| **Authority Information Access**       | Where to get the issuer's certificate (and OCSP, if any)                                                                              |
+| **SCTs**                               | Proof the certificate was logged in Certificate Transparency                                                                          |
+| **Name Constraints**                   | On a CA: "may only sign names under `*.corp.example.com`"                                                                             |
 
 ## The chain of trust
 

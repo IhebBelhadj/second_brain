@@ -55,12 +55,12 @@ Source IP: ...
 - Alerts: CloudTrail → CloudWatch → alarm when someone logs in as root
 
 ## CloudTrail vs the others
-| Tool | Answers |
-|---|---|
-| **CloudTrail** | Who did **what API call**, when |
+| Tool                   | Answers                                                          |
+| ---------------------- | ---------------------------------------------------------------- |
+| **CloudTrail**         | Who did **what API call**, when                                  |
 | IAM **Access Advisor** | When was a **service** last used by this principal (see [[IAM]]) |
-| **CloudWatch** | How are my resources **performing** (metrics, app logs) |
-| **Config** | What did a resource's **configuration** look like over time |
+| **CloudWatch**         | How are my resources **performing** (metrics, app logs)          |
+| **Config**             | What did a resource's **configuration** look like over time      |
 
 ## Connects to
 - [[IAM]]: every action by a user/role is recorded

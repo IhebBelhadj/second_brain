@@ -1,0 +1,6 @@
+- [ ] AWS cloud watch
+- [ ] AWS cloud trail
+- [ ] AWS Site-to-site VPN
+- [ ] AWS VPC endpoint
+- [ ] AWS identity center
+- [ ] 

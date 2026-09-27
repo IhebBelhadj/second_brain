@@ -103,9 +103,33 @@ flowchart TB
         direction LR
         TPID["TPID<br/>16 bits<br/>0x8100"]:::opt --- PCP["PCP<br/>3 bits<br/>priority 0–7"]:::opt --- DEI["DEI<br/>1 bit<br/>drop eligible"]:::opt --- VID["VLAN ID<br/>12 bits<br/>1–4094"]:::opt
     end
-    subgraph INSIDE["Zoom: the payload when EtherType = 0x0800 (IPv4) carrying TCP"]
-        direction LR
-        IPH["IPv4 header<br/>20 B<br/>TTL, protocol, src/dst IP"]:::l3 --- TCPH["TCP header<br/>20 B<br/>ports, seq/ack, flags"]:::l4 --- DATA["Data<br/>up to 1460 B<br/>(= the MSS)"]:::l7
+    subgraph INSIDE["Zoom: the payload, depending on the EtherType"]
+        direction TB
+        subgraph P_TCP["0x0800 IPv4 → protocol 6 TCP (e.g. HTTPS)"]
+            direction LR
+            IPH["IPv4 header<br/>20 B<br/>TTL, protocol, src/dst IP"]:::l3 --- TCPH["TCP header<br/>20 B<br/>ports, seq/ack, flags"]:::l4 --- DATA["Data<br/>up to 1460 B<br/>(= the MSS)"]:::l7
+        end
+        subgraph P_UDP["0x0800 IPv4 → protocol 17 UDP (e.g. a DNS query)"]
+            direction LR
+            IPH2["IPv4 header<br/>20 B<br/>protocol 17"]:::l3 --- UDPH["UDP header<br/>8 B<br/>ports, length, checksum"]:::l4 --- DNSQ["DNS message<br/>up to 1472 B<br/>(usually ~50–100)"]:::l7
+        end
+        subgraph P_ICMP["0x0800 IPv4 → protocol 1 ICMP (e.g. ping)"]
+            direction LR
+            IPH3["IPv4 header<br/>20 B<br/>protocol 1"]:::l3 --- ICMPH["ICMP header<br/>8 B<br/>type 8 echo request, code, id, seq"]:::l3 --- ECHO["Echo data<br/>56 B by default<br/>(up to 1472)"]:::l7
+        end
+        subgraph P_V6["0x86DD IPv6 → next header 6 TCP"]
+            direction LR
+            IP6H["IPv6 header<br/>40 B, fixed<br/>next header, hop limit, src/dst"]:::l3 --- TCPH2["TCP header<br/>20 B"]:::l4 --- DATA2["Data<br/>up to 1440 B<br/>(MSS is 20 B smaller)"]:::l7
+        end
+        subgraph P_ARP["0x0806 ARP: no IP header at all"]
+            direction LR
+            ARPM["ARP message<br/>28 B<br/>opcode, sender MAC/IP, target MAC/IP"]:::arp --- PAD["Padding<br/>18 B of zeros<br/>(to reach the 46 B minimum)"]:::pad
+        end
+        subgraph P_WG["0x0800 IPv4 → UDP 51820 → WireGuard (a tunnel)"]
+            direction LR
+            IPH4["Outer IPv4<br/>20 B<br/>laptop → VPN server"]:::l3 --- UDPH2["UDP header<br/>8 B"]:::l4 --- WGH["WireGuard header<br/>16 B<br/>type, receiver, counter"]:::tun --- INNER["🔒 Inner IP packet<br/>up to 1420 B<br/>(its own IP + TCP + data)"]:::l7 --- TAG16["Auth tag<br/>16 B"]:::tun
+        end
+        P_TCP ~~~ P_UDP ~~~ P_ICMP ~~~ P_V6 ~~~ P_ARP ~~~ P_WG
     end
     WIRE -- "the tag, expanded" --> VLAN
     WIRE -- "the payload, expanded" --> INSIDE
@@ -118,12 +142,20 @@ flowchart TB
     classDef l3 fill:#e2d9f3,stroke:#6f42c1,color:#24123f
     classDef l4 fill:#d2f4ea,stroke:#1f8a70,color:#0b2e24
     classDef l7 fill:#fde2c8,stroke:#c46210,color:#3d1e03
+    classDef arp fill:#cff4fc,stroke:#0a7a8f,color:#032b33
+    classDef pad fill:#f1f1f1,stroke:#777777,color:#333333
+    classDef tun fill:#e7e7ff,stroke:#4b4bb3,color:#16163d
 ```
 
 How to read it:
 - **Dashed grey** (preamble, SFD, interframe gap) = physical layer only. The NIC uses them and strips them, Wireshark never shows them, and they **don't count** in the 64–1518 B frame size
 - **Blue** = the 14 B Ethernet header (18 B with the **yellow** VLAN tag). **Green** = the payload, which is the whole IP packet. **Red** = the trailer (FCS), checked and dropped by the receiving NIC
-- The bottom zoom is the "nested envelopes" idea from the start of this note: the frame's payload is an IP packet, whose payload is a TCP segment, whose payload is the app's data. 20 + 20 + 1460 = 1500 = the MTU
+- The bottom zooms are the "nested envelopes" idea from the start of this note. The **EtherType** says what the payload is, then the IP header's **protocol** (IPv6: next header) says what's inside that, and so on:
+  - **IPv4 + TCP**: 20 + 20 + 1460 = 1500 = the MTU
+  - **IPv4 + UDP**: the UDP header is only 8 B, so 1472 B of data fit. Same for **ICMP** (ping's `-s 1472` is the biggest ping that isn't fragmented)
+  - **IPv6**: the header is 40 B instead of 20, so the TCP data shrinks to 1440
+  - **ARP** rides directly in the frame, with no IP header: 28 B, padded with zeros up to the 46 B minimum
+  - **A tunnel** (WireGuard) is a whole IP packet *inside* the data of a UDP datagram: 20 + 8 + 16 + 16 = 60 B of overhead, hence the 1420 inner MTU in [[#The numbers that come back everywhere]]
 
 | Field                        | Bytes     | What it is                                                                                                                                                                                    |
 | ---------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

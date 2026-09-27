@@ -161,6 +161,8 @@ The full-tunnel routing tricks (why `0.0.0.0/1`, how WireGuard uses `fwmark` ins
 
 ## DNS: the part everyone forgets
 
+(How DNS itself works → [[DNS]]. Joining DNS across networks → [[DNS in production#Hybrid DNS: joining internal DNS worlds]].)
+
 Routing says where packets go. **DNS** says which IP a name becomes. They're configured separately:
 
 - **Split DNS**: only names under `corp.example.com` go to the company DNS server, everything else goes to my normal DNS. On Linux with systemd-resolved: `resolvectl dns tun0 10.20.0.2` and `resolvectl domain tun0 '~corp.example.com'`

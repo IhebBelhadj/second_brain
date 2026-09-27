@@ -109,6 +109,7 @@ When I create a record I pick *how* Route 53 answers:
 4. Wait a minute, then `dig myapp.com` or `nslookup myapp.com` to check
 
 ## Connects to
+- How DNS works in general (vendor-neutral): [[DNS]], [[DNS security]], [[DNS in production]]
 - [[Load balancers]]: the usual target, through an Alias record
 - [[Certificate Manager (ACM)]]: ACM proves I own the domain with a CNAME record. If the zone is in Route 53, it's a single **"Create records in Route 53"** button
 - [[Lightsail]]: Lightsail has its **own** DNS zones (simpler, free), but I can use Route 53 instead

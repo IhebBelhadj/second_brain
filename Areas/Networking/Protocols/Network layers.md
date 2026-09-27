@@ -226,7 +226,7 @@ The best way I found to understand "where encryption happens": imagine someone c
 - Thinking a VPN or TLS stops application attacks: they protect the pipe, not what goes through it
 
 ## Related
-- Protocols:: [[ICMP]], [[AS and BGP]], [[TLS]], [[IPsec and IKE]]
+- Protocols:: [[DNS]], [[ICMP]], [[AS and BGP]], [[TLS]], [[IPsec and IKE]]
 - Devices:: [[Hubs, switches and routers]], [[VLAN]], [[Spanning Tree]], [[NAT and PAT]]
 - L2:: [[Network interfaces]] (NICs, VLANs, bridges, tun/tap, VXLAN)
 - L3:: [[Routing tables]], [[Policy-based routing]], [[Overlapping address spaces]]

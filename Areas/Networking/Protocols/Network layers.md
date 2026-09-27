@@ -125,17 +125,17 @@ How to read it:
 - **Blue** = the 14 B Ethernet header (18 B with the **yellow** VLAN tag). **Green** = the payload, which is the whole IP packet. **Red** = the trailer (FCS), checked and dropped by the receiving NIC
 - The bottom zoom is the "nested envelopes" idea from the start of this note: the frame's payload is an IP packet, whose payload is a TCP segment, whose payload is the app's data. 20 + 20 + 1460 = 1500 = the MTU
 
-| Field | Bytes | What it is |
-|---|---|---|
-| Preamble | 7 | `10101010…` so the receiver syncs its clock. Not seen by Wireshark |
-| Start frame delimiter (SFD) | 1 | `10101011`: "the frame starts now" |
-| **Destination MAC** | 6 | First, so a switch can start forwarding before the frame has fully arrived (cut-through) |
-| **Source MAC** | 6 | The sender's MAC. Switches learn "this MAC is on this port" from it |
-| *802.1Q VLAN tag* (optional) | 4 | TPID `0x8100` (2 bytes) + PCP priority (3 bits) + DEI (1 bit) + **VLAN ID (12 bits → 4 094 VLANs)** |
-| **EtherType** | 2 | What's in the payload: `0x0800` IPv4, `0x86DD` IPv6, `0x0806` ARP, `0x8100` VLAN tag, `0x888E` 802.1X (EAPOL), `0x88E5` MACsec. A value ≤ 1500 means it's an old 802.3 *length* field instead |
-| **Payload** | 46–1500 | The IP packet. **1500 is the MTU**. Padded up to 46 if smaller |
-| **FCS** | 4 | CRC-32 checksum. A bad FCS = the frame is silently dropped. Detects corruption, **not tampering** (anyone can recompute a CRC) |
-| Interframe gap | 12 (idle) | Silence between frames |
+| Field                        | Bytes     | What it is                                                                                                                                                                                    |
+| ---------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Preamble                     | 7         | `10101010…` so the receiver syncs its clock. Not seen by Wireshark                                                                                                                            |
+| Start frame delimiter (SFD)  | 1         | `10101011`: "the frame starts now"                                                                                                                                                            |
+| **Destination MAC**          | 6         | First, so a switch can start forwarding before the frame has fully arrived (cut-through)                                                                                                      |
+| **Source MAC**               | 6         | The sender's MAC. Switches learn "this MAC is on this port" from it                                                                                                                           |
+| *802.1Q VLAN tag* (optional) | 4         | TPID `0x8100` (2 bytes) + PCP priority (3 bits) + DEI (1 bit) + **VLAN ID (12 bits → 4 094 VLANs)**                                                                                           |
+| **EtherType**                | 2         | What's in the payload: `0x0800` IPv4, `0x86DD` IPv6, `0x0806` ARP, `0x8100` VLAN tag, `0x888E` 802.1X (EAPOL), `0x88E5` MACsec. A value ≤ 1500 means it's an old 802.3 *length* field instead |
+| **Payload**                  | 46–1500   | The IP packet. **1500 is the MTU**. Padded up to 46 if smaller                                                                                                                                |
+| **FCS**                      | 4         | CRC-32 checksum. A bad FCS = the frame is silently dropped. Detects corruption, **not tampering** (anyone can recompute a CRC)                                                                |
+| Interframe gap               | 12 (idle) | Silence between frames                                                                                                                                                                        |
 
 - **Header = 14 bytes** (18 with a VLAN tag). **Frame = 64 to 1518 bytes** (1522 tagged), counted from destination MAC to FCS
 - Real cost on the wire per frame: 7 + 1 + 14 + 4 + 12 = **38 bytes** around the payload

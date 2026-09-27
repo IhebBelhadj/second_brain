@@ -63,6 +63,30 @@ flowchart LR
 
 The two CAs can be the same (typical inside one company or a service mesh) or different (a bank trusting only its own client CA, while its server uses a public CA).
 
+## Why a private CA?
+
+Putting a CA in the server's client trust store means: "**anyone this CA signed may connect**". So the real question is *who decides who gets a certificate?* With a public CA, it's not me.
+
+| | **Public CA** (Let's Encrypt, DigiCert…) | **Private CA** (my own, AWS Private CA, a mesh CA) |
+|---|---|---|
+| Who can get a certificate | Anyone who controls *some* domain | Only who I decide |
+| What passing the handshake proves | "Someone on the internet" | "One of my services / devices / partners" |
+| Identities it can put in a cert | Only domain names it validated | Anything: `orders-service`, a SPIFFE URI, a device serial, a partner ID |
+| `clientAuth` certificates | Being phased out: browser root programs now require public TLS CAs to be `serverAuth`-only (Let's Encrypt dropped `clientAuth` in 2026) | ✅ |
+| Lifetime | Days to months, with issuance rate limits | Whatever I want, even **minutes/hours**, thousands per second |
+| Revocation | Their process | Mine: revoke instantly, or just stop reissuing |
+| Visibility | Every cert is published in **Certificate Transparency** logs | Private: internal names and device IDs aren't leaked |
+
+The core reasons:
+
+1. **Authentication must mean membership.** If the server trusts a public CA, anyone can buy or get a free cert from it and complete the handshake. mTLS would then only prove "this client owns *a* domain", and all the security would fall on my authorization code
+2. **Public CAs can't express my identities.** They validate domain control, nothing else. They won't issue a cert saying "this is the `payments` workload" or "device #A1-4432"
+3. **Control over the lifecycle.** mTLS means one certificate per service/device, often short-lived and rotated automatically (see [[Certificate rotation]]). That needs an issuer I drive through an API, without rate limits or CT logging
+4. **Nobody else needs to trust it.** The only reason to pay for a public CA is that browsers and OSes already trust it. In mTLS the verifier is **my own server**, so I just install my root CA there. I control both ends, so distributing the root is easy
+
+> [!note] The server certificate is a separate choice
+> Private CA for the server cert too when all clients are mine (service mesh, Kubernetes). **Public CA** for the server cert when outside clients (partners, browsers) connect and shouldn't have to install my root. The *client* CA stays private either way.
+
 ## Authentication ≠ authorization
 
 mTLS answers "**who** is this?". It doesn't decide "**may** they do this?":
@@ -74,7 +98,7 @@ mTLS answers "**who** is this?". It doesn't decide "**may** they do this?":
    - Then: "`orders` may call `POST /charge` on `payments`, `reporting` may only `GET`"
 
 > [!warning] Trusting a CA ≠ trusting everyone it signed
-> If the server trusts a **public CA** for client certificates, anyone can buy a certificate from that CA and pass authentication. Client CAs should be **private** (or the server must check the exact identity).
+> If the server trusts a **public CA** for client certificates, anyone can buy a certificate from that CA and pass authentication. Client CAs should be **private** (or the server must check the exact identity). See [[#Why a private CA?]].
 
 ## Where mTLS is used
 
@@ -190,6 +214,11 @@ Is the client certificate encrypted in TLS 1.3? :: Yes (in TLS 1.2 it was sent i
 What trust store does the server use in mTLS? :: A client CA trust store: the CAs allowed to sign client certificates
 mTLS authentication vs authorization? :: The handshake proves who the client is. A policy must still decide what that identity may do
 Why not trust a public CA for client certificates? :: Anyone could get a certificate from it and pass authentication
+What does adding a CA to the client trust store mean? :: Anyone that CA signed may connect, so I must control who it signs
+Four reasons mTLS uses a private CA? :: Authentication = membership; custom identities (service names, SPIFFE, device IDs); control over lifetime/rotation/revocation; only my own server needs to trust it
+Why can't a public CA issue a workload identity cert? :: It only validates domain control and puts domain names in certs, not "orders-service" or a device ID
+What leaks if internal client certs come from a public CA? :: Every cert goes into public Certificate Transparency logs, exposing internal names
+When can the server cert still be public in mTLS? :: When outside clients connect and shouldn't have to install my root. The client CA stays private
 mTLS vs bearer token security? :: mTLS never sends the secret (only a signature). A stolen token can be replayed
 ALB mTLS verify mode vs passthrough? :: Verify: ALB validates against a trust store. Passthrough: ALB forwards the cert in a header and the app validates
 API Gateway mTLS trap? :: The default execute-api endpoint bypasses mTLS, so disable it

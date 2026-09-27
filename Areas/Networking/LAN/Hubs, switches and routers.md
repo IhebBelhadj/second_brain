@@ -4,7 +4,7 @@ created: 2026-09-27
 topic: Networking
 confidence: 1
 tags: [networking, lan, switching, routing]
-aliases: [Hub, Switch, Router, ARP, Collision domain, Broadcast domain]
+aliases: [Hub, Switch, Router, Collision domain, Broadcast domain]
 ---
 # Hubs, switches and routers
 
@@ -68,6 +68,9 @@ What changed compared to the hub:
 **But broadcasts still go everywhere.** The switch floods them, so all its ports (and every switch connected to it) form one **broadcast domain**.
 
 ### Stage 3: how a machine finds a MAC in the first place (ARP)
+
+(The short version. Everything else, from packet format and cache states to gratuitous/proxy ARP, failures and spoofing, is in [[ARP]].)
+
 
 I know the IP I want to reach, not its MAC. **ARP** fills the gap:
 1. PC-A wants `192.168.1.20`. Is it in my subnet? Yes → ask for its MAC directly. No → ask for my **default gateway**'s MAC instead
@@ -159,7 +162,7 @@ A router with two interfaces. Interface 1 → switch S1 with 4 PCs. Interface 2 
 
 ## Related
 - Foundation:: [[Network layers]]
-- Next:: [[VLAN]], [[Spanning Tree]], [[NAT and PAT]]
+- Next:: [[ARP]], [[VLAN]], [[Spanning Tree]], [[NAT and PAT]]
 - Routing:: [[Routing tables]], [[Policy-based routing]], [[AS and BGP]]
 - Linux / cloud:: [[Network interfaces]], [[VPC]]
 - Security:: [[ACL]], [[Security groups]]

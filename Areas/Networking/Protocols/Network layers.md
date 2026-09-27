@@ -25,7 +25,7 @@ This is my reminder note: the models, what's actually inside a frame, and where 
 | Protocol | Carried by | But its job is about | So it's "layer…" |
 |---|---|---|---|
 | [[ICMP]] | IP (protocol 1) | Errors and diagnostics for IP | L3, riding inside L3 |
-| **ARP** | Ethernet directly (EtherType `0x0806`) | Finding the MAC for an IP | Between L2 and L3 |
+| [[ARP]] | Ethernet directly (EtherType `0x0806`) | Finding the MAC for an IP | Between L2 and L3 |
 | [[AS and BGP\|BGP]] | TCP port 179 | Building the IP routing table | An L7 app that controls L3 |
 | **DHCP** | UDP 67/68 | Giving a host its IP address | An L7 app that configures L3 |
 | [[TLS]] | TCP | Encrypting the app's bytes | "L4.5", or L6 depending on who you ask |
@@ -92,6 +92,38 @@ What I should take from this:
 ## Inside the Ethernet frame
 
 ### The layout, byte by byte
+
+```mermaid
+flowchart TB
+    subgraph WIRE["What goes on the wire, in order (left → right)"]
+        direction LR
+        PRE["Preamble<br/>7 B<br/>10101010…"]:::phy --- SFD["SFD<br/>1 B<br/>10101011"]:::phy --- DST["Destination MAC<br/>6 B"]:::hdr --- SRC["Source MAC<br/>6 B"]:::hdr --- TAG["802.1Q tag<br/>4 B<br/>(optional)"]:::opt --- ET["EtherType<br/>2 B"]:::hdr --- PAY["Payload<br/>46–1500 B<br/>(MTU = 1500)"]:::pay --- FCS["FCS<br/>4 B<br/>CRC-32"]:::trl --- IFG["Interframe gap<br/>12 B of silence"]:::phy
+    end
+    subgraph VLAN["Zoom: the 802.1Q tag (4 B)"]
+        direction LR
+        TPID["TPID<br/>16 bits<br/>0x8100"]:::opt --- PCP["PCP<br/>3 bits<br/>priority 0–7"]:::opt --- DEI["DEI<br/>1 bit<br/>drop eligible"]:::opt --- VID["VLAN ID<br/>12 bits<br/>1–4094"]:::opt
+    end
+    subgraph INSIDE["Zoom: the payload when EtherType = 0x0800 (IPv4) carrying TCP"]
+        direction LR
+        IPH["IPv4 header<br/>20 B<br/>TTL, protocol, src/dst IP"]:::l3 --- TCPH["TCP header<br/>20 B<br/>ports, seq/ack, flags"]:::l4 --- DATA["Data<br/>up to 1460 B<br/>(= the MSS)"]:::l7
+    end
+    WIRE -- "the tag, expanded" --> VLAN
+    WIRE -- "the payload, expanded" --> INSIDE
+
+    classDef phy fill:#eeeeee,stroke:#999999,stroke-dasharray: 5 5,color:#333333
+    classDef hdr fill:#cfe2ff,stroke:#3b6fb6,color:#10233f
+    classDef opt fill:#fff3cd,stroke:#b8860b,color:#3d2e00
+    classDef pay fill:#d1e7dd,stroke:#2e7d4f,color:#0f2e1c
+    classDef trl fill:#f8d7da,stroke:#b02a37,color:#3d0a10
+    classDef l3 fill:#e2d9f3,stroke:#6f42c1,color:#24123f
+    classDef l4 fill:#d2f4ea,stroke:#1f8a70,color:#0b2e24
+    classDef l7 fill:#fde2c8,stroke:#c46210,color:#3d1e03
+```
+
+How to read it:
+- **Dashed grey** (preamble, SFD, interframe gap) = physical layer only. The NIC uses them and strips them, Wireshark never shows them, and they **don't count** in the 64–1518 B frame size
+- **Blue** = the 14 B Ethernet header (18 B with the **yellow** VLAN tag). **Green** = the payload, which is the whole IP packet. **Red** = the trailer (FCS), checked and dropped by the receiving NIC
+- The bottom zoom is the "nested envelopes" idea from the start of this note: the frame's payload is an IP packet, whose payload is a TCP segment, whose payload is the app's data. 20 + 20 + 1460 = 1500 = the MTU
 
 | Field | Bytes | What it is |
 |---|---|---|
@@ -227,7 +259,7 @@ The best way I found to understand "where encryption happens": imagine someone c
 
 ## Related
 - Protocols:: [[DNS]], [[ICMP]], [[AS and BGP]], [[TLS]], [[IPsec and IKE]]
-- Devices:: [[Hubs, switches and routers]], [[VLAN]], [[Spanning Tree]], [[NAT and PAT]]
+- Devices:: [[ARP]], [[Hubs, switches and routers]], [[VLAN]], [[Spanning Tree]], [[NAT and PAT]]
 - L2:: [[Network interfaces]] (NICs, VLANs, bridges, tun/tap, VXLAN)
 - L3:: [[Routing tables]], [[Policy-based routing]], [[Overlapping address spaces]]
 - Security:: [[Encryption basics]], [[ACL]], [[mTLS]], [[Certificates and PKI]], [[IPsec vs TLS vs WireGuard vs SSH]]

@@ -18,8 +18,9 @@ flowchart TD
     L2 --> L3["4. Routing and translation (L3)<br/>routes, NAT, BGP"]
     L3 --> FI["5. Filtering<br/>ACLs, firewalls"]
     FI --> S["6. Securing traffic<br/>crypto, TLS, PKI, identity"]
-    S --> V["7. Joining networks<br/>VPNs and their alternatives"]
-    V --> C["8. Applied: cloud networking<br/>(AWS today)"]
+    S --> T["7. Delivering traffic to services<br/>proxies, load balancing, discovery"]
+    T --> V["8. Joining networks<br/>VPNs and their alternatives"]
+    V --> C["9. Applied: cloud networking<br/>(AWS today)"]
     L3 --> V
 ```
 
@@ -37,6 +38,7 @@ flowchart TD
 
 ## 3. Local networks (Layer 2)
 - [[Hubs, switches and routers]]: what each device decides on, MAC learning, ARP, collision vs broadcast domains, why the home "router" is five devices
+- [[ARP]]: how IP finds MAC, the packet, cache states, gratuitous and proxy ARP, failover and duplicate-IP problems, ARP spoofing and defenses, NDP and clouds
 - [[VLAN]]: virtual switches, access vs trunk ports, 802.1Q, native VLAN traps, routing between VLANs
 - [[Spanning Tree]]: why redundant switch links loop forever, how STP/RSTP block them, how data centers design loops out
 
@@ -61,25 +63,30 @@ flowchart TD
 - [[Workload identity (SPIFFE)]]: identities for services without stored secrets
 - [[Service mesh]]: proxies + a control plane doing mTLS, authorization, retries and traffic splitting for every service
 
-## 7. Joining networks (VPNs and their alternatives)
+## 7. Delivering traffic to services
+- [[Proxies]]: forward proxies, proxy vs NAT vs VPN, CONNECT, `HTTP_PROXY`/`NO_PROXY`, PAC/WPAD, transparent proxies, SOCKS, TLS inspection and what it breaks
+- [[Reverse proxy]]: one entry point for many apps, TLS termination, the "real client IP" problem (X-Forwarded-For, PROXY protocol), 502/504 debugging, the family (LB, API gateway, CDN, ingress, sidecar)
+- [[Load balancing]]: L4 vs L7, algorithms, health checks and their traps, sticky sessions, draining and retries, the gRPC trap, making the LB itself HA (VRRP, ECMP, anycast, DSR), global load balancing
+- [[Service discovery]]: from config files to DNS to registries, client-side vs server-side, registration, how Kubernetes Services work, failure modes
+
+## 8. Joining networks (VPNs and their alternatives)
 - [[VPN]]: the three ingredients, how a client works (tun, routes, DNS), site-to-site vs remote access, split vs full tunnel, WireGuard, MTU
 - [[Types of VPN]]: site-to-site → DMVPN → SD-WAN, remote access → ZTNA, mesh overlays and NAT hole punching, L2 VPNs, MPLS. Each one as the fix for the previous one's problem
 - [[IPsec and IKE]]: ESP, IKEv2 exchanges, policy- vs route-based, NAT-T, MTU, troubleshooting
 - [[IPsec vs TLS vs WireGuard vs SSH]]: which one to use when
 
-## 8. Applied: cloud networking (AWS today)
+## 9. Applied: cloud networking (AWS today)
 Every concept above shows up here under a product name. The general idea is in the sections above, the notes below are about how one provider packages it.
 - [[VPC]]: a private network in the cloud: subnets, CIDR ranges, route tables, internet and NAT gateways
 - [[Security groups]]: stateful filtering per network interface (section 5 applied)
 - [[Connecting VPCs]]: peering vs a central router (transit gateway), transitive routing
-- [[Connecting AWS to a private network]]: the managed VPN and eight workarounds, and where each one breaks (sections 4 and 7 applied)
-- [[Load balancers]]: Layer 4 vs Layer 7 load balancing
+- [[Connecting AWS to a private network]]: the managed VPN and eight workarounds, and where each one breaks (sections 4 and 8 applied)
+- [[Load balancers]]: ALB/NLB setup, target groups, health checks
+- [[Proxies, load balancing and discovery in AWS]]: every concept from section 7 mapped to its AWS product (ALB, NLB, GWLB, CloudFront, API Gateway, Global Accelerator, Cloud Map, Service Connect, VPC Lattice, egress control)
 - [[Route 53]]: DNS as a managed service (applies [[DNS]] and [[DNS in production]])
 - [[AWS WAF]]: Layer 7 filtering
 
 ## Not written yet: the rest of the systems engineer path
-- *[[Load balancing]]*: L4 vs L7, algorithms, health checks, HAProxy/nginx, independent of any cloud
-- *[[Proxies]]*: forward vs reverse proxies, transparent proxies
 - *[[Network troubleshooting]]*: a method + the tools (`ip`, `ss`, `tcpdump`, `mtr`, `dig`, `curl -v`, `openssl s_client`)
 - *[[High availability networking]]*: VRRP/keepalived, anycast, link aggregation, ECMP
 - *[[Network monitoring]]*: SNMP, flow logs (NetFlow/sFlow), metrics that matter

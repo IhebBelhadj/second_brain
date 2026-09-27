@@ -150,6 +150,7 @@ Use it for:
 - TLS pass-through
 
 ## Connects to
+- The general concepts: [[Load balancing]], [[Reverse proxy]]. All AWS options side by side: [[Proxies, load balancing and discovery in AWS]]
 - [[EC2]]: the usual targets
 - [[Auto Scaling]]: registers/deregisters instances in target groups
 - [[Lambda]]: can be a target

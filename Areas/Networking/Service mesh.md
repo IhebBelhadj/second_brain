@@ -197,6 +197,7 @@ spec:
 - Building on **App Mesh** in 2026
 
 ## Related
+- Built from:: [[Reverse proxy]], [[Load balancing]], [[Service discovery]]
 - Depends on:: [[mTLS]], [[Certificates and PKI]], [[Network interfaces]] (namespaces, iptables redirection)
 - Identity:: [[Workload identity (SPIFFE)]]
 - Certificates:: [[Certificate rotation]]

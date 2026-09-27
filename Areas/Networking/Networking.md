@@ -8,6 +8,7 @@ tags: [topic]
 > What this covers: the general networking stuff (protocols, routing) that sits underneath the cloud. Not AWS-specific, but AWS makes a lot more sense once I know it.
 
 ## Start here
+- [[Network layers]]: OSI vs TCP/IP, what's inside an Ethernet frame / IP / TCP header, and security at each layer. The map everything else hangs on
 - [[ICMP]]: what `ping` actually uses (and why a security group can block it)
 - [[ACL]]: access control lists, the "ordered list of allow/deny rules" idea behind AWS Network ACLs and WAF web ACLs
 - [[AS and BGP]]: how the internet routes between networks. It shows up in AWS as the ASN on a transit gateway
@@ -51,4 +52,4 @@ SORT confidence ASC
 ```
 
 ## Open questions
-- OSI layers properly: I keep saying "L4" and "L7" without being 100% sure of the rest
+- ~~OSI layers properly: I keep saying "L4" and "L7" without being 100% sure of the rest~~ → answered in [[Network layers]]

@@ -36,6 +36,64 @@ Related but not quite VPNs: **SSH tunnels** (forward single ports or a SOCKS pro
 
 → Why each type exists, and the harder ones (DMVPN, SD-WAN, ZTNA, NAT hole punching, Layer 2 VPNs, MPLS): [[Types of VPN]].
 
+## Site-to-site vs remote access: where does the tunnel end?
+
+I got confused by this, so here's the scenario that cleared it up. There are three things:
+- The company network `10.0.0.0/16`, with a VM holding data at `10.0.0.50` and a **VPN gateway** at `10.0.0.1` (with a public IP on its other side)
+- An employee **laptop** at home
+- An AWS **VPC** `10.20.0.0/16` with an EC2 instance at `10.20.1.10`
+
+**My wrong mental model:** the laptop connects to the company's VPN gateway, so the gateway *is* "the VPN network". If AWS wants in, it just "consults" that same gateway to find the VM. So why does everyone say a site-to-site VPN needs **two** gateways?
+
+**What was wrong with it:**
+
+1. **The gateway isn't the network.** It's a router with one extra job: it's the **endpoint of the tunnel**. It decrypts what comes out of the tunnel, then routes the plain packet into the LAN like any other router.
+2. **A tunnel always has two endpoints.** Something has to encrypt on one side and something has to decrypt on the other. With the laptop, the laptop *is* the other endpoint (the VPN client). With AWS, the VPC has no VPN client in it. The EC2 instance knows nothing about VPNs, so AWS needs its own endpoint: the **virtual private gateway / transit gateway**.
+3. **Nobody "consults" a gateway.** No one sends a question like "where is 10.0.0.50?". A **route table** does the work: the VPC route table says `10.0.0.0/16 → VPN gateway`. EC2 just sends the packet, the route sends it to the AWS endpoint, which encrypts it into the tunnel. See [[Routing tables]].
+
+```mermaid
+flowchart LR
+    subgraph HOME["Remote access: HOST ↔ NETWORK"]
+        L["Laptop<br/>(VPN client = endpoint)"]
+    end
+    subgraph CORP["Company network 10.0.0.0/16"]
+        GW["Company VPN gateway<br/>10.0.0.1"]
+        VM["VM 10.0.0.50"]
+        GW -- "plain routing" --> VM
+    end
+    subgraph AWS["AWS VPC 10.20.0.0/16"]
+        EC2["EC2 10.20.1.10<br/>(knows nothing about VPNs)"]
+        RT["VPC route table<br/>10.0.0.0/16 → VGW"]
+        VGW["AWS VPN gateway<br/>(endpoint)"]
+        EC2 --> RT --> VGW
+    end
+    L == "tunnel 1" ==> GW
+    VGW == "tunnel 2: site-to-site<br/>NETWORK ↔ NETWORK" ==> GW
+```
+
+The same company gateway ends **both** tunnels. What changes is what sits on the **other end**:
+
+| | Remote access | Site-to-site |
+|---|---|---|
+| Shape | **host ↔ network** | **network ↔ network** |
+| Other endpoint | The laptop itself (a client app) | A gateway in front of another network |
+| Who knows about the VPN | The laptop | Only the two gateways. The machines behind them just follow routes |
+| Traffic from | One machine (its tunnel IP) | Every machine behind the gateway |
+
+> [!tip] It's about the role, not the hardware
+> A laptop can act as a gateway and route a whole home network through its tunnel. A cloud VPN gateway is just a router with crypto. "Site-to-site" or "remote access" describes **what the endpoints are doing**, not what kind of box they are.
+
+### Harder follow-up: can the laptop reach the EC2 instance?
+
+Both tunnels end at the same company gateway, so it's tempting to think it just works. Follow the packet `10.99.0.42 (laptop's tunnel IP) → 10.20.1.10`:
+
+1. **Laptop:** is there a route for `10.20.0.0/16` into `tun0`? Only if the VPN server **pushes** that prefix. With a split tunnel that only pushes `10.0.0.0/16`, the packet goes out to the home internet and dies
+2. **Company gateway:** it decrypts tunnel 1, looks up `10.20.0.0/16`, finds tunnel 2, and encrypts again. It must also be **allowed** to forward from the VPN pool to AWS (firewall policy, and with policy-based IPsec the traffic selectors must include `10.99.0.0/16`, see [[IPsec and IKE]])
+3. **AWS:** the reply goes to `10.99.0.42`. The VPC needs a route for `10.99.0.0/16` back to the VPN gateway. With **BGP**, the company gateway must *advertise* the client pool, not just `10.0.0.0/16`. With static routing I have to add it by hand
+4. [[Security groups]] on the EC2 instance must allow `10.99.0.0/16`, not just `10.0.0.0/16`
+
+The usual failure is 3: the request arrives, the reply has no route back. Pings from the laptop time out while pings from the VM work, and the tunnel shows "UP" the whole time. That's the "connected ≠ working" rule again.
+
 ## How a remote-access VPN works on a laptop
 
 ### The virtual interface
@@ -195,6 +253,11 @@ Each client installs its own routes and DNS, and none of them knows about the ot
 
 The three ingredients of a VPN? :: Encapsulation, cryptography, routing (which traffic enters the tunnel)
 Site-to-site vs remote-access VPN? :: Site-to-site joins two networks via gateways (hosts unaware). Remote access connects one device running a client
+Why does a site-to-site VPN to AWS need a gateway on the AWS side? :: A tunnel has two endpoints. The machines in the VPC don't run a VPN client, so something must encrypt/decrypt for them
+Is the VPN gateway "the network"? :: No. It's a router that also ends the tunnel: it decrypts, then routes plain packets into its LAN
+How does an EC2 instance "find" the on-prem VM over a VPN? :: It doesn't ask anyone. The VPC route table sends 10.0.0.0/16 to the VPN gateway
+Remote access vs site-to-site in shapes? :: Remote access: host ↔ network. Site-to-site: network ↔ network
+Laptop on remote-access VPN can't reach AWS behind a site-to-site VPN. Usual cause? :: No route back: AWS doesn't know the VPN client pool (not advertised in BGP / not in the route table). Also check the pushed routes and security groups
 tun vs tap? :: tun carries IP packets (Layer 3). tap carries Ethernet frames (Layer 2)
 What does a VPN client do when it connects? :: Authenticates, gets an inner IP on tun0, installs routes, adds a host route to the server, configures DNS
 Why are there two route lookups for a VPN packet? :: One for the inner packet (→ tun0), one for the encrypted outer packet (→ the real network)

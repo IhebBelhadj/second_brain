@@ -132,6 +132,7 @@ Fixes, from quick to proper: change the home router's LAN to something unusual (
 - Assuming the VPN software handles it. It can only install routes and rules. See "who is in charge" in [[Policy-based routing]]
 
 ## Related
+- NAT itself:: [[NAT and PAT]]
 - Depends on:: [[Routing tables]], [[Policy-based routing]]
 - Shows up with:: [[VPN]], [[Connecting VPCs]]
 - Similar to:: two streets called "Main Street" in two different towns: the house number alone isn't enough, you need the town (the routing domain)

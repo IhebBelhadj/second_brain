@@ -209,6 +209,7 @@ What an ENI carries:
 - macvlan: by default the **host can't talk** to its own macvlan containers (use a macvlan interface on the host too, or ipvlan)
 
 ## Related
+- Physical counterparts:: [[Hubs, switches and routers]] (bridge = switch), [[VLAN]], [[NAT and PAT]] (Docker's MASQUERADE/DNAT)
 - Used by:: [[Routing tables]] (routes point at interfaces), [[Policy-based routing]] (VRFs, namespaces, `iif`/`oif`), [[VPN]] (tun, wg0, xfrm)
 - In AWS:: [[EC2]], [[Security groups]], [[VPC]]
 - Differs from:: a network namespace (contains interfaces) and a VRF (groups interfaces under one routing table)

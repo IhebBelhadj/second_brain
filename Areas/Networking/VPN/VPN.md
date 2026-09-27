@@ -232,7 +232,7 @@ Each client installs its own routes and DNS, and none of them knows about the ot
 | **Client VPN** | Remote access, OpenVPN-based ([[TLS]]) | Managed endpoint associated with VPC subnets. Auth: mutual certificates, Active Directory, or SAML (SSO). **Authorization rules** say which users reach which CIDRs. Split tunnel optional. The **client CIDR must not overlap** the VPC |
 | **VPN CloudHub** | Hub and spoke | Several sites connected through one virtual private gateway |
 | **Direct Connect** | Not a VPN: a **private physical link** | Not encrypted by default: add IPsec on top, or MACsec on dedicated connections |
-| Self-managed | WireGuard/OpenVPN/strongSwan on [[EC2]] | Needs **source/destination check disabled** on the instance, and routes pointing at its ENI |
+| Self-managed | WireGuard/OpenVPN/strongSwan on [[EC2]] | Needs **source/destination check disabled** on the instance, and routes pointing at its ENI. All the variations and their limits → [[Connecting AWS to a private network]] |
 
 ## Easy to get wrong
 - **"Connected" doesn't mean "working"**: the tunnel can be up while routes, DNS, security groups or MTU are wrong

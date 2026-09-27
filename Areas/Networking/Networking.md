@@ -16,9 +16,15 @@ tags: [topic]
 ## Interfaces (where the machine meets the network)
 - [[Network interfaces]]: physical NICs, virtual ones (loopback, bridge, veth, tun/tap, VLAN, VXLAN, WireGuard…), namespaces, Docker, AWS ENIs
 
+## Local networks (Layer 2)
+- [[Hubs, switches and routers]]: what each device decides on, MAC learning, ARP, collision vs broadcast domains, the home "router" that's five devices
+- [[VLAN]]: virtual switches, access vs trunk ports, 802.1Q, native VLAN traps, inter-VLAN routing
+- [[Spanning Tree]]: why redundant switch links loop forever, how STP/RSTP block them, and how data centers design loops out
+
 ## Routing (where packets go)
 - [[Routing tables]]: longest prefix match, metrics, admin distance, Linux's multiple tables
 - [[Policy-based routing]]: `ip rule`, marks, VRFs and namespaces. Choosing *which* table before choosing the route
+- [[NAT and PAT]]: static/dynamic NAT, PAT tables, SNAT vs DNAT, NAT types and hole punching, CGNAT, why NAT isn't a firewall, AWS NAT gateway
 - [[Overlapping address spaces]]: when two networks use the same IPs, and the ways out (PBR, NAT, PrivateLink, renumbering)
 
 ## Security (protecting traffic)
@@ -36,6 +42,7 @@ tags: [topic]
 - [[Types of VPN]]: site-to-site → DMVPN → SD-WAN, remote access → ZTNA, mesh overlays and NAT hole punching, L2 VPNs, MPLS. Each one as the fix for the previous one's problem
 - [[IPsec and IKE]]: ESP, IKEv2 exchanges, policy- vs route-based, NAT-T, AWS Site-to-Site VPN
 - [[IPsec vs TLS vs WireGuard vs SSH]]: which one to use when
+- [[Connecting AWS to a private network]]: workarounds to the managed VPN, and why each one breaks
 
 ## Where this shows up in AWS
 - [[VPC]]: subnets, CIDR ranges, route tables

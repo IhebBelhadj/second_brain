@@ -227,6 +227,7 @@ The best way I found to understand "where encryption happens": imagine someone c
 
 ## Related
 - Protocols:: [[ICMP]], [[AS and BGP]], [[TLS]], [[IPsec and IKE]]
+- Devices:: [[Hubs, switches and routers]], [[VLAN]], [[Spanning Tree]], [[NAT and PAT]]
 - L2:: [[Network interfaces]] (NICs, VLANs, bridges, tun/tap, VXLAN)
 - L3:: [[Routing tables]], [[Policy-based routing]], [[Overlapping address spaces]]
 - Security:: [[Encryption basics]], [[ACL]], [[mTLS]], [[Certificates and PKI]], [[IPsec vs TLS vs WireGuard vs SSH]]

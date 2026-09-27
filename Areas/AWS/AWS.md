@@ -15,6 +15,7 @@ tags: [topic]
 ## Networking (where things live)
 - [[VPC]]: my private network. Subnets, route tables, internet gateway, NAT
 - [[Connecting VPCs]]: peering vs transit gateway
+- [[Connecting AWS to a private network]]: the managed VPN, and eight workarounds (EC2 as a VPN router, dial-out tunnels, mesh, SSH, connectors…) with where each one breaks
 - [[Route 53]]: DNS, turns `myapp.com` into an address
 - [[Bastion host]]: how I get into servers sitting in a private subnet
 - [[Security groups]]: the firewall on each resource, and how it differs from NACLs

@@ -34,6 +34,8 @@ People often think of a VPN as "the encryption". In practice, most VPN **problem
 
 Related but not quite VPNs: **SSH tunnels** (forward single ports or a SOCKS proxy), **zero-trust access (ZTNA)** proxies that give access **per application** instead of per network.
 
+→ Why each type exists, and the harder ones (DMVPN, SD-WAN, ZTNA, NAT hole punching, Layer 2 VPNs, MPLS): [[Types of VPN]].
+
 ## How a remote-access VPN works on a laptop
 
 ### The virtual interface

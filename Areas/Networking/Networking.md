@@ -32,6 +32,7 @@ tags: [topic]
 
 ## VPNs (joining networks over the internet)
 - [[VPN]]: types, how a client works (tun, routes, DNS), split vs full tunnel, WireGuard, MTU
+- [[Types of VPN]]: site-to-site → DMVPN → SD-WAN, remote access → ZTNA, mesh overlays and NAT hole punching, L2 VPNs, MPLS. Each one as the fix for the previous one's problem
 - [[IPsec and IKE]]: ESP, IKEv2 exchanges, policy- vs route-based, NAT-T, AWS Site-to-Site VPN
 - [[IPsec vs TLS vs WireGuard vs SSH]]: which one to use when
 

@@ -22,7 +22,7 @@ An **Obsidian vault** of study notes. The owner is working toward **systems engi
 |---|---|---|
 | `Home.md` | Dashboard: Dataview queries (weakest notes, inbox, projects, topics). Don't hand-edit the queries | |
 | `How this works.md` | The owner's own manual for the system: folders, templates, properties. Read it before restructuring anything | |
-| `Areas/` | Subjects built up over time, **one folder per subject** with a topic index | **Where almost everything is**: `Networking/`, `AWS/` |
+| `Areas/` | Subjects built up over time, **one folder per subject** with a topic index | **Where almost everything is**: `Networking/`, `AWS/`, `Storage/` |
 | `Inbox/` | Undecided captures | Nearly empty |
 | `Journal/` | Daily/weekly notes | Empty |
 | `Notes/` | The owner's own ideas | Empty |
@@ -40,6 +40,7 @@ An **Obsidian vault** of study notes. The owner is working toward **systems engi
 |---|---|---|---|
 | Networking | `Areas/Networking/AGENTS.md` | `Areas/Networking/Networking.md` | **Vendor-neutral** networking as a systems engineer needs it: layers, L2, L3, DNS, security, proxies/LB, VPNs. Ordered as a learning path |
 | AWS | `Areas/AWS/AGENTS.md` | `Areas/AWS/AWS.md` | AWS services for the certification, and how the Networking concepts map onto AWS products |
+| Storage | `Areas/Storage/AGENTS.md` | `Areas/Storage/Storage.md` | **Vendor-neutral** storage: block/file/object, filesystems, RAID, network storage, backups, distributed storage. Ordered as a learning path. Mostly a roadmap so far |
 
 A new subject gets its own `Areas/<Subject>/` folder with an index note `<Subject>.md` (type `topic`, from `Templates/Topic.md`), its own `AGENTS.md` and `CLAUDE.md`, and a row in the table above.
 

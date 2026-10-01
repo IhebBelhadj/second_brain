@@ -67,6 +67,7 @@ Source IP: ...
 - [[AWS Organizations]]: organization trail
 - [[Bastion host]]: Session Manager sessions show up here
 - [[Lambda]]: function changes are management events. Invocations are data events
+- [[S3]]: where trails deliver their logs, and object reads/writes are data events
 
 ## Flashcards
 #flashcards

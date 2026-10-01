@@ -28,6 +28,8 @@ AWS/
 │   ├── Proxies, load balancing and discovery in AWS.md   ALB/NLB/GWLB/CloudFront/API GW/GA/Cloud Map/Lattice, egress control
 │   ├── Route 53.md                 hosted zones, records, routing policies, resolver
 │   └── Bastion host.md             reaching private instances
+├── Storage/
+│   └── S3.md                       buckets, storage classes, lifecycle, versioning, replication, access, endpoints (also indexed in Storage)
 └── Security/
     ├── IAM.md                      users, roles, policies
     ├── AWS Organizations.md        accounts, SCPs
@@ -47,7 +49,8 @@ Many notes embed console screenshots from `Attachments/` (`![[aws-console … si
 | Something that runs code (ECS, EKS, Batch) | `Compute/` |
 | Networking services (CloudFront, Direct Connect, Global Accelerator) | `Networking/` |
 | Identity, encryption, audit, protection (KMS, Secrets Manager, Shield, GuardDuty) | `Security/` |
-| Storage and databases (S3, EBS, RDS, DynamoDB): no folder yet | Create `Storage/` or `Databases/` |
+| Storage (EBS, EFS, AWS Backup) | `Storage/` (also add it to section 7 of `Areas/Storage/Storage.md`) |
+| Databases (RDS, DynamoDB): no folder yet | Create `Databases/` |
 | Cross-cutting (pricing, Well-Architected, exam strategy) | Area root |
 
-`AWS.md` → "Open questions" lists gaps the owner has noticed (e.g. no S3, RDS or CloudFront notes yet).
+`AWS.md` → "Open questions" lists gaps the owner has noticed (e.g. no RDS or CloudFront notes yet).

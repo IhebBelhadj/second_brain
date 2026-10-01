@@ -21,6 +21,11 @@ tags: [topic]
 - [[Bastion host]]: how I get into servers sitting in a private subnet
 - [[Security groups]]: the firewall on each resource, and how it differs from NACLs
 
+## Storage (where my data lives)
+- [[S3]]: object storage. Buckets and keys (no real folders), storage classes and lifecycle, versioning, replication, who can access a bucket, presigned URLs, gateway endpoints, and the 403s
+- Not written yet: *[[EBS]]* (disks for EC2) · *[[EFS]]* (shared NFS)
+- The vendor-neutral side (block/file/object, RAID, backups…) → [[Storage]]
+
 ## Compute (what runs my code)
 - [[EC2]]: virtual machines, launch templates
 - [[Load balancers]]: ALB / NLB and **target groups**
@@ -42,6 +47,7 @@ tags: [topic]
 
 ## Related areas
 - [[Networking]]: protocols behind all this (BGP, ICMP), routing, VPNs (IPsec/IKE), TLS
+- [[Storage]]: block vs file vs object, filesystems, backups, the concepts behind S3/EBS/EFS
 
 ## Weakest first
 ```dataview
@@ -54,4 +60,4 @@ SORT confidence ASC
 ## Open questions
 - What is **VPC Lattice** exactly? (came up in [[Auto Scaling]])
 - What is the transit gateway **Connect** attachment? (came up in [[Connecting VPCs]])
-- CloudFront, RDS and S3 don't have their own notes yet, and they show up in almost every architecture
+- CloudFront and RDS don't have their own notes yet, and they show up in almost every architecture (S3 done → [[S3]])

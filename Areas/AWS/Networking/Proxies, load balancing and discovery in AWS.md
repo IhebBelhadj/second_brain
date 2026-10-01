@@ -12,20 +12,20 @@ tags: [aws, networking, load-balancing, proxy, service-discovery]
 
 ## Concept → AWS product
 
-| Concept (vendor-neutral) | AWS product | Notes |
-|---|---|---|
-| L7 load balancer / [[Reverse proxy]] | **ALB** (Application Load Balancer) | HTTP/HTTPS/gRPC, host/path/header routing, TLS termination, auth (OIDC/Cognito), WAF |
-| L4 load balancer | **NLB** (Network Load Balancer) | TCP/UDP/TLS, static IP per AZ, huge throughput, preserves client IP (depending on target type) |
-| "Bump in the wire" for appliances | **GWLB** (Gateway Load Balancer) | Sends packets through firewalls/IDS appliances, GENEVE on UDP 6081 |
-| CDN (distributed reverse proxy) | **CloudFront** | Caching at edge locations, TLS at the edge, origins = S3/ALB/any HTTP server |
-| API gateway | **API Gateway** | REST/HTTP/WebSocket APIs, auth, throttling per client, usage plans |
-| Anycast global entry point | **Global Accelerator** | Two static anycast IPs, traffic enters the AWS backbone at the nearest edge, fast regional failover |
-| DNS-based / global load balancing | **Route 53** routing policies | Weighted, latency, failover, geo, health checks ([[Route 53]], [[DNS in production]]) |
-| Service registry | **Cloud Map** | Registry with DNS or API-based lookup, health status |
-| Service mesh / service-to-service discovery | **ECS Service Connect**, **VPC Lattice** (App Mesh is being retired) | Discovery + balancing + retries between services |
-| Kubernetes Service / Ingress | **EKS** + AWS Load Balancer Controller | Ingress → ALB, `Service type: LoadBalancer` → NLB, pods as IP targets |
-| Private exposure of one service | **PrivateLink** (endpoint services behind an NLB) | One-way, per service, works across accounts and overlapping CIDRs |
-| Forward proxy / egress filtering | No classic managed one: **Squid on EC2**, **Network Firewall** domain rules, **Route 53 Resolver DNS Firewall**, NAT gateway | See below |
+| Concept (vendor-neutral)                    | AWS product                                                                                                                  | Notes                                                                                               |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| L7 load balancer / [[Reverse proxy]]        | **ALB** (Application Load Balancer)                                                                                          | HTTP/HTTPS/gRPC, host/path/header routing, TLS termination, auth (OIDC/Cognito), WAF                |
+| L4 load balancer                            | **NLB** (Network Load Balancer)                                                                                              | TCP/UDP/TLS, static IP per AZ, huge throughput, preserves client IP (depending on target type)      |
+| "Bump in the wire" for appliances           | **GWLB** (Gateway Load Balancer)                                                                                             | Sends packets through firewalls/IDS appliances, GENEVE on UDP 6081                                  |
+| CDN (distributed reverse proxy)             | **CloudFront**                                                                                                               | Caching at edge locations, TLS at the edge, origins = S3/ALB/any HTTP server                        |
+| API gateway                                 | **API Gateway**                                                                                                              | REST/HTTP/WebSocket APIs, auth, throttling per client, usage plans                                  |
+| Anycast global entry point                  | **Global Accelerator**                                                                                                       | Two static anycast IPs, traffic enters the AWS backbone at the nearest edge, fast regional failover |
+| DNS-based / global load balancing           | **Route 53** routing policies                                                                                                | Weighted, latency, failover, geo, health checks ([[Route 53]], [[DNS in production]])               |
+| Service registry                            | **Cloud Map**                                                                                                                | Registry with DNS or API-based lookup, health status                                                |
+| Service mesh / service-to-service discovery | **ECS Service Connect**, **VPC Lattice** (App Mesh is being retired)                                                         | Discovery + balancing + retries between services                                                    |
+| Kubernetes Service / Ingress                | **EKS** + AWS Load Balancer Controller                                                                                       | Ingress → ALB, `Service type: LoadBalancer` → NLB, pods as IP targets                               |
+| Private exposure of one service             | **PrivateLink** (endpoint services behind an NLB)                                                                            | One-way, per service, works across accounts and overlapping CIDRs                                   |
+| Forward proxy / egress filtering            | No classic managed one: **Squid on EC2**, **Network Firewall** domain rules, **Route 53 Resolver DNS Firewall**, NAT gateway | See below                                                                                           |
 
 ## A typical request path, and who does what
 

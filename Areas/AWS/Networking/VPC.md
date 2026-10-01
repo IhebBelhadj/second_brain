@@ -213,6 +213,7 @@ Public  subnet route table:  0.0.0.0/0 → igw-xxxx   (the NAT itself uses the I
 - [[Bastion host]]: the door into private subnets
 - [[Route 53]]: private hosted zones give internal DNS names inside the VPC
 - [[Lambda]]: optional VPC attachment
+- [[S3]]: the gateway endpoint keeps private subnets' S3 traffic off the NAT gateway
 - [[Lightsail]]: lives in a hidden AWS-managed VPC, which can be peered with my default VPC
 - Big picture → [[How AWS services connect]]
 

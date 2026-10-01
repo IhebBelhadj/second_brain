@@ -21,7 +21,7 @@ tags: [aws]
 |                         | EKS                            | Managed Kubernetes                                                                                                                      |
 |                         | Fargate                        | Serverless engine for ECS/EKS — no EC2 instances to manage                                                                              |
 |                         | ECR                            | Private registry for container images                                                                                                   |
-| **Storage**             | S3                             | Object storage, effectively unlimited, accessed by key                                                                                  |
+| **Storage**             | [[S3]]                         | Object storage, effectively unlimited, accessed by key                                                                                  |
 |                         | EBS                            | Block volumes attached to one EC2 instance at a time                                                                                    |
 |                         | EFS                            | Shared filesystem many instances can mount at once                                                                                      |
 |                         | FSx                            | Managed third-party filesystems (Windows, Lustre, NetApp, OpenZFS)                                                                      |

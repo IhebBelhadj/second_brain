@@ -147,6 +147,7 @@ Source IP: ...
 - [[AWS Identity Center]]: the modern way for people to log in (instead of IAM users)
 - [[CloudTrail]]: records everything IAM identities do
 - [[EC2]], [[Lambda]]: get permissions through roles
+- [[S3]]: bucket policies are the resource-based policy I'll write most, and cross-account access needs both sides
 - Big picture → [[How AWS services connect]]
 
 ## Flashcards

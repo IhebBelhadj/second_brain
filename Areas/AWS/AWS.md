@@ -26,6 +26,9 @@ tags: [topic]
 - Not written yet: *[[EBS]]* (disks for EC2) · *[[EFS]]* (shared NFS)
 - The vendor-neutral side (block/file/object, RAID, backups…) → [[Storage]]
 
+## Databases (where my app's data lives)
+- [[RDS]]: managed relational databases. What I give up (no SSH), Multi-AZ vs read replicas, failover through the endpoint, backups and point-in-time restore (always a new instance), RDS Proxy, Aurora, and the connection problems I'll debug
+
 ## Compute (what runs my code)
 - [[EC2]]: virtual machines, launch templates
 - [[Load balancers]]: ALB / NLB and **target groups**
@@ -60,4 +63,4 @@ SORT confidence ASC
 ## Open questions
 - What is **VPC Lattice** exactly? (came up in [[Auto Scaling]])
 - What is the transit gateway **Connect** attachment? (came up in [[Connecting VPCs]])
-- CloudFront and RDS don't have their own notes yet, and they show up in almost every architecture (S3 done → [[S3]])
+- CloudFront doesn't have its own note yet, and it shows up in almost every architecture (S3 and RDS done → [[S3]], [[RDS]])

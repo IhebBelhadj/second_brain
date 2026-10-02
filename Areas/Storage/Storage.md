@@ -67,5 +67,5 @@ SORT confidence ASC
 ```
 
 ## Open questions
-- Where do databases fit? Probably their own area later (RDS, DynamoDB, how a database uses the disk), with only the disk side here
+- Where do databases fit? Probably their own area later (RDS, DynamoDB, how a database uses the disk), with only the disk side here. For now [[RDS]] lives in the AWS area
 - How do EBS snapshots end up "in S3" (my [[EC2]] note says so) when I can't see them in any bucket?

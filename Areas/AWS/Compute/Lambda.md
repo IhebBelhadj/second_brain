@@ -144,6 +144,7 @@ Lambda (in VPC, private subnet) ──► NAT GW ──► internet   ✅ needs 
 - [[Load balancers]]: Lambda can be a target group target
 - [[VPC]]: only when it needs private resources, and then NAT for internet
 - [[Route 53]] + [[Certificate Manager (ACM)]]: a custom domain on API Gateway in front of Lambda
+- [[RDS]]: reaching it needs VPC attachment, and many executions need RDS Proxy
 - [[S3]]: a classic trigger (object uploaded → function runs)
 - [[CloudTrail]]: logs who changed/invoked functions (API calls). CloudWatch holds the function's own logs
 - vs [[EC2]] and [[Lightsail]] → [[EC2 vs Lightsail vs Lambda]]

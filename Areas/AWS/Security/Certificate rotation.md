@@ -195,7 +195,7 @@ Typical setup: EventBridge rule on the expiration / action-required events → S
 
 | Where | What rotates | What I must do |
 |---|---|---|
-| **RDS / Aurora** | The server certificate's CA (e.g. `rds-ca-2019` → `rds-ca-rsa2048-g1`) | Update clients' trust bundles **first**, then modify the DB instance to the new CA (may need a restart). Apps using `sslmode=verify-full` break if the bundle is old |
+| **[[RDS]] / Aurora** | The server certificate's CA (e.g. `rds-ca-2019` → `rds-ca-rsa2048-g1`) | Update clients' trust bundles **first**, then modify the DB instance to the new CA (may need a restart). Apps using `sslmode=verify-full` break if the bundle is old |
 | **ALB mTLS trust store** | My client-CA bundle in S3 | Upload a new bundle (old + new CA during the overlap), update the trust store |
 | **API Gateway mTLS** | Truststore file in S3 | Upload a new version, update the domain's truststore version |
 | **IoT Core** device certificates | Each device's certificate | Rotate with IoT Jobs / fleet provisioning before expiry |

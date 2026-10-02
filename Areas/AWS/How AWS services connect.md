@@ -60,6 +60,7 @@ And around all of it:
 | [[Lambda]] | API Gateway, ALB, S3, SQS, EventBridge… | Something happens → Lambda runs. Logs go to CloudWatch |
 | [[Lambda]] | [[VPC]] | Only needed if the function must reach private things (like a DB) |
 | [[Lightsail]] | [[EC2]] (export), VPC (peering), Route 53 | Its own mini-world, with exits to "real" AWS when I outgrow it |
+| [[RDS]] | VPC private subnets (DB subnet group), security groups, Secrets Manager, KMS | The app's database, reached through an endpoint DNS name |
 | [[Bastion host]] | VPC public subnet, security groups | The one door in from outside to my private subnets |
 | [[IAM]] | Everything | Users/roles + policies. Lambda and EC2 get permissions through **roles** |
 | [[CloudTrail]] | Everything | Logs every API call |

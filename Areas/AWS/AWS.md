@@ -37,6 +37,15 @@ tags: [topic]
 - [[Lightsail]]: the "easy mode" VPS
 - [[EC2 vs Lightsail vs Lambda]]: which one should I pick?
 
+## Integration (how my services talk without waiting for each other)
+- [[SQS]]: queues. Consumers pull and delete, visibility timeout and duplicates, dead-letter queues, standard vs FIFO (message groups), scaling workers on queue depth, Lambda batches
+- [[SNS]]: pub/sub topics. One publish → every subscriber, fan-out to one SQS queue per consumer, filter policies, the envelope and raw delivery
+- [[EventBridge]]: event buses and rules. Reacting to AWS's own events, routing my events by content, Scheduler, cross-account buses, archive and replay, Pipes
+- [[SQS vs SNS vs EventBridge]]: which one (and which combination), plus when the answer is Kinesis, Amazon MQ or Step Functions instead
+- [[Kafka vs AWS messaging services]]: Kafka (a replayable log) next to MSK, Kinesis, SQS, SNS and EventBridge, the exam keywords for each, and a design that combines them
+- Not written yet: *[[Amazon MSK]]* · *[[Kinesis Data Streams]]*
+- The vendor-neutral side (Kafka, delivery guarantees…) → [[Messaging]]
+
 ## Security, identity & governance (who can do what)
 - [[IAM]]: users, groups, roles, policies
 - [[AWS Organizations]]: many accounts, SCPs
@@ -50,6 +59,7 @@ tags: [topic]
 
 ## Related areas
 - [[Networking]]: protocols behind all this (BGP, ICMP), routing, VPNs (IPsec/IKE), TLS
+- [[Messaging]]: queues vs pub/sub vs logs, [[Kafka]], the concepts behind SQS/SNS/EventBridge
 - [[Storage]]: block vs file vs object, filesystems, backups, the concepts behind S3/EBS/EFS
 
 ## Weakest first

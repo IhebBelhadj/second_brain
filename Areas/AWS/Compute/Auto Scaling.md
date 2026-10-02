@@ -215,7 +215,8 @@ I can attach the load balancer here. It lists my existing target group, since th
 - [[Load balancers]]: the target group is the meeting point
 - [[VPC]]: the ASG spreads instances over subnets in several AZs
 - CloudWatch: metrics that drive scaling policies
-- SNS: notifications
+- [[SNS]]: notifications
+- [[SQS]]: worker groups scaled on queue depth (backlog per instance)
 - [[Lightsail]]: has **no** auto scaling, one of the main reasons to move to EC2
 - [[Lambda]]: scales by itself, no ASG needed
 - Big picture → [[How AWS services connect]]

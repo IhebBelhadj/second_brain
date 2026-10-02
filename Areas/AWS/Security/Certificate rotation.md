@@ -220,7 +220,7 @@ Typical setup: EventBridge rule on the expiration / action-required events → S
 
 ## Related
 - Depends on:: [[TLS]], [[Certificates and PKI]] (chains, trust stores, CAs)
-- AWS:: [[Certificate Manager (ACM)]], [[Load balancers]], [[Route 53]] (DNS validation)
+- AWS:: [[Certificate Manager (ACM)]], [[Load balancers]], [[Route 53]] (DNS validation), [[EventBridge]] + [[SNS]] (expiry alerts)
 - Used in:: [[IPsec and IKE]] (certificate-authenticated tunnels), [[VPN]], [[mTLS]]
 - Short-lived certificates at scale:: [[Service mesh]], [[Workload identity (SPIFFE)]]
 

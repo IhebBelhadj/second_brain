@@ -22,7 +22,7 @@ An **Obsidian vault** of study notes. The owner is working toward **systems engi
 |---|---|---|
 | `Home.md` | Dashboard: Dataview queries (weakest notes, inbox, projects, topics). Don't hand-edit the queries | |
 | `How this works.md` | The owner's own manual for the system: folders, templates, properties. Read it before restructuring anything | |
-| `Areas/` | Subjects built up over time, **one folder per subject** with a topic index | **Where almost everything is**: `Networking/`, `AWS/`, `Storage/` |
+| `Areas/` | Subjects built up over time, **one folder per subject** with a topic index | **Where almost everything is**: `Networking/`, `AWS/`, `Storage/`, `Messaging/` |
 | `Inbox/` | Undecided captures | Nearly empty |
 | `Journal/` | Daily/weekly notes | Empty |
 | `Notes/` | The owner's own ideas | Empty |
@@ -41,6 +41,7 @@ An **Obsidian vault** of study notes. The owner is working toward **systems engi
 | Networking | `Areas/Networking/AGENTS.md` | `Areas/Networking/Networking.md` | **Vendor-neutral** networking as a systems engineer needs it: layers, L2, L3, DNS, security, proxies/LB, VPNs. Ordered as a learning path |
 | AWS | `Areas/AWS/AGENTS.md` | `Areas/AWS/AWS.md` | AWS services for the certification, and how the Networking concepts map onto AWS products |
 | Storage | `Areas/Storage/AGENTS.md` | `Areas/Storage/Storage.md` | **Vendor-neutral** storage: block/file/object, filesystems, RAID, network storage, backups, distributed storage. Ordered as a learning path. Mostly a roadmap so far |
+| Messaging | `Areas/Messaging/AGENTS.md` | `Areas/Messaging/Messaging.md` | **Vendor-neutral** messaging: queues, pub/sub, event streaming (Kafka), delivery guarantees, event-driven patterns. Ordered as a learning path. Mostly a roadmap so far |
 
 A new subject gets its own `Areas/<Subject>/` folder with an index note `<Subject>.md` (type `topic`, from `Templates/Topic.md`), its own `AGENTS.md` and `CLAUDE.md`, and a row in the table above.
 
@@ -68,7 +69,7 @@ aliases: [DNS records, dig]   # optional: other names people link with
 
 **Structure of a knowledge note** (match the existing ones):
 1. `> [!abstract] In one sentence` callout
-2. **The misconception(s)**: the wrong mental model, then what's actually true, often as a table
+2. **Common misconceptions**: the wrong mental model, then what's actually true, often as a table. Frame them neutrally ("Wrong mental model: …"), **never as the owner's past** (no "The misconceptions I had", "I thought…", "I mixed them up for weeks"): invented memories don't help studying
 3. **Build-up**: a concrete scenario (named hosts, real-looking IPs from the documentation ranges `192.0.2.0/24`, `198.51.100.0/24`, `203.0.113.0/24`, or private ranges), each stage fixing the previous one's problem
 4. **Advanced problems**: real failure modes, their symptoms, and the fix
 5. For cloud-applicable topics, a section on how a cloud (AWS) does it **at the end**, never as the frame of a Networking note
@@ -78,7 +79,7 @@ aliases: [DNS records, dig]   # optional: other names people link with
 9. `## Flashcards`, then `#flashcards` on its own line, then one card per line: `Question? :: Answer` (the Spaced Repetition plugin reads this exact syntax)
 
 **Style:**
-- First person, plain and human ("I thought…", "what I'd do"). Explain *why*, not just *what*
+- Plain and human. First person is fine for the scenario and advice ("I add a queue", "what I'd do"), but don't invent what the owner thought, felt or did in the past. Explain *why*, not just *what*
 - **Mermaid** for anything with branches, sequences or several boxes (flowcharts, sequence diagrams). No ASCII art for complex diagrams. Colours only through `classDef` with explicit text colours, so the diagram stays readable in light and dark themes
 - Tables for comparisons. Callouts: `[!abstract]`, `[!tip]`, `[!warning]`, `[!info]`, `[!note]`, `[!example]-`, `[!question]`
 - Keep Networking notes vendor-neutral. Put AWS specifics in the AWS area and link across

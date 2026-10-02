@@ -146,6 +146,7 @@ Lambda (in VPC, private subnet) ──► NAT GW ──► internet   ✅ needs 
 - [[Route 53]] + [[Certificate Manager (ACM)]]: a custom domain on API Gateway in front of Lambda
 - [[RDS]]: reaching it needs VPC attachment, and many executions need RDS Proxy
 - [[S3]]: a classic trigger (object uploaded → function runs)
+- [[SQS]], [[SNS]], [[EventBridge]]: the usual async triggers (queue polled by an event source mapping, topic push, event rules and schedules). Which one → [[SQS vs SNS vs EventBridge]]
 - [[CloudTrail]]: logs who changed/invoked functions (API calls). CloudWatch holds the function's own logs
 - vs [[EC2]] and [[Lightsail]] → [[EC2 vs Lightsail vs Lambda]]
 - Big picture → [[How AWS services connect]]

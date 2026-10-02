@@ -30,6 +30,12 @@ AWS/
 │   └── Bastion host.md             reaching private instances
 ├── Databases/
 │   └── RDS.md                      Multi-AZ vs replicas, backups/PITR, RDS Proxy, Aurora, connection debugging
+├── Integration/
+│   ├── SQS.md                      queues, visibility timeout, DLQ, standard vs FIFO, scaling consumers
+│   ├── SNS.md                      pub/sub topics, fan-out to SQS, filter policies, subscriber types
+│   ├── EventBridge.md              buses, rules/patterns, AWS service events, Scheduler, archive/replay, Pipes
+│   ├── SQS vs SNS vs EventBridge.md   which to pick, common exam patterns
+│   └── Kafka vs AWS messaging services.md   Kafka vs MSK/Kinesis/SQS/SNS/EventBridge (also indexed in Messaging)
 ├── Storage/
 │   └── S3.md                       buckets, storage classes, lifecycle, versioning, replication, access, endpoints (also indexed in Storage)
 └── Security/
@@ -53,6 +59,7 @@ Many notes embed console screenshots from `Attachments/` (`![[aws-console … si
 | Identity, encryption, audit, protection (KMS, Secrets Manager, Shield, GuardDuty) | `Security/` |
 | Storage (EBS, EFS, AWS Backup) | `Storage/` (also add it to section 7 of `Areas/Storage/Storage.md`) |
 | Databases (DynamoDB, ElastiCache) | `Databases/` |
+| Messaging and workflows (Kinesis, MSK, Step Functions, Amazon MQ) | `Integration/` (also add it to section 5 of `Areas/Messaging/Messaging.md`) |
 | Cross-cutting (pricing, Well-Architected, exam strategy) | Area root |
 
 `AWS.md` → "Open questions" lists gaps the owner has noticed (e.g. no CloudFront note yet).

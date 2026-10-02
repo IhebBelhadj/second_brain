@@ -11,6 +11,7 @@ Messaging/
 ├── Messaging.md                   topic index (the learning path)
 ├── AMQP.md                        0-9-1 vs 1.0, exchanges/bindings, acks, confirms, durability, DLX
 ├── MQTT.md                        topics/wildcards, QoS, retained, LWT, sessions, IoT security, IoT Core
+├── Saga pattern.md               local transactions + compensations, pivot, choreography vs orchestration, isolation, outbox, Step Functions
 ├── JMS.md                         Java API (not a protocol), queues/topics, durable subs, selectors, transactions, Amazon MQ
 └── Kafka.md                       log, partitions/keys, offsets, consumer groups, replication, exactly-once, compaction, debugging
 ```

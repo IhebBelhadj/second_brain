@@ -126,7 +126,7 @@ The warehouse consumer receives an order, inserts it into its database, and cras
 
 **Options:**
 - **Transacted session** + idempotent insert (unique order ID): redelivery hits the unique constraint and is skipped. Simple and robust
-- **XA (two-phase commit)**: one distributed transaction covering the JMS session **and** the database, coordinated by the application server. Exactly-once between broker and database, at the cost of complexity, performance and tricky failure states (in-doubt transactions). Common in older enterprise systems, rarely chosen for new ones
+- **XA (two-phase commit)**: one distributed transaction covering the JMS session **and** the database, coordinated by the application server. Exactly-once between broker and database, at the cost of complexity, performance and tricky failure states (in-doubt transactions). Common in older enterprise systems, rarely chosen for new ones. Across services that can't share a transaction, the usual alternative is a [[Saga pattern|saga]]
 
 ### Stage 6: moving the OMS to AWS
 
@@ -186,6 +186,7 @@ The OMS must leave the data center. The broker is ActiveMQ.
 - Amazon MQ runs ActiveMQ and RabbitMQ, not IBM MQ
 
 ## Related
+- Instead of XA across services:: [[Saga pattern]]
 - Same family:: [[AMQP]] (AMQP 1.0 is a common wire protocol under JMS), [[MQTT]]
 - Compared with:: [[SQS]] (queues), [[SNS]] (topics), [[Kafka]]
 - In AWS:: [[SQS vs SNS vs EventBridge]] (when Amazon MQ is the answer), [[Connecting AWS to a private network]] (hybrid brokers)

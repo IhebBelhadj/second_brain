@@ -34,7 +34,8 @@ flowchart TD
 - [[Kafka]]: a replicated, partitioned log. Topics, partitions and keys, offsets and consumer groups, replication (ISR, `acks`, `min.insync.replicas`), at-least-once vs exactly-once, compaction, KRaft, and the problems I'll debug (lag, rebalances, hot partitions, `advertised.listeners`)
 
 ## 4. Patterns
-- *[[Event-driven architecture]]*: events vs commands, choreography vs orchestration, the transactional outbox, sagas, change data capture
+- [[Saga pattern]]: consistency across services without a distributed transaction. Local transactions + compensations in reverse, pivot steps, choreography vs orchestration, isolation countermeasures, failing compensations, the outbox. Applied with [[Step Functions]]
+- *[[Event-driven architecture]]*: events vs commands, choreography vs orchestration, the transactional outbox, change data capture
 
 ## 5. Applied: cloud messaging (AWS today)
 The notes below live in `Areas/AWS/Integration/` with `topic: AWS`.

@@ -163,7 +163,7 @@ What this buys:
 
 ### Stage 3: the failure path is a saga
 
-Payment succeeded, then shipment creation fails for good. There is no database transaction spanning a payment provider, DynamoDB and a carrier API. The **saga pattern**: each step that changed something has a **compensating** step that undoes it, and the Catch runs them in reverse order (refund, release stock, notify). The compensations must themselves be idempotent and retried, since they can fail too.
+Payment succeeded, then shipment creation fails for good. There is no database transaction spanning a payment provider, DynamoDB and a carrier API. The **[[Saga pattern]]**: each step that changed something has a **compensating** step that undoes it, and the Catch runs them in reverse order (refund, release stock, notify). The compensations must themselves be idempotent and retried, since they can fail too. The pattern itself (pivot steps, isolation countermeasures, choreography vs orchestration, the outbox) is in [[Saga pattern]].
 
 ### Stage 4: the manager's approval (callback)
 
@@ -215,7 +215,7 @@ The concurrency limit is the real design decision: 10,000 parallel Lambdas will 
 
 | Architecture | Shape | Type |
 |---|---|---|
-| **Order / booking saga** | Event → validate → parallel steps → Catch with compensations (above) | Standard |
+| **Order / booking [[Saga pattern\|saga]]** | Event → validate → parallel steps → Catch with compensations (above) | Standard |
 | **Human approval** | Task with `.waitForTaskToken`, token in an email/UI, timeout + escalation (above) | Standard |
 | **Large-scale batch over S3** | Distributed Map over objects, batches, tolerated failures, results to S3 (above) | Standard parent, Express or Standard children |
 | **Synchronous API backend** | API Gateway → `StartSyncExecution` → Express workflow calling 3–4 services → response to the client in < 29 s | Express (sync) |
@@ -309,6 +309,7 @@ Exam keywords: "serverless orchestration", "coordinate Lambda functions / micros
 - The state machine needs an **execution role** with permission for every service it calls
 
 ## Related
+- Patterns it implements:: [[Saga pattern]]
 - Event sources and siblings:: [[EventBridge]], [[SQS]], [[SNS]]
 - Choosing an integration service:: [[SQS vs SNS vs EventBridge]]
 - Tasks it runs:: [[Lambda]], [[EC2]] (via SSM), [[S3]], [[RDS]]

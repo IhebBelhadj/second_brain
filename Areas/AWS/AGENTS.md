@@ -26,7 +26,7 @@ AWS/
 │   ├── Connecting VPCs.md          peering vs transit gateway, transitivity
 │   ├── Connecting AWS to a private network.md   managed VPN + 8 workarounds and their limits
 │   ├── Proxies, load balancing and discovery in AWS.md   ALB/NLB/GWLB/CloudFront/API GW/GA/Cloud Map/Lattice, egress control
-│   ├── Route 53.md                 hosted zones, records, routing policies, resolver
+│   ├── Route 53.md                 hosted zones, Alias, private zones, health checks/failover, routing policies, Resolver endpoints, DNSSEC
 │   └── Bastion host.md             reaching private instances
 ├── Databases/
 │   └── RDS.md                      Multi-AZ vs replicas, backups/PITR, RDS Proxy, Aurora, connection debugging

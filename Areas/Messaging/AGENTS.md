@@ -9,6 +9,9 @@
 ```
 Messaging/
 ├── Messaging.md                   topic index (the learning path)
+├── AMQP.md                        0-9-1 vs 1.0, exchanges/bindings, acks, confirms, durability, DLX
+├── MQTT.md                        topics/wildcards, QoS, retained, LWT, sessions, IoT security, IoT Core
+├── JMS.md                         Java API (not a protocol), queues/topics, durable subs, selectors, transactions, Amazon MQ
 └── Kafka.md                       log, partitions/keys, offsets, consumer groups, replication, exactly-once, compaction, debugging
 ```
 
@@ -19,6 +22,7 @@ Messaging/
 | It's about… | Folder |
 |---|---|
 | Queue/pub-sub/log shapes, delivery guarantees (section 1) | Area root |
+| A protocol or API (AMQP, MQTT, JMS, STOMP) | Area root |
 | A broker or streaming platform (RabbitMQ, Kafka, NATS, Pulsar) | Area root, or a folder once 2+ notes share it |
 | Architecture patterns (outbox, sagas, CDC) (section 4) | Area root |
 | An AWS messaging service (MSK, Kinesis, Step Functions) | `Areas/AWS/Integration/`, `topic: AWS`, listed in section 5 of `Messaging.md` |

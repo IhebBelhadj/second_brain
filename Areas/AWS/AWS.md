@@ -17,7 +17,7 @@ tags: [topic]
 - [[Connecting VPCs]]: peering vs transit gateway
 - [[Proxies, load balancing and discovery in AWS]]: ALB, NLB, GWLB, CloudFront, API Gateway, Global Accelerator, Cloud Map, Service Connect, VPC Lattice, and egress control, mapped to the general concepts
 - [[Connecting AWS to a private network]]: the managed VPN, and eight workarounds (EC2 as a VPN router, dial-out tunnels, mesh, SSH, connectors…) with where each one breaks
-- [[Route 53]]: DNS, turns `myapp.com` into an address
+- [[Route 53]]: DNS, turns `myapp.com` into an address. Delegation from the registrar, Alias vs CNAME, private hosted zones (and the no-fallback trap), health checks and failover timing, routing policies combined, Resolver endpoints for hybrid DNS, DNSSEC and DNS Firewall
 - [[Bastion host]]: how I get into servers sitting in a private subnet
 - [[Security groups]]: the firewall on each resource, and how it differs from NACLs
 

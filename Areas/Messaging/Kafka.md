@@ -209,6 +209,7 @@ The `customer-profiles` topic holds profile updates keyed by `customerId`. With 
 ## Related
 - Compared with:: [[Kafka vs AWS messaging services]]
 - Queue and pub/sub alternatives:: [[SQS]], [[SNS]], [[EventBridge]]
+- Broker protocols:: [[AMQP]], [[MQTT]], [[JMS]]
 - Network side:: [[NAT and PAT]], [[DNS]], [[Load balancing]], [[TLS]], [[mTLS]] (client authentication)
 - Storage side:: [[S3]] (tiered storage, sink connectors), *[[Storage replication]]*
 - Area:: [[Messaging]]

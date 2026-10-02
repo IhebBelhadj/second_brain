@@ -62,19 +62,19 @@ flowchart TD
 
 ## The patterns the exam keeps asking about
 
-| Situation | Answer |
-|---|---|
-| Web tier must not wait for slow processing, or must survive spikes | Web tier → **SQS** → workers (ASG scaled on queue depth, or Lambda) |
-| One event, several independent consumers, none may lose messages | **SNS → one SQS queue each** (fan-out) |
-| Same, but each consumer wants only some events, filtered on the body | **EventBridge** rules (or SNS filter policies) → SQS |
-| React to "an instance stopped / a certificate is expiring / GuardDuty found something" | **EventBridge** rule on the default bus |
-| Run something every night, or once at a given date | **EventBridge Scheduler** |
-| Strict order + no duplicates | **SQS FIFO** (with SNS FIFO in front for fan-out) |
-| Email/SMS/push to people | **SNS** (customer email → SES) |
-| Re-process past events after a bug | **EventBridge archive and replay** |
-| Real-time stream, many readers replaying the same data, ordering per shard | Not these three: **Kinesis Data Streams**, or **MSK** for Kafka (see [[Kafka vs AWS messaging services]]) |
-| Migrating an app that already speaks AMQP/MQTT/JMS | Not these three: **Amazon MQ** |
-| A multi-step workflow with branches, waits and retries | Not these three: **Step Functions** (orchestration, while these do choreography) |
+| Situation                                                                              | Answer                                                                                                    |
+| -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Web tier must not wait for slow processing, or must survive spikes                     | Web tier → **SQS** → workers (ASG scaled on queue depth, or Lambda)                                       |
+| One event, several independent consumers, none may lose messages                       | **SNS → one SQS queue each** (fan-out)                                                                    |
+| Same, but each consumer wants only some events, filtered on the body                   | **EventBridge** rules (or SNS filter policies) → SQS                                                      |
+| React to "an instance stopped / a certificate is expiring / GuardDuty found something" | **EventBridge** rule on the default bus                                                                   |
+| Run something every night, or once at a given date                                     | **EventBridge Scheduler**                                                                                 |
+| Strict order + no duplicates                                                           | **SQS FIFO** (with SNS FIFO in front for fan-out)                                                         |
+| Email/SMS/push to people                                                               | **SNS** (customer email → SES)                                                                            |
+| Re-process past events after a bug                                                     | **EventBridge archive and replay**                                                                        |
+| Real-time stream, many readers replaying the same data, ordering per shard             | Not these three: **Kinesis Data Streams**, or **MSK** for Kafka (see [[Kafka vs AWS messaging services]]) |
+| Migrating an app that already speaks [[AMQP]]/[[MQTT]]/[[JMS]]                                     | Not these three: **Amazon MQ**                                                                            |
+| A multi-step workflow with branches, waits and retries                                 | Not these three: **Step Functions** (orchestration, while these do choreography)                          |
 
 ## If you have to choose
 - If the consumer might be slow, down, or overwhelmed → **SQS** (in front of it, always)

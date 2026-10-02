@@ -42,6 +42,7 @@ The notes below live in `Areas/AWS/Integration/` with `topic: AWS`.
 - [[SNS]]: managed pub/sub, fan-out to queues
 - [[EventBridge]]: event bus with content-based rules, AWS service events, Scheduler, archive and replay
 - [[SQS vs SNS vs EventBridge]]: which of the three
+- [[Step Functions]]: orchestration rather than messaging. Workflows with retries, waits, callbacks and sagas, and how it differs from Airflow
 - [[Kafka vs AWS messaging services]]: Kafka next to MSK, Kinesis, SQS, SNS and EventBridge, and how to choose
 - Not written yet: *[[Amazon MSK]]* · *[[Kinesis Data Streams]]* · *[[Amazon MQ]]* (managed ActiveMQ/RabbitMQ, the AWS home for AMQP/MQTT/JMS apps)
 

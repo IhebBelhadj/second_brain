@@ -201,6 +201,7 @@ The warehouse puts stock changes in an SQS queue, and a tiny Lambda's only job i
 
 ## Related
 - Siblings:: [[SQS]], [[SNS]]
+- Orchestration (one owner for a multi-step process):: [[Step Functions]]
 - Choosing between them:: [[SQS vs SNS vs EventBridge]]
 - Streams instead of queues:: [[Kafka]], [[Kafka vs AWS messaging services]]
 - Targets:: [[Lambda]], [[SQS]], [[SNS]]

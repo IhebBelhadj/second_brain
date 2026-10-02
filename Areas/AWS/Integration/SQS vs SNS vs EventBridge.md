@@ -74,7 +74,7 @@ flowchart TD
 | Re-process past events after a bug                                                     | **EventBridge archive and replay**                                                                        |
 | Real-time stream, many readers replaying the same data, ordering per shard             | Not these three: **Kinesis Data Streams**, or **MSK** for Kafka (see [[Kafka vs AWS messaging services]]) |
 | Migrating an app that already speaks [[AMQP]]/[[MQTT]]/[[JMS]]                                     | Not these three: **Amazon MQ**                                                                            |
-| A multi-step workflow with branches, waits and retries                                 | Not these three: **Step Functions** (orchestration, while these do choreography)                          |
+| A multi-step workflow with branches, waits and retries                                 | Not these three: [[Step Functions]] (orchestration, while these do choreography)                          |
 
 ## If you have to choose
 - If the consumer might be slow, down, or overwhelmed → **SQS** (in front of it, always)

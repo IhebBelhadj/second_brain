@@ -15,7 +15,7 @@ Messaging/
 └── Kafka.md                       log, partitions/keys, offsets, consumer groups, replication, exactly-once, compaction, debugging
 ```
 
-`SQS.md`, `SNS.md`, `EventBridge.md`, `SQS vs SNS vs EventBridge.md` and `Kafka vs AWS messaging services.md` are listed in this area's index (section 5) but live in `Areas/AWS/Integration/` with `topic: AWS`.
+`SQS.md`, `SNS.md`, `EventBridge.md`, `Step Functions.md`, `SQS vs SNS vs EventBridge.md` and `Kafka vs AWS messaging services.md` are listed in this area's index (section 5) but live in `Areas/AWS/Integration/` with `topic: AWS`.
 
 ## Where a new note goes
 

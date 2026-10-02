@@ -34,6 +34,7 @@ AWS/
 │   ├── SQS.md                      queues, visibility timeout, DLQ, standard vs FIFO, scaling consumers
 │   ├── SNS.md                      pub/sub topics, fan-out to SQS, filter policies, subscriber types
 │   ├── EventBridge.md              buses, rules/patterns, AWS service events, Scheduler, archive/replay, Pipes
+│   ├── Step Functions.md           state machines, Standard vs Express, integration patterns, sagas, Distributed Map, architectures, vs Airflow
 │   ├── SQS vs SNS vs EventBridge.md   which to pick, common exam patterns
 │   └── Kafka vs AWS messaging services.md   Kafka vs MSK/Kinesis/SQS/SNS/EventBridge (also indexed in Messaging)
 ├── Storage/

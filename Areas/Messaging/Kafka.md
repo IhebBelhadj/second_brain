@@ -211,6 +211,7 @@ The `customer-profiles` topic holds profile updates keyed by `customerId`. With 
 - Queue and pub/sub alternatives:: [[SQS]], [[SNS]], [[EventBridge]]
 - Broker protocols:: [[AMQP]], [[MQTT]], [[JMS]]
 - Network side:: [[NAT and PAT]], [[DNS]], [[Load balancing]], [[TLS]], [[mTLS]] (client authentication)
+- Partitioning:: [[Hash table]] (hash(key) % n, and what changing n does)
 - Storage side:: [[S3]] (tiered storage, sink connectors), *[[Storage replication]]*
 - Area:: [[Messaging]]
 

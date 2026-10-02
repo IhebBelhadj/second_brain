@@ -101,6 +101,7 @@ In AWS there's nothing to configure: the VPC has no broadcast and no switches I 
 ## Related
 - Foundation:: [[Hubs, switches and routers]], [[VLAN]]
 - Why L3 doesn't have this problem:: [[Network layers]] (TTL), [[Routing tables]]
+- Graph view:: [[Breadth-first search]] (flooding), [[Depth-first search]] (finding loops)
 - Modern fabrics:: [[AS and BGP]], [[Types of VPN]] (VXLAN, EVPN)
 
 ## Flashcards

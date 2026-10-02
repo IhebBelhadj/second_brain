@@ -22,7 +22,7 @@ An **Obsidian vault** of study notes. The owner is working toward **systems engi
 |---|---|---|
 | `Home.md` | Dashboard: Dataview queries (weakest notes, inbox, projects, topics). Don't hand-edit the queries | |
 | `How this works.md` | The owner's own manual for the system: folders, templates, properties. Read it before restructuring anything | |
-| `Areas/` | Subjects built up over time, **one folder per subject** with a topic index | **Where almost everything is**: `Networking/`, `AWS/`, `Storage/`, `Messaging/` |
+| `Areas/` | Subjects built up over time, **one folder per subject** with a topic index | **Where almost everything is**: `Networking/`, `AWS/`, `Storage/`, `Messaging/`, `Data structures and algorithms/` |
 | `Inbox/` | Undecided captures | Nearly empty |
 | `Journal/` | Daily/weekly notes | Empty |
 | `Notes/` | The owner's own ideas | Empty |
@@ -42,6 +42,7 @@ An **Obsidian vault** of study notes. The owner is working toward **systems engi
 | AWS | `Areas/AWS/AGENTS.md` | `Areas/AWS/AWS.md` | AWS services for the certification, and how the Networking concepts map onto AWS products |
 | Storage | `Areas/Storage/AGENTS.md` | `Areas/Storage/Storage.md` | **Vendor-neutral** storage: block/file/object, filesystems, RAID, network storage, backups, distributed storage. Ordered as a learning path. Mostly a roadmap so far |
 | Messaging | `Areas/Messaging/AGENTS.md` | `Areas/Messaging/Messaging.md` | **Vendor-neutral** messaging: queues, pub/sub, event streaming (Kafka), delivery guarantees, event-driven patterns. Ordered as a learning path. Mostly a roadmap so far |
+| Data structures and algorithms | `Areas/Data structures and algorithms/AGENTS.md` | `Areas/Data structures and algorithms/Data structures and algorithms.md` | Data structures, algorithms, techniques and practice problems, with Python code. Ordered as a learning path |
 
 A new subject gets its own `Areas/<Subject>/` folder with an index note `<Subject>.md` (type `topic`, from `Templates/Topic.md`), its own `AGENTS.md` and `CLAUDE.md`, and a row in the table above.
 
@@ -66,10 +67,11 @@ aliases: [DNS records, dig]   # optional: other names people link with
 - Section links `[[DNS#Caching and TTL]]` match the heading text exactly. **Keep headings plain** (no `*emphasis*` or links in headings), and grep for `[[Note#Old heading` before renaming a heading
 - A link to a note that doesn't exist yet is written in italics, `*[[IPv6]]*`: it marks a **planned** note (a roadmap item), not a broken link
 - In tables, escape the pipe in aliased links: `[[IPsec and IKE\|IPsec]]`
+- **Never refer to files outside the vault** (code directories, paths like `~/projects/…`, `.py` file names): Obsidian can't open them and the note stops being self-contained. Quote the relevant code inline instead
 
-**Structure of a knowledge note** (match the existing ones):
+**Structure of a knowledge note** (a default, not a mold: pick what the topic needs. A technique or problem-solving note like [[Recursion]] is organized around *how to solve*, and doesn't open with misconceptions):
 1. `> [!abstract] In one sentence` callout
-2. **Common misconceptions**: the wrong mental model, then what's actually true, often as a table. Frame them neutrally ("Wrong mental model: …"), **never as the owner's past** (no "The misconceptions I had", "I thought…", "I mixed them up for weeks"): invented memories don't help studying
+2. **Common misconceptions** (when there's a real, common wrong model worth correcting): the wrong mental model, then what's actually true, often as a table. Frame them neutrally ("Wrong mental model: …"), **never as the owner's past** (no "The misconceptions I had", "I thought…", "I mixed them up for weeks"): invented memories don't help studying
 3. **Build-up**: a concrete scenario (named hosts, real-looking IPs from the documentation ranges `192.0.2.0/24`, `198.51.100.0/24`, `203.0.113.0/24`, or private ranges), each stage fixing the previous one's problem
 4. **Advanced problems**: real failure modes, their symptoms, and the fix
 5. For cloud-applicable topics, a section on how a cloud (AWS) does it **at the end**, never as the frame of a Networking note

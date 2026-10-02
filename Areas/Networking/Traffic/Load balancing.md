@@ -141,6 +141,7 @@ backend app
 ## Related
 - Built on:: [[Reverse proxy]], [[Network layers]], [[NAT and PAT]] (L4 LBs rewrite addresses)
 - Finding backends:: [[Service discovery]]
+- Hashing behind it:: [[Hash table]] (why `hash % servers` moves keys)
 - Global:: [[DNS in production]], [[AS and BGP]] (anycast, ECMP)
 - Service-to-service:: [[Service mesh]]
 - Applied:: [[Proxies, load balancing and discovery in AWS]], [[Load balancers]]

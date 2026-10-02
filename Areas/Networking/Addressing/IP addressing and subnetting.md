@@ -245,7 +245,7 @@ Same arithmetic, a few extra rules. In AWS (see [[VPC]]):
 - Using `192.168.1.0/24` or `10.0.0.0/16` for anything that might ever connect to something else
 
 ## Related
-- Foundation:: [[Network layers]]
+- Foundation:: [[Network layers]], [[Number base conversion]] (binary, hex)
 - Uses the mask:: [[Hubs, switches and routers]] (direct vs gateway), [[Routing tables]] (longest prefix match), [[ACL]]
 - Running out of addresses:: [[NAT and PAT]], *[[IPv6]]*
 - Planning problems:: [[Overlapping address spaces]], [[VLAN]]

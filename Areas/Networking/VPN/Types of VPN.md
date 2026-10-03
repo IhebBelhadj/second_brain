@@ -337,7 +337,8 @@ flowchart TD
 - Routing:: [[AS and BGP]], [[Policy-based routing]], [[Overlapping address spaces]], [[Routing tables]]
 - Interfaces:: [[Network interfaces]] (tun/tap, GRE, VXLAN, WireGuard)
 - Zero trust inside the network:: [[Service mesh]], [[Workload identity (SPIFFE)]]
-- AWS:: [[Connecting VPCs]]
+- Nesting:: [[Nested VPNs]]
+- AWS:: [[Site-to-Site VPN]] (CloudHub = hub and spoke), [[Transit gateway]] (Connect attachments for SD-WAN), [[Direct Connect]] (a private carrier link, like MPLS), [[Hybrid connectivity architectures]], [[Connecting VPCs]]
 
 ## Flashcards
 #flashcards

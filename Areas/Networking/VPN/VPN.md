@@ -225,15 +225,16 @@ Each client installs its own routes and DNS, and none of them knows about the ot
 - The **same prefix** on two VPNs: only one wins → [[Overlapping address spaces]]
 - One VPN in **full tunnel**: its default route can capture the other VPN's server traffic, unless the host routes / marks are right
 - Clean separation: [[Policy-based routing]] (per-source/per-user tables) or one VPN per **network namespace**
+- One VPN running **inside** another, or VPNs chained through a gateway: [[Nested VPNs]]
 
 ## VPNs in AWS
 
 | Service | Type | Details |
 |---|---|---|
-| **Site-to-Site VPN** | Site-to-site, IPsec | Two tunnels, BGP or static, attaches to a virtual private gateway or transit gateway → [[IPsec and IKE]], [[Connecting VPCs]] |
+| **Site-to-Site VPN** | Site-to-site, IPsec | Two tunnels, BGP or static, attaches to a virtual private gateway or transit gateway → [[Site-to-Site VPN]], [[Transit gateway]] |
 | **Client VPN** | Remote access, OpenVPN-based ([[TLS]]) | Managed endpoint associated with VPC subnets. Auth: mutual certificates, Active Directory, or SAML (SSO). **Authorization rules** say which users reach which CIDRs. Split tunnel optional. The **client CIDR must not overlap** the VPC |
 | **VPN CloudHub** | Hub and spoke | Several sites connected through one virtual private gateway |
-| **Direct Connect** | Not a VPN: a **private physical link** | Not encrypted by default: add IPsec on top, or MACsec on dedicated connections |
+| **Direct Connect** | Not a VPN: a **private physical link** → [[Direct Connect]] | Not encrypted by default: add IPsec on top, or MACsec on dedicated connections |
 | Self-managed | WireGuard/OpenVPN/strongSwan on [[EC2]] | Needs **source/destination check disabled** on the instance, and routes pointing at its ENI. All the variations and their limits → [[Connecting AWS to a private network]] |
 
 ## Easy to get wrong
@@ -248,7 +249,8 @@ Each client installs its own routes and DNS, and none of them knows about the ot
 - Protocols:: [[IPsec and IKE]], [[TLS]], WireGuard (above)
 - Compared:: [[IPsec vs TLS vs WireGuard vs SSH]]
 - Problems:: [[Overlapping address spaces]]
-- AWS:: [[Connecting VPCs]], [[VPC]], [[Bastion host]] (an alternative for admin access)
+- Nesting:: [[Nested VPNs]]
+- AWS:: [[Site-to-Site VPN]], [[Transit gateway]], [[Direct Connect]], [[Hybrid connectivity architectures]], [[Connecting VPCs]], [[VPC]], [[Bastion host]] (an alternative for admin access)
 
 ## Flashcards
 #flashcards

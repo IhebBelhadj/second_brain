@@ -24,6 +24,10 @@ AWS/
 │   ├── VPC.md                      subnets, route tables, internet/NAT gateways, console wizard
 │   ├── Security groups.md          stateful per-interface firewall vs NACLs
 │   ├── Connecting VPCs.md          peering vs transit gateway, transitivity
+│   ├── Site-to-Site VPN.md         customer gateway, VGW, two tunnels, static vs BGP, propagation, CloudHub, limits, troubleshooting
+│   ├── Transit gateway.md          hub for VPNs/VPCs, association vs propagation, segmentation, ECMP, inspection, Connect
+│   ├── Direct Connect.md           physical link, VIF types, DX gateway, VPN backup, resilience, encryption, reaching an instance
+│   ├── Hybrid connectivity architectures.md   problems → designs: many VPCs, bandwidth, HA, overlap, DNS, chained client VPNs
 │   ├── Connecting AWS to a private network.md   managed VPN + 8 workarounds and their limits
 │   ├── Proxies, load balancing and discovery in AWS.md   ALB/NLB/GWLB/CloudFront/API GW/GA/Cloud Map/Lattice, egress control
 │   ├── Route 53.md                 hosted zones, Alias, private zones, health checks/failover, routing policies, Resolver endpoints, DNSSEC

@@ -30,7 +30,7 @@ flowchart LR
     VGW == "IPsec" ==> FW["Company firewall"] --> VM["VM 10.0.0.50"]
 ```
 
-It needs the **company firewall admin** to configure an IPsec peer, and the company side must be reachable on UDP 500/4500. Everything else in this note is a way around one of those two requirements. Details: [[IPsec and IKE]], and why there's a gateway on each side: [[VPN#Site-to-site vs remote access: where does the tunnel end?]].
+It needs the **company firewall admin** to configure an IPsec peer, and the company side must be reachable on UDP 500/4500. Everything else in this note is a way around one of those two requirements. Details: [[Site-to-Site VPN]], [[IPsec and IKE]], and why there's a gateway on each side: [[VPN#Site-to-site vs remote access: where does the tunnel end?]].
 
 ---
 
@@ -270,7 +270,7 @@ flowchart TD
 
 ## Related
 - Concepts:: [[VPN]], [[Types of VPN]], [[IPsec and IKE]], [[Routing tables]], [[Network layers]]
-- AWS:: [[VPC]], [[Connecting VPCs]], [[Security groups]], [[Route 53]], [[Bastion host]], [[EC2]], [[IAM]]
+- AWS:: [[Site-to-Site VPN]], [[Transit gateway]], [[Direct Connect]], [[Hybrid connectivity architectures]], [[VPC]], [[Connecting VPCs]], [[Security groups]], [[Route 53]], [[Bastion host]], [[EC2]], [[IAM]]
 - Problems:: [[Overlapping address spaces]]
 - Alternatives by protocol:: [[IPsec vs TLS vs WireGuard vs SSH]], [[mTLS]]
 

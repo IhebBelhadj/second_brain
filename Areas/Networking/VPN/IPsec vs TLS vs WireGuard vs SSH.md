@@ -90,6 +90,11 @@ HTTPS inside an IPsec tunnel is "double encryption", and that's fine: **IPsec** 
 - If it's **admin access** to a server or reaching one port on a private host → **SSH** (through a [[Bastion host]]), or AWS Session Manager
 - **Never**: PPTP, IKEv1 aggressive mode with PSK, TLS ≤ 1.1, "encrypted but unauthenticated" setups
 
+## Related
+- Part of:: [[VPN]]
+- Stacking them:: [[Nested VPNs]]
+- AWS:: [[Site-to-Site VPN]], [[Connecting AWS to a private network]]
+
 ## Flashcards
 #flashcards
 

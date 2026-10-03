@@ -47,7 +47,8 @@ Networking/
     ├── VPN.md                     ingredients, client internals, site-to-site vs remote access, split tunnel, DNS, MTU
     ├── Types of VPN.md            site-to-site → DMVPN → SD-WAN, ZTNA, mesh overlays, L2 VPNs, MPLS
     ├── IPsec and IKE.md           ESP, IKEv2, policy vs route-based, NAT-T, AWS Site-to-Site
-    └── IPsec vs TLS vs WireGuard vs SSH.md   which one when
+    ├── IPsec vs TLS vs WireGuard vs SSH.md   which one when
+    └── Nested VPNs.md             chained vs stacked VPNs, transitivity, selectors, hairpin, MTU, in the cloud
 ```
 
 `Certificate rotation.md` is listed in this area's index (section 6) but the file lives in `Areas/AWS/Security/` with `topic: AWS`.

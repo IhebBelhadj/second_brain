@@ -16,6 +16,10 @@ tags: [topic]
 - [[VPC]]: my private network. Subnets, route tables, internet gateway, NAT
 - [[Connecting VPCs]]: peering vs transit gateway
 - [[Proxies, load balancing and discovery in AWS]]: ALB, NLB, GWLB, CloudFront, API Gateway, Global Accelerator, Cloud Map, Service Connect, VPC Lattice, and egress control, mapped to the general concepts
+- [[Site-to-Site VPN]]: the managed IPsec VPN. Customer gateway, virtual private gateway, two tunnels, static vs BGP, route propagation, CloudHub, limits (1.25 Gbps, 100 routes, MSS 1379) and the "tunnel UP but nothing works" checklist
+- [[Transit gateway]]: the hub that replaces one VGW per VPC. Association vs propagation, segmentation, VPN ECMP, inspection VPC and appliance mode, peering, RAM, Connect attachments
+- [[Direct Connect]]: a private physical link. Dedicated vs hosted, private/transit/public VIFs, Direct Connect gateway, VPN as backup, resilience, encryption, and what it takes to reach one instance over it
+- [[Hybrid connectivity architectures]]: the problems in the order they show up (many VPCs, bandwidth, failover, overlap, DNS, a client network that's already a chain of VPNs, inspection, multi-region) and the design for each
 - [[Connecting AWS to a private network]]: the managed VPN, and eight workarounds (EC2 as a VPN router, dial-out tunnels, mesh, SSH, connectors…) with where each one breaks
 - [[Route 53]]: DNS, turns `myapp.com` into an address. Delegation from the registrar, Alias vs CNAME, private hosted zones (and the no-fallback trap), health checks and failover timing, routing policies combined, Resolver endpoints for hybrid DNS, DNSSEC and DNS Firewall
 - [[Bastion host]]: how I get into servers sitting in a private subnet
@@ -73,5 +77,5 @@ SORT confidence ASC
 
 ## Open questions
 - What is **VPC Lattice** exactly? (came up in [[Auto Scaling]])
-- What is the transit gateway **Connect** attachment? (came up in [[Connecting VPCs]])
+- ~~What is the transit gateway **Connect** attachment?~~ Answered in [[Transit gateway#Connect attachments: SD-WAN on top]]
 - CloudFront doesn't have its own note yet, and it shows up in almost every architecture (S3 and RDS done → [[S3]], [[RDS]])

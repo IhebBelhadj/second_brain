@@ -174,6 +174,8 @@ flowchart LR
 - Bandwidth is limited per tunnel (about 1.25 Gbps). More → ECMP over several VPNs on a transit gateway, or **Direct Connect**
 - AWS generates a **config file per device vendor** (Cisco, Palo Alto, Fortinet, strongSwan…) with every setting above
 
+The full AWS side (propagation, CloudHub, limits, troubleshooting) → [[Site-to-Site VPN]]. Many VPCs → [[Transit gateway]]. Chaining tunnels through a gateway and why policy-based selectors break it → [[Nested VPNs]].
+
 ## Troubleshooting by symptom
 
 | Symptom | Look at |
@@ -201,7 +203,8 @@ tcpdump -ni eth0 'udp port 500 or udp port 4500 or esp'
 - Part of:: [[VPN]]
 - Compared:: [[IPsec vs TLS vs WireGuard vs SSH]]
 - Routing side:: [[Routing tables]], [[Policy-based routing]], [[AS and BGP]]
-- AWS:: [[Connecting VPCs]], [[VPC]]
+- Chaining:: [[Nested VPNs]]
+- AWS:: [[Site-to-Site VPN]], [[Transit gateway]], [[Direct Connect]], [[Hybrid connectivity architectures]], [[Connecting VPCs]], [[VPC]]
 
 ## Flashcards
 #flashcards

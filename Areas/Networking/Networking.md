@@ -74,12 +74,17 @@ flowchart TD
 - [[Types of VPN]]: site-to-site → DMVPN → SD-WAN, remote access → ZTNA, mesh overlays and NAT hole punching, L2 VPNs, MPLS. Each one as the fix for the previous one's problem
 - [[IPsec and IKE]]: ESP, IKEv2 exchanges, policy- vs route-based, NAT-T, MTU, troubleshooting
 - [[IPsec vs TLS vs WireGuard vs SSH]]: which one to use when
+- [[Nested VPNs]]: chained VPNs (branch → HQ → cloud, a routing problem: transitivity, selectors, return paths, hairpinning) vs stacked VPNs (tunnel in a tunnel, an MTU problem), and the fixes
 
 ## 9. Applied: cloud networking (AWS today)
 Every concept above shows up here under a product name. The general idea is in the sections above, the notes below are about how one provider packages it.
 - [[VPC]]: a private network in the cloud: subnets, CIDR ranges, route tables, internet and NAT gateways
 - [[Security groups]]: stateful filtering per network interface (section 5 applied)
 - [[Connecting VPCs]]: peering vs a central router (transit gateway), transitive routing
+- [[Site-to-Site VPN]]: section 8's site-to-site VPN as an AWS product (customer gateway, virtual private gateway, BGP, limits)
+- [[Transit gateway]]: a hub router with VRF-like route tables, for many VPCs and sites
+- [[Direct Connect]]: a private carrier link with BGP, and why it isn't encrypted
+- [[Hybrid connectivity architectures]]: hybrid problems → designs, including a client network that's already a chain of VPNs ([[Nested VPNs]] applied)
 - [[Connecting AWS to a private network]]: the managed VPN and eight workarounds, and where each one breaks (sections 4 and 8 applied)
 - [[Load balancers]]: ALB/NLB setup, target groups, health checks
 - [[Proxies, load balancing and discovery in AWS]]: every concept from section 7 mapped to its AWS product (ALB, NLB, GWLB, CloudFront, API Gateway, Global Accelerator, Cloud Map, Service Connect, VPC Lattice, egress control)

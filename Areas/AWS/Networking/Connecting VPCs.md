@@ -65,7 +65,7 @@ The attachment creation form:
 Attachment types: not just VPCs, but also VPNs, peering with other TGWs, Direct Connect, and <span style="color:rgb(192, 0, 0)">Connect</span>.
 
 > [!question] What's a "Connect" attachment?
-> From what I read: it's for plugging **SD-WAN / third-party network appliances** into the TGW, using GRE tunnels + BGP on top of an existing VPC or Direct Connect attachment. <span style="color:rgb(192, 0, 0)">Not studied yet.</span>
+> It's for plugging **SD-WAN / third-party network appliances** into the TGW, using GRE tunnels + BGP on top of an existing VPC or Direct Connect attachment. Details → [[Transit gateway#Connect attachments: SD-WAN on top]]
 
 ![[Pasted image 20260920185116.png]]
 
@@ -155,6 +155,8 @@ VPC B: 10.0.0.0/16   ← which 10.0.1.5 do you mean?
 - [[VPC]]: route tables, CIDRs, subnets
 - [[AS and BGP]]: the ASN on the transit gateway
 - [[IPsec and IKE]]: how the Site-to-Site VPN attachments work (two tunnels, BGP)
+- [[Transit gateway]]: the TGW in depth (route tables, segmentation, ECMP, inspection)
+- [[Site-to-Site VPN]], [[Direct Connect]], [[Hybrid connectivity architectures]]: connecting these VPCs to on-prem
 - [[VPN]]: VPN types, AWS Client VPN
 - [[Lightsail]]: Lightsail's "VPC peering" checkbox is this same idea, done for me
 - [[AWS Organizations]]: in multi-account setups, the TGW is usually shared across accounts

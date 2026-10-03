@@ -38,6 +38,31 @@ flowchart LR
 | Each tunnel capped at ~1.25 Gbps, one active tunnel per VGW | No way to aggregate |
 | No central place to filter or log | Every VGW is its own island |
 
+And that's with 2 offices and 4 VPCs. A real company quickly has **20 VPCs, 10 offices, several AWS accounts, prod/dev/staging environments and more than one region**: 200 VPN connections, 400 tunnels, routes maintained in every VPC and on every office firewall, and no way for VPCs to talk to each other except a peering mesh. It stops being a configuration task and becomes a network management problem.
+
+The VPC ↔ VPC side has the same shape. With peering, every pair needs its own link:
+
+```mermaid
+flowchart LR
+    subgraph MESH["Peering: a mesh, n(n-1)/2 links"]
+        A1["VPC-A"] --- B1["VPC-B"]
+        A1 --- C1["VPC-C"]
+        B1 --- C1
+        A1 --- D1["VPC-D"]
+        B1 --- D1
+        C1 --- D1
+    end
+    subgraph HUB["Transit gateway: hub and spoke, n links"]
+        T2(("TGW"))
+        T2 --- A2["VPC-A"]
+        T2 --- B2["VPC-B"]
+        T2 --- C2["VPC-C"]
+        T2 --- D2["VPC-D"]
+    end
+```
+
+4 VPCs = 6 peerings vs 4 attachments; 20 VPCs = 190 peerings vs 20 attachments (details in [[Connecting VPCs]]).
+
 ## The fix: one hub
 
 ```mermaid
@@ -59,6 +84,57 @@ aws ec2 create-vpn-connection --type ipsec.1 \
   --options StaticRoutesOnly=false
 ```
 
+### Think of it as the company's core router
+
+In a traditional company, a core router sits in the middle and has a routing table:
+
+```text
+Core router
+10.10.0.0/16 → Production
+10.20.0.0/16 → Development
+10.30.0.0/16 → Data centre
+10.40.0.0/16 → Branch
+```
+
+The TGW plays the same role for AWS. It isn't a Linux box I log into, but conceptually it's an **AWS-managed regional router**: every network plugs into it, and its route tables say where each prefix lives.
+
+### Attachments: how networks plug in
+
+I don't "connect a VPC to a TGW". I create a **transit gateway attachment**, and the TGW sees each attachment as one "port":
+
+```text
+TGW
+ ├── VPC-A attachment
+ ├── VPC-B attachment
+ ├── VPC-C attachment
+ └── VPN attachment (office)
+```
+
+| Attachment type | Connects | Notes |
+|---|---|---|
+| **VPC** | A VPC, through one subnet per AZ | The most common. → [[Transit gateway routing#Stage 1: create the attachments]] |
+| **VPN** | A [[Site-to-Site VPN]] that ends on the TGW instead of a VGW | Static or BGP. ECMP and accelerated VPN only exist here |
+| **Direct Connect gateway** | [[Direct Connect]] via a transit VIF | |
+| **Peering** | Another TGW (other region or account) | Static routes only |
+| **Connect** | An SD-WAN / virtual appliance over GRE + BGP | Runs on top of a VPC or DX attachment |
+
+Client VPN isn't an attachment type: an AWS Client VPN endpoint lives in a VPC, and that VPC is attached, so remote users reach the TGW's other networks through it.
+
+The three to understand first: **VPC**, **VPN** and **Direct Connect**.
+
+### Not any-to-any unless I want it
+
+Attaching everything to one TGW doesn't have to mean everything can talk to everything:
+
+```text
+Prod  → Shared   ✓
+Dev   → Shared   ✓
+Prod  → Dev      ✗
+Dev   → Prod     ✗
+```
+
+That's decided by the TGW route tables (association and propagation, below). So the accurate summary isn't "a TGW connects my VPCs" but **"a TGW connects my networks *and* gives me one central place for routing and segmentation policy"**.
+
 **Two layers of routing, always.** The TGW doesn't replace the VPC route tables:
 1. **VPC route table**: "to reach `10.0.0.0/8`, go to `tgw-0dd`". Note: VPC route tables **don't learn routes from a TGW**. I add them myself (a summary like `10.0.0.0/8 → tgw` is common)
 2. **TGW route table**: "`10.0.0.0/16` is behind the Office A VPN attachment"
@@ -75,6 +151,37 @@ It's easy to see it as a replacement for the VPN. It isn't. They answer differen
 | **Routing between networks** | "Once everything is connected, which network can reach which?" | The transit gateway and its route tables |
 
 So the usual picture is: the office's VPN (or DX) **ends on** the TGW as one attachment, and the TGW routes between it and every VPC.
+
+- **VPN** answers: how do I connect my network to AWS **securely**, over the internet?
+- **Direct Connect** answers: how do I get **dedicated, private** connectivity to AWS?
+- **Transit gateway** answers: once networks are connected to AWS, **how do I route traffic between all of them**?
+
+Both connectivity options plug into the same hub, often at the same time:
+
+```mermaid
+flowchart TB
+    TGW(("Transit gateway<br/>TGW route tables"))
+    TGW --- A["VPC-A"]
+    TGW --- B["VPC-B"]
+    TGW --- C["VPC-C"]
+    TGW -- "VPN attachment" --- VPN["Site-to-Site VPN<br/>(IPsec over the internet)"]
+    TGW -- "DX gateway attachment" --- DX["Direct Connect<br/>(dedicated link)"]
+    VPN --- BR["Branch office"]
+    DX --- DC["Data centre"]
+    TGW -- "peering" --- T2(("TGW in another region"))
+```
+
+The branch uses a VPN (cheap, quick), the data centre uses Direct Connect (bandwidth, steady latency), and the TGW is the central routing point between them and every VPC. The routing flow to memorise, for any packet:
+
+```text
+VPC route table      →  "should this packet go to the TGW?"
+        ↓
+Transit gateway
+        ↓
+TGW route table      →  "which attachment should receive it?"
+        ↓
+VPC / VPN / Direct Connect / another TGW
+```
 
 **TGW vs VPN CloudHub.** [[Site-to-Site VPN#Stage 4: the second office|CloudHub]] is one specific hub-and-spoke: several sites' VPNs on one VGW, so branches reach each other and **one** VPC. A TGW is a general hub: VPCs, VPNs, Direct Connect, other TGWs, SD-WAN appliances, with segmentation between them.
 
@@ -188,6 +295,11 @@ A Direct Connect **transit VIF** lands on a **Direct Connect gateway**, which as
 
 VPN vs Direct Connect vs transit gateway: which question does each answer? :: VPN and DX: how packets get from my network into AWS. TGW: once connected, which network can reach which
 TGW vs VPN CloudHub? :: CloudHub: several site VPNs on one VGW, branches ↔ each other and one VPC. TGW: general regional hub for VPCs, VPNs, DX, peering, with segmentation
+Good mental model for a transit gateway? :: An AWS-managed regional core router: every network plugs in, its route tables say where each prefix lives and who may reach it
+Main TGW attachment types? :: VPC, VPN, Direct Connect gateway, peering (another TGW), Connect (SD-WAN over GRE + BGP)
+Is Client VPN a TGW attachment type? :: No. The Client VPN endpoint lives in a VPC, and that VPC is attached
+Peering mesh vs TGW for 20 VPCs? :: 190 peerings vs 20 attachments
+Does attaching everything to one TGW mean any-to-any? :: Only with the default route table. Separate TGW route tables make reachability a policy choice
 Why does a virtual private gateway stop scaling with many VPCs? :: One VGW per VPC, so one VPN per (site, VPC) pair, and VPCs can't reach each other through VGWs
 What does a TGW change for an office reaching 10 VPCs? :: One VPN connection to the TGW instead of 10
 Does a TGW add routes to VPC route tables? :: No. I add routes like 10.0.0.0/8 → tgw myself

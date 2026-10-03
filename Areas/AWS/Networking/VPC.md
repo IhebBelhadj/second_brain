@@ -210,6 +210,7 @@ Public  subnet route table:  0.0.0.0/0 → igw-xxxx   (the NAT itself uses the I
 - [[EC2]]: instances live in subnets and wear security groups
 - [[Load balancers]]: live in (public) subnets, across AZs
 - [[Connecting VPCs]]: peering and transit gateways
+- [[VPC IP address planning]]: choosing the VPC's CIDR and subnet layout from a company-wide plan
 - [[Site-to-Site VPN]], [[Transit gateway]], [[Direct Connect]], [[Hybrid connectivity architectures]]: connecting VPCs to on-prem
 - [[Bastion host]]: the door into private subnets
 - [[Route 53]]: private hosted zones give internal DNS names inside the VPC

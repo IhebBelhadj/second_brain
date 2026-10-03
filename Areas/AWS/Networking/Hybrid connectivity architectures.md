@@ -155,7 +155,7 @@ Security wants east-west (VPC ↔ VPC) and north-south (on-prem ↔ AWS, interne
 
 - One TGW **per region**, peered (static routes only), or **Cloud WAN** for dynamic routing and a single policy
 - A **network account** owns TGWs, DX and VPNs, shares the TGW with RAM to workload accounts → [[AWS Organizations]]
-- An IP plan (IPAM) with non-overlapping blocks per region/environment *before* the second region
+- An IP plan (IPAM) with non-overlapping blocks per region/environment *before* the second region → [[VPC IP address planning]]
 
 ## Side by side
 

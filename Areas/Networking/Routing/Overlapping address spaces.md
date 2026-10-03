@@ -134,6 +134,7 @@ Fixes, from quick to proper: change the home router's LAN to something unusual (
 ## Related
 - NAT itself:: [[NAT and PAT]]
 - Depends on:: [[Routing tables]], [[Policy-based routing]]
+- Prevented by:: [[IP address planning]], [[VPC IP address planning]]
 - Shows up with:: [[VPN]], [[Nested VPNs]], [[Connecting VPCs]], [[Hybrid connectivity architectures]]
 - Similar to:: two streets called "Main Street" in two different towns: the house number alone isn't enough, you need the town (the routing domain)
 

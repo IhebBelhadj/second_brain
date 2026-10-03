@@ -17,7 +17,8 @@ Networking/
 │   ├── ICMP.md                    ping, traceroute, error messages
 │   └── AS and BGP.md              inter-network routing, ASNs
 ├── Addressing/
-│   └── IP addressing and subnetting.md   binary, masks, CIDR, special ranges, VLSM, summarization, practice
+│   ├── IP addressing and subnetting.md   binary, masks, CIDR, special ranges, VLSM, summarization, practice
+│   └── IP address planning.md     hierarchical plans, aggregation, bit budgets, growth, reserved/avoided ranges, IPAM
 ├── DNS/
 │   ├── DNS.md                     resolution, roles, caching/TTL, records, glue, Linux resolver, dig
 │   ├── DNS security.md            poisoning, DNSSEC, DoT/DoH, takeovers, tunneling, amplification, rebinding

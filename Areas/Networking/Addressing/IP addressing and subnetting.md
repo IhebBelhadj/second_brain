@@ -187,7 +187,7 @@ Over-summarizing is a real bug: advertising `10.4.0.0/16` when only `10.4.8.0/22
 
 ## Planning addresses in real life
 
-What I'd keep in mind as a systems engineer, beyond the arithmetic:
+What I'd keep in mind as a systems engineer, beyond the arithmetic (the full method, with a hierarchy, bit budgets and IPAM, is in [[IP address planning]]):
 - **Leave room**: a subnet that's full can't grow in place. Renumbering later is painful. Size for 2–3× today
 - **Encode meaning** in the plan: e.g. `10.<site>.<vlan>.0/24`, so an address tells me where it is (see [[VLAN]])
 - **Avoid the defaults everyone uses**: `192.168.0.0/24`, `192.168.1.0/24` (home routers), `10.0.0.0/16` (every tutorial), `172.17.0.0/16` (Docker). They collide the moment a VPN or a merger happens → [[Overlapping address spaces]]
@@ -210,7 +210,7 @@ python3 -c "import ipaddress as i; print(list(i.collapse_addresses([i.ip_network
 Same arithmetic, a few extra rules. In AWS (see [[VPC]]):
 - A VPC gets a CIDR between `/16` and `/28`, cut into subnets that each live in **one** availability zone
 - AWS **reserves 5 addresses per subnet**: network, `+1` VPC router, `+2` DNS, `+3` reserved for future use, and the last one. A `/24` has **251** usable addresses, a `/28` only **11**
-- VPCs that need to be connected (peering, transit gateway, VPN to an office) **must not overlap**, so the planning advice above applies across all accounts ([[Connecting VPCs]])
+- VPCs that need to be connected (peering, transit gateway, VPN to an office) **must not overlap**, so the planning advice above applies across all accounts ([[Connecting VPCs]], [[VPC IP address planning]])
 - Other clouds do similar things (Azure also reserves 5 per subnet, GCP 4), so check before sizing small subnets
 
 ## Practice
@@ -250,6 +250,7 @@ Same arithmetic, a few extra rules. In AWS (see [[VPC]]):
 - Running out of addresses:: [[NAT and PAT]], *[[IPv6]]*
 - Planning problems:: [[Overlapping address spaces]], [[VLAN]]
 - Applied:: [[VPC]], [[Connecting VPCs]], [[AS and BGP]] (summarization)
+- Next:: [[IP address planning]]
 
 ## Flashcards
 #flashcards

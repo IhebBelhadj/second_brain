@@ -120,7 +120,7 @@ TGW
 
 Client VPN isn't an attachment type: an AWS Client VPN endpoint lives in a VPC, and that VPC is attached, so remote users reach the TGW's other networks through it.
 
-The three to understand first: **VPC**, **VPN** and **Direct Connect**.
+The three to understand first: **VPC**, **VPN** and **Direct Connect**. What an attachment is from a networking point of view, what each type runs underneath and why AWS designed the TGW around them → [[Transit gateway attachments]].
 
 ### Not any-to-any unless I want it
 
@@ -284,7 +284,7 @@ A Direct Connect **transit VIF** lands on a **Direct Connect gateway**, which as
 - Thinking a TGW is global: it's **regional**. Other regions need peering or Cloud WAN
 
 ## Related
-- Basics:: [[Connecting VPCs]], [[Transit gateway routing]] (association, propagation, packet trace)
+- Basics:: [[Connecting VPCs]], [[Transit gateway attachments]], [[Transit gateway routing]] (association, propagation, packet trace)
 - Concepts:: [[Routing tables]], [[Policy-based routing]] (VRFs), [[AS and BGP]], [[Types of VPN]] (hub and spoke, SD-WAN), [[VPN]]
 - AWS:: [[Site-to-Site VPN]], [[Direct Connect]], [[VPC]], [[AWS Organizations]], [[Proxies, load balancing and discovery in AWS]] (GWLB)
 - Designs:: [[Hybrid connectivity architectures]], [[Nested VPNs]]

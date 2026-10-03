@@ -27,6 +27,8 @@ AWS/
 │   ├── Site-to-Site VPN.md         customer gateway, VGW, two tunnels, static vs BGP, propagation, CloudHub, limits, troubleshooting
 │   ├── Transit gateway.md          hub for VPNs/VPCs, association vs propagation, segmentation, ECMP, inspection, Connect
 │   ├── VPC IP address planning.md  org-wide CIDR plan, routing payoff, subnet layout, IPAM pools, pod ranges
+│   ├── BGP in AWS hybrid networking.md   BGP vs propagation, route chain to TGW, what each side announces, tunnel failover, static vs BGP
+│   ├── Transit gateway attachments.md   what attachments are, per-type data/control plane, design reasons, VRF analogy, lifecycle
 │   ├── Transit gateway routing.md  two-stage routing, attach/associate/propagate, defaults, packet trace, limiting propagation
 │   ├── Direct Connect.md           physical link, VIF types, DX gateway, VPN backup, resilience, encryption, reaching an instance
 │   ├── Hybrid connectivity architectures.md   problems → designs: many VPCs, bandwidth, HA, overlap, DNS, chained client VPNs

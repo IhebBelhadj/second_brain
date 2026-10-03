@@ -213,6 +213,7 @@ What an ENI carries:
 - Used by:: [[Routing tables]] (routes point at interfaces), [[Policy-based routing]] (VRFs, namespaces, `iif`/`oif`), [[VPN]] (tun, wg0, xfrm)
 - In AWS:: [[EC2]], [[Security groups]], [[VPC]]
 - Differs from:: a network namespace (contains interfaces) and a VRF (groups interfaces under one routing table)
+- Cloud equivalent of an interface on a central router:: [[Transit gateway attachments]]
 
 ## Flashcards
 #flashcards

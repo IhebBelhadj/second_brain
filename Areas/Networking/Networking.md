@@ -85,6 +85,8 @@ Every concept above shows up here under a product name. The general idea is in t
 - [[Site-to-Site VPN]]: section 8's site-to-site VPN as an AWS product (customer gateway, virtual private gateway, BGP, limits)
 - [[Transit gateway]]: a hub router with VRF-like route tables, for many VPCs and sites
 - [[VPC IP address planning]]: the address plan applied to AWS (VPC rules, environment blocks that keep TGW routing short, subnet layout, AWS IPAM, pod ranges)
+- [[BGP in AWS hybrid networking]]: [[AS and BGP]] applied: routes vs traffic, routing domains, failover between tunnels
+- [[Transit gateway attachments]]: interfaces and VRFs as an AWS product (what runs under each attachment type)
 - [[Transit gateway routing]]: two routing tables per hop, and how routes get into them (propagation vs static)
 - [[Direct Connect]]: a private carrier link with BGP, and why it isn't encrypted
 - [[Hybrid connectivity architectures]]: hybrid problems → designs, including a client network that's already a chain of VPNs ([[Nested VPNs]] applied)

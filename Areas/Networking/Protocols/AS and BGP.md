@@ -46,9 +46,10 @@ But **inside** an AS, shortest path is exactly what you want, so ASes still use 
 - **Transit gateway** creation asks for an **ASN** (see [[Connecting VPCs]])
 - **Site-to-Site VPN** and **Direct Connect** use BGP to exchange routes between my data center and AWS → [[Site-to-Site VPN]], [[Direct Connect]] (AS path prepending, local preference, DX preferred over VPN)
 - The **transit gateway** propagates BGP routes into its route tables, and does ECMP over VPNs → [[Transit gateway]]
+- The whole picture (BGP carries routes not traffic, BGP vs propagation, what each side announces, failover between tunnels) → [[BGP in AWS hybrid networking]]
 
 ## Connects to
-- [[Connecting VPCs]], [[Site-to-Site VPN]], [[Transit gateway]], [[Direct Connect]], [[Nested VPNs]]
+- [[Connecting VPCs]], [[BGP in AWS hybrid networking]], [[Site-to-Site VPN]], [[Transit gateway]], [[Direct Connect]], [[Nested VPNs]]
 - [[Networking]]
 
 ## Flashcards

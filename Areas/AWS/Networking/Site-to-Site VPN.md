@@ -87,7 +87,7 @@ AWS takes one tunnel down at a time for maintenance. If my firewall only configu
 | **Static** | I configure the routes on both sides. Failover depends on my device noticing the tunnel is dead (DPD) and switching the route | Simple, but slow and device-dependent |
 | **Dynamic (BGP)** | Each tunnel has a BGP session. If one dies, its routes are withdrawn, traffic moves to the other | The recommended mode. Needs a device that speaks BGP |
 
-With BGP both tunnels are up at once. AWS picks **one tunnel for traffic toward the office** (the other is standby) unless I influence it. From my side I can prefer a tunnel with **AS path prepending** or MED on the routes I announce, so that traffic is symmetric and doesn't come back on the other tunnel and get dropped by a stateful firewall. Background on ASNs and path selection: [[AS and BGP]].
+With BGP both tunnels are up at once. AWS picks **one tunnel for traffic toward the office** (the other is standby) unless I influence it. From my side I can prefer a tunnel with **AS path prepending** or MED on the routes I announce, so that traffic is symmetric and doesn't come back on the other tunnel and get dropped by a stateful firewall. Background on ASNs and path selection: [[AS and BGP]]; how BGP fits with the transit gateway and VPC route tables: [[BGP in AWS hybrid networking]].
 
 ### Stage 4: the second office
 
@@ -169,7 +169,7 @@ This is how a VPN can be the **backup for Direct Connect** without any extra con
 ## Related
 - Concepts:: [[VPN]], [[IPsec and IKE]], [[Types of VPN]], [[AS and BGP]], [[Routing tables]]
 - Problems:: [[Overlapping address spaces]], [[Nested VPNs]]
-- AWS:: [[VPC]], [[Transit gateway]], [[Direct Connect]], [[Connecting VPCs]], [[Route 53]], [[Security groups]]
+- AWS:: [[VPC]], [[BGP in AWS hybrid networking]], [[Transit gateway]], [[Direct Connect]], [[Connecting VPCs]], [[Route 53]], [[Security groups]]
 - Bigger picture:: [[Hybrid connectivity architectures]], [[Connecting AWS to a private network]] (workarounds when the managed VPN isn't possible)
 
 ## Flashcards

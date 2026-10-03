@@ -180,7 +180,7 @@ flowchart LR
 
 ## Related
 - Concepts:: [[AS and BGP]], [[Routing tables]], [[Types of VPN]] (private carrier links like MPLS), [[VPN]], [[Encryption basics]]
-- AWS:: [[Site-to-Site VPN]], [[Transit gateway]], [[VPC]], [[Security groups]], [[Route 53]], [[Bastion host]], [[EC2]]
+- AWS:: [[BGP in AWS hybrid networking]], [[Site-to-Site VPN]], [[Transit gateway]], [[VPC]], [[Security groups]], [[Route 53]], [[Bastion host]], [[EC2]]
 - Designs:: [[Hybrid connectivity architectures]], [[Connecting AWS to a private network]]
 
 ## Flashcards

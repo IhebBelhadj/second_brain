@@ -155,7 +155,7 @@ The same prefix appears in **both** tables, with different targets, at two diffe
 
 ### Stage 1: create the attachments
 
-The VPCs aren't physically plugged into the TGW. AWS creates an **attachment** for each: the connection, the "interface", between one network and the TGW.
+The VPCs aren't physically plugged into the TGW. AWS creates an **attachment** for each: the connection, the "interface", between one network and the TGW (what attachments really are, per type → [[Transit gateway attachments]]).
 
 **Console:** VPC → Transit gateway attachments → **Create transit gateway attachment**:
 
@@ -306,7 +306,7 @@ sequenceDiagram
 - **Office → AWS**: the office router announces its networks. The VPN attachment propagates them into the TGW route tables I chose
 - **AWS → office**: the TGW announces the routes in the TGW route table **associated with the VPN attachment**. So the office learns `10.10.0.0/16 → AWS` etc. without anyone typing them
 
-A new VPC attached and propagated into the VPN's associated table is announced to the office automatically. A new office subnet announced over BGP shows up in the TGW automatically. The only manual part left is still side ①: the VPC route tables. Background on BGP: [[AS and BGP]].
+A new VPC attached and propagated into the VPN's associated table is announced to the office automatically. BGP in depth (routes vs traffic, BGP vs propagation, failover, static vs BGP) → [[BGP in AWS hybrid networking]]. A new office subnet announced over BGP shows up in the TGW automatically. The only manual part left is still side ①: the VPC route tables. Background on BGP: [[AS and BGP]].
 
 #### Static vs propagated routes in one table
 
@@ -723,6 +723,8 @@ Debugging tools: `search-transit-gateway-routes` (what a table contains), `get-t
 
 ## Related
 - Part of:: [[Transit gateway]]
+- The objects being routed to:: [[Transit gateway attachments]]
+- BGP side:: [[BGP in AWS hybrid networking]]
 - Depends on:: [[Routing tables]], [[IP addressing and subnetting]], [[IP address planning]], [[VPC IP address planning]], [[AS and BGP]], [[VPC]]
 - Similar to:: VRFs in [[Policy-based routing]] (one router, several separate tables)
 - AWS:: [[Connecting VPCs]], [[Site-to-Site VPN]], [[Direct Connect]], [[Hybrid connectivity architectures]], [[Security groups]], [[CloudTrail]]

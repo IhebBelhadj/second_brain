@@ -37,7 +37,7 @@ tags: [aws, compute, serverless]
 | | VPC | Attach to private subnets (see below) |
 | | Concurrency | **Reserved** (cap/guarantee) and **provisioned** (pre-warmed, no cold start) |
 | | SnapStart | Snapshot-based fast start (Java, Python, .NET) |
-| | File systems | Mount EFS |
+| | File systems | Mount [[EFS]] (through an access point) |
 | **Aliases / Versions** | | Immutable **versions** + **aliases** (`prod` → v7) for safe releases and traffic shifting |
 
 Related: **Lambda@Edge** (run at CloudFront locations), **Step Functions** (chain Lambdas into workflows), **API Gateway** (the usual HTTP front door).

@@ -242,6 +242,7 @@ Creating an OU only needs a name (tags optional):
 
 ## Connects to
 - [[IAM]]: SCPs cap what IAM policies can grant
+- [[AWS Regions and Availability Zones]]: enabling opt-in Regions for member accounts, and SCPs that deny unused Regions
 - [[AWS Identity Center]]: people access across the org's accounts
 - [[CloudTrail]]: an **organization trail** logs every account in one place. Alerts and investigations across accounts → [[CloudTrail in production]]
 - [[Connecting VPCs]]: transit gateways are often shared across the org's accounts

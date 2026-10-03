@@ -45,7 +45,7 @@ aliases: [ECS task, ECS tasks, Task definition, Task definitions, Task role, Exe
 | `executionRoleArn` | Role **ECS** uses: pull image, logs, secrets | |
 | `taskRoleArn` | Role **my code** uses | |
 | `ephemeralStorage` | Fargate scratch disk | 20 GiB default, up to 200 GiB |
-| `volumes` | Shared between containers, or persistent | Bind mounts (task-lived), **EFS** (shared, persistent), EBS (one per task) |
+| `volumes` | Shared between containers, or persistent | Bind mounts (task-lived), **[[EFS]]** (shared, persistent, via access points), EBS (one per task) |
 
 **Fargate CPU/memory combinations:**
 

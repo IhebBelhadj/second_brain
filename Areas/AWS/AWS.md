@@ -10,7 +10,8 @@ tags: [topic]
 ## Start here
 1. [[AWS services overview]]: the big table of every service category, so I know what exists
 2. [[How AWS services connect]]: follows one request from the browser to the database and shows which service does what along the way
-3. Then dive into a domain below
+3. [[AWS Regions and Availability Zones]]: choosing a Region, AZs (names vs IDs), global vs regional vs zonal resources, **opt-in Regions** and enabling them per account, enabled vs allowed (SCPs), STS tokens in opt-in Regions
+4. Then dive into a domain below
 
 ## Networking (where things live)
 Full reading path, prerequisites and a "which note answers…" table → [[AWS networking]]
@@ -42,7 +43,9 @@ Full reading path, prerequisites and a "which note answers…" table → [[AWS n
 
 ## Storage (where my data lives)
 - [[S3]]: object storage. Buckets and keys (no real folders), storage classes and lifecycle, versioning, replication, who can access a bucket, presigned URLs, gateway endpoints, and the 403s
-- Not written yet: *[[EBS]]* (disks for EC2) · *[[EFS]]* (shared NFS)
+- [[S3 replication]]: CRR/SRR step by step (versioning, role, rule), Batch Replication for existing objects, cross-account (bucket policy, ownership), **which account needs which Region enabled** (the exam question), SSE-KMS, deletes and Object Lock, RTC, two-way, what isn't replicated, PENDING/FAILED debugging
+- [[EFS]]: managed NFS for **Linux** clients (not Windows: FSx). Mount targets per AZ and port 2049, the mount helper (`-t efs`, `tls`, `iam`) vs plain `nfs4`, IAM authorization with a file system policy, access points for apps and containers, storage classes and throughput modes, EFS vs EBS vs S3 vs FSx, mount failures
+- Not written yet: *[[EBS]]* (disks for EC2)
 - The vendor-neutral side (block/file/object, RAID, backups…) → [[Storage]]
 
 ## Databases (where my app's data lives)

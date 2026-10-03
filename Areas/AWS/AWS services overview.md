@@ -23,7 +23,7 @@ tags: [aws]
 |                         | [[ECR]]                        | Private registry for container images                                                                                                   |
 | **Storage**             | [[S3]]                         | Object storage, effectively unlimited, accessed by key                                                                                  |
 |                         | EBS                            | Block volumes attached to one EC2 instance at a time                                                                                    |
-|                         | EFS                            | Shared filesystem many instances can mount at once                                                                                      |
+|                         | [[EFS]]                        | Shared filesystem many instances can mount at once                                                                                      |
 |                         | FSx                            | Managed third-party filesystems (Windows, Lustre, NetApp, OpenZFS)                                                                      |
 |                         | S3 Glacier                     | Cheap archival tiers for data you rarely retrieve                                                                                       |
 |                         | Storage Gateway                | Bridge giving on-premises systems access to AWS storage                                                                                 |

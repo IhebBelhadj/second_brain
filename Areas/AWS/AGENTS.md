@@ -15,6 +15,7 @@ AWS/
 ├── How AWS services connect.md     one request from browser to database, service by service
 ├── ARN.md                          resource names
 ├── AWS naming conventions.md       ID prefixes, naming rules, project-env-resource convention
+├── AWS Regions and Availability Zones.md   Regions, AZ names vs IDs, global/regional/zonal, opt-in Regions, enabling per account, SCP region guardrails
 ├── Compute/
 │   ├── EC2.md                      instances, launch templates
 │   ├── Load balancers.md           ALB/NLB setup, target groups, health checks
@@ -53,7 +54,9 @@ AWS/
 │   ├── SQS vs SNS vs EventBridge.md   which to pick, common exam patterns
 │   └── Kafka vs AWS messaging services.md   Kafka vs MSK/Kinesis/SQS/SNS/EventBridge (also indexed in Messaging)
 ├── Storage/
-│   └── S3.md                       buckets, storage classes, lifecycle, versioning, replication, access, endpoints (also indexed in Storage)
+│   ├── S3.md                       buckets, storage classes, lifecycle, versioning, replication, access, endpoints (also indexed in Storage)
+│   ├── S3 replication.md           CRR/SRR setup, Batch Replication, cross-account, Region enablement rules, KMS, deletes, RTC, troubleshooting (also indexed in Storage)
+│   └── EFS.md                      managed NFS (Linux only), mount targets, mount helper, IAM/file system policy, access points, classes, vs FSx (also indexed in Storage)
 ├── Monitoring/
 │   ├── CloudWatch.md               metrics, custom namespaces (PutMetricData/EMF), dimensions, retention, Metrics Insights, dashboards, Insights family
 │   ├── CloudWatch agent.md         install, IAM, config JSON, fleet rollout via SSM, on-prem, private subnets, troubleshooting

@@ -8,10 +8,12 @@
 
 ```
 Storage/
-└── Storage.md                     topic index (the learning path)
+├── Storage.md                     topic index (the learning path)
+└── Network storage/
+    └── NFS and SMB.md             exports/mounts, NFS versions, UID trust, SMB/Samba, cross-OS support, stale handles, hard/soft
 ```
 
-No notes of its own yet. `S3.md` is listed in this area's index (section 7) but the file lives in `Areas/AWS/Storage/` with `topic: AWS`.
+`S3.md`, `S3 replication.md` and `EFS.md` are listed in this area's index (section 7) but the files live in `Areas/AWS/Storage/` with `topic: AWS`.
 
 ## Where a new note goes
 

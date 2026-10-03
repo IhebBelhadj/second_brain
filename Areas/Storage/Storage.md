@@ -34,7 +34,7 @@ flowchart TD
 - *[[RAID]]*: RAID 0/1/5/6/10, what each one survives, rebuild times and why RAID isn't a backup
 
 ## 3. Over the network
-- *[[NFS and SMB]]*: sharing a filesystem with many machines, locking, permissions, the "stale file handle" kind of problems
+- [[NFS and SMB]]: sharing a filesystem with many machines. NFS on Linux (exports, versions, UID/GID trust, root_squash) vs SMB on Windows (users, ACLs, Samba), **which OS can mount which** (Windows' NFS client is v3 only), stale handles, hard vs soft mounts, locking, small-file slowness
 - *[[iSCSI and SAN]]*: sharing raw block devices over the network, why only one machine may mount a normal filesystem on one
 
 ## 4. Object storage
@@ -52,7 +52,9 @@ flowchart TD
 ## 7. Applied: cloud storage (AWS today)
 Every concept above shows up here under a product name. The general idea is in the sections above, the notes below are about how one provider packages it.
 - [[S3]]: object storage. Buckets, keys, storage classes and lifecycle, versioning and Object Lock, replication, who can access what (IAM, bucket policies, Block Public Access, KMS), presigned URLs, CloudFront, gateway endpoints, and the 403s I'll debug
-- Not written yet: *[[EBS]]* (block volumes for EC2, volume types, snapshots) · *[[EFS]]* (managed NFS) · *[[AWS Backup]]*
+- [[S3 replication]]: asynchronous copies across Regions and accounts, what's required on each side (versioning, role, bucket policy, enabled Regions, KMS), what never replicates (permanent deletes), RTC
+- [[EFS]]: managed NFSv4 for Linux clients (Windows → FSx), mount targets, mount helper with TLS and IAM, access points, storage classes
+- Not written yet: *[[EBS]]* (block volumes for EC2, volume types, snapshots) · *[[AWS Backup]]*
 
 ## Related areas
 - [[Networking]]: everything in section 3 runs over it, and S3 traffic goes through NAT gateways or VPC endpoints

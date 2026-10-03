@@ -145,7 +145,7 @@ systemctl enable --now nginx
 | Backups | **Snapshots** (stored in S3). An AMI is basically snapshots + config | None |
 | Scope | Stays in **one AZ**, attached to one instance (usually) | Tied to that instance |
 
-For a filesystem shared by many instances → **EFS**.
+For a filesystem shared by many instances → **[[EFS]]** (Linux; Windows needs FSx).
 
 ## Instance lifecycle
 

@@ -87,6 +87,7 @@ Bonus: both are logged (Session Manager can record full sessions, and the API ca
 - [[VPC]]: public vs private subnets, route tables, internet gateway
 - [[EC2]]: key pairs, security groups, the instances I'm reaching
 - [[IAM]]: roles for Session Manager
+- [[Systems Manager]]: Session Manager in depth (endpoints, port forwarding to RDS, session logging), and why it works with no inbound port ([[Outbound-initiated connections]])
 - [[CloudTrail]]: auditing who connected
 - [[Lightsail]]: doesn't need this. Lightsail instances are public, with browser SSH
 - Big picture → [[How AWS services connect]]

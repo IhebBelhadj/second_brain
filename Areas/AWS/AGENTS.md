@@ -54,7 +54,8 @@ AWS/
 │   ├── CloudWatch.md               metrics, custom namespaces (PutMetricData/EMF), dimensions, retention, Metrics Insights, dashboards, Insights family
 │   ├── CloudWatch agent.md         install, IAM, config JSON, fleet rollout via SSM, on-prem, private subnets, troubleshooting
 │   ├── CloudWatch Logs.md          log groups, retention, Logs Insights queries, metric/subscription filters, archive to S3
-│   └── CloudWatch alarms.md        states, M of N, missing data, actions, symptom alerting, composite alarms, remediation
+│   ├── CloudWatch alarms.md        states, M of N, missing data, actions, symptom alerting, composite alarms, remediation
+│   └── Systems Manager.md          agent dial-out model, endpoints, Session Manager, Run Command, State/Patch Manager, Parameter Store, Automation
 └── Security/
     ├── IAM.md                      users, roles, policies
     ├── AWS Organizations.md        accounts, SCPs

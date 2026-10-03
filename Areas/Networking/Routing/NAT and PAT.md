@@ -97,6 +97,9 @@ The table only has entries for connections started from **inside**. An unsolicit
 - Peer-to-peer apps, VoIP and mesh VPNs need tricks: **hole punching**, relays (see [[Types of VPN#Stage 5: machines behind NAT need to reach each other]])
 - VPN protocols send **keepalives** (WireGuard `PersistentKeepalive = 25`, IPsec NAT-T every ~20 s): a UDP entry is deleted after ~30–120 s of silence, and then the other side can't reach me anymore
 
+> [!warning] Responses vs new connections
+> "Only replies get in" is about **connections**, not messages. The server I connected to can send as much as it likes **on that connection** (HTTP responses, WebSocket messages, commands to an agent), because an HTTP response doesn't close the TCP connection. But neither it nor anyone else can open a **new** connection through the entry, which is tied to the remote IP and port of that flow. This is how AWS Systems Manager reaches instances behind a NAT gateway → [[Outbound-initiated connections]]
+
 ### 2. Not all NATs behave the same (and it decides whether P2P works)
 
 What matters is how the NAT picks the **outside port** for a new destination (RFC 4787):
@@ -237,6 +240,7 @@ What this means in practice:
 - Foundation:: [[Network layers]], [[Hubs, switches and routers]], [[Routing tables]]
 - Uses of NAT:: [[Overlapping address spaces]], [[Network interfaces]] (Docker), [[VPN]]
 - Breaks / works around NAT:: [[IPsec and IKE]] (NAT-T), [[Types of VPN]] (hole punching), [[Connecting AWS to a private network]]
+- Connections vs requests, agents behind NAT:: [[Outbound-initiated connections]], [[HTTP]], [[Systems Manager]]
 - Security:: [[ACL]], [[Security groups]]
 - AWS:: [[VPC]], [[EC2]]
 

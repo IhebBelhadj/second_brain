@@ -15,6 +15,8 @@ Networking/
 ├── Protocols/                     foundations and protocols
 │   ├── Network layers.md          OSI vs TCP/IP, Ethernet frame + IP/TCP/UDP headers, hop-by-hop walk, security per layer
 │   ├── ICMP.md                    ping, traceroute, error messages
+│   ├── HTTP.md                    messages, methods, status, 1.0 vs 1.1 persistent connections, chunked, HOL, Host, long polling/SSE/WebSocket
+│   ├── HTTP2.md                   frames, streams, multiplexing, ALPN, HPACK, TCP HOL, HTTP/3 and QUIC, LB trap
 │   └── AS and BGP.md              inter-network routing, ASNs
 ├── Addressing/
 │   ├── IP addressing and subnetting.md   binary, masks, CIDR, special ranges, VLSM, summarization, practice
@@ -32,6 +34,7 @@ Networking/
 │   ├── Routing tables.md          longest prefix match, metrics, Linux tables
 │   ├── Policy-based routing.md    ip rule, marks, VRFs, namespaces
 │   ├── NAT and PAT.md             NAT types, PAT tables, SNAT/DNAT, hole punching, CGNAT, NAT ≠ firewall, AWS gateways
+│   ├── Outbound-initiated connections.md   responses vs new connections through NAT, agents that dial out (SSM), keepalives
 │   └── Overlapping address spaces.md   same IPs on both sides and the ways out
 ├── Security/
 │   ├── Encryption basics.md       symmetric/asymmetric, DH, forward secrecy

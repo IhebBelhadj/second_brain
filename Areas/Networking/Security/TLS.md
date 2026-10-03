@@ -144,6 +144,7 @@ Common errors:
 - Compared:: [[IPsec vs TLS vs WireGuard vs SSH]]
 - Used in:: [[VPN]] (SSL VPNs, OpenVPN, AWS Client VPN), [[Load balancers]], [[Certificate Manager (ACM)]]
 - Lifecycle:: [[Certificate rotation]]
+- Carries:: [[HTTP]], [[HTTP2]] (ALPN picks the version, QUIC has TLS built in)
 
 ## Flashcards
 #flashcards

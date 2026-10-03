@@ -32,6 +32,8 @@ flowchart TD
 - [[DNS]]: why it's a delegated tree, the three roles (stub, recursive, authoritative), a lookup step by step, caching and TTL, records, glue, how Linux resolves, reading `dig`
     - [[DNS security]]: cache poisoning and Kaminsky, DNSSEC's chain of trust, DoT/DoH, hijacking, subdomain takeover, tunneling, amplification, rebinding
     - [[DNS in production]]: internal naming, split-horizon, hybrid forwarding, DNS load balancing and its limits, safe record changes, running servers, a troubleshooting method
+- [[HTTP]]: the request/response protocol on top of TCP. Message anatomy, methods (safe/idempotent), status codes, HTTP/1.0 vs 1.1 persistent connections, Content-Length vs chunked, head-of-line blocking and 6 connections per host, the Host header, polling/long polling/SSE/WebSocket, keep-alive 502s
+    - [[HTTP2]]: same meaning, new framing. Binary frames and streams multiplexed on one connection, ALPN, HPACK, RST_STREAM/GOAWAY, TCP head-of-line blocking, HTTP/3 over QUIC, the per-connection load balancing trap
 - Not written yet: *[[TCP and UDP]]* (handshake, states, retransmission, congestion control) · *[[DHCP]]* · *[[IPv6]]*
 
 ## 2. Where the machine meets the network
@@ -47,6 +49,7 @@ flowchart TD
 - [[Routing tables]]: longest prefix match, metrics, administrative distance, Linux's multiple tables
 - [[Policy-based routing]]: `ip rule`, marks, VRFs and namespaces. Choosing *which* table before choosing the route
 - [[NAT and PAT]]: static/dynamic NAT, PAT tables, SNAT vs DNAT, NAT behaviors and hole punching, CGNAT, UPnP/NAT-PMP/PCP, why NAT isn't a firewall
+    - [[Outbound-initiated connections]]: responses vs new connections through NAT, why an HTTP response doesn't end the TCP connection, why a NAT mapping isn't an open door, agents that dial out and keep the line open (SSM, CI runners, tunnels), keepalives, the egress-control lesson
 - [[Overlapping address spaces]]: two networks using the same IPs, and the ways out (separate routing domains, NAT, exposing services, renumbering)
 - [[AS and BGP]]: how independent networks route between each other, the protocol the internet runs on
 - Not written yet: *[[OSPF]]* (routing inside one organization) · *[[First-hop redundancy (VRRP)]]* (two gateways, one IP)
@@ -95,6 +98,7 @@ Every concept above shows up here under a product name. The general idea is in t
 - [[Proxies, load balancing and discovery in AWS]]: every concept from section 7 mapped to its AWS product (ALB, NLB, GWLB, CloudFront, API Gateway, Global Accelerator, Cloud Map, Service Connect, VPC Lattice, egress control)
 - [[Route 53]]: DNS as a managed service (applies [[DNS]] and [[DNS in production]])
 - [[AWS WAF]]: Layer 7 filtering
+- [[Systems Manager]]: managing private instances with no inbound port, through an agent that dials out ([[Outbound-initiated connections]] applied)
 
 ## Not written yet: the rest of the systems engineer path
 - *[[Network troubleshooting]]*: a method + the tools (`ip`, `ss`, `tcpdump`, `mtr`, `dig`, `curl -v`, `openssl s_client`)

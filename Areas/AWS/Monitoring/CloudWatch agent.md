@@ -118,7 +118,7 @@ sudo dnf install -y amazon-cloudwatch-agent
 What each choice is for:
 - **`namespace: Shop/EC2`**: my own **custom namespace** instead of the default `CWAgent`, so agent metrics are grouped per project
 - **`append_dimensions`**: tag every metric with the instance and its Auto Scaling group (the agent reads them from instance metadata)
-- **`aggregation_dimensions: [["AutoScalingGroupName"]]`**: also publish a copy of each metric with **only** the group as dimension. That's what lets me alarm on "memory of the **whole group**", which survives instances being replaced (an alarm on one `InstanceId` dies with the instance)
+- **`aggregation_dimensions`** (a list containing the list `"AutoScalingGroupName"`): also publish a copy of each metric with **only** the group as dimension. That's what lets me alarm on "memory of the **whole group**", which survives instances being replaced (an alarm on one `InstanceId` dies with the instance)
 - **`drop_device: true`**: removes the `device` dimension (`nvme0n1p1`, `xvda1`…), whose name changes between instance types and breaks alarms
 - **`procstat`**: `pid_count` = 0 means my process died even though the instance is healthy
 - **`retention_in_days`**: without it, the log group is created with **Never expire**
@@ -222,7 +222,7 @@ flowchart TD
 > The agent was installed by hand on the first instance. New instances come from the launch template, which doesn't install it. Fix: user data or an SSM State Manager association, with the config in Parameter Store.
 
 > [!example]- I want one alarm "memory of the web fleet above 85%" that keeps working when instances are replaced. What do I configure?
-> `aggregation_dimensions: [["AutoScalingGroupName"]]` (with `AutoScalingGroupName` in `append_dimensions`), then alarm on `mem_used_percent` with only the `AutoScalingGroupName` dimension.
+> `aggregation_dimensions` set to the group name only (with `AutoScalingGroupName` in `append_dimensions`), then alarm on `mem_used_percent` with only the `AutoScalingGroupName` dimension.
 
 > [!example]- My alarm on `disk_used_percent` stays in INSUFFICIENT_DATA. The graph shows data. Why?
 > The alarm's dimensions don't match: disk metrics also carry `path`, `fstype` (and `device` unless dropped). The alarm must specify all of them exactly.
@@ -246,6 +246,7 @@ flowchart TD
 - Used by:: [[CloudWatch alarms]]
 - Runs on:: [[EC2]], [[Auto Scaling]]
 - Needs:: [[IAM]] (instance role), [[VPC]] (endpoints or NAT), [[Security groups]]
+- Rolled out by:: [[Systems Manager]] (Parameter Store, State Manager, Run Command)
 - On-premises path:: [[Site-to-Site VPN]], [[Connecting AWS to a private network]]
 
 ## Flashcards

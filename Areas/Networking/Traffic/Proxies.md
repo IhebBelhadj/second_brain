@@ -157,6 +157,8 @@ What it breaks, and what engineers have to handle:
 - The other direction:: [[Reverse proxy]]
 - Next:: [[Load balancing]], [[Service discovery]]
 - Compared with:: [[NAT and PAT]], [[VPN]], [[IPsec vs TLS vs WireGuard vs SSH]]
+- The protocol:: [[HTTP]]
+- Egress control and agents dialing out:: [[Outbound-initiated connections]]
 - Security:: [[TLS]], [[Certificates and PKI]], [[mTLS]], [[DNS security]]
 - Applied:: [[Proxies, load balancing and discovery in AWS]]
 

@@ -258,7 +258,7 @@ Exit code **137** = SIGKILL: either the cgroup memory limit (OOM) or a stop time
 
 ### 5. Builds that aren't reproducible
 
-`FROM python:3.12-slim` and `apt-get install libpq5` today and next month give **different images** from the same Dockerfile: the base tag moved, the package version moved. Usually that's what I want (security patches), but it means "rebuild the old version" doesn't reproduce what ran. That's why a deployed image is **kept** and **identified by digest**, and why base images can be pinned by digest with a bot proposing updates (see [[Docker image tags#Stage 6: the base image moved under me]]).
+`FROM python:3.12-slim` and `apt-get install libpq5` today and next month give **different images** from the same Dockerfile: the base tag moved, the package version moved. Usually that's what I want (security patches), but it means "rebuild the old version" doesn't reproduce what ran. That's why a deployed image is **kept** and **identified by digest**, and why base images can be pinned by digest with a bot proposing updates (see [[Docker image tags#3. The base image moved under me]]).
 
 ## In AWS
 - **ECR**: private registry per account/region, immutable tags option, scan on push, lifecycle policies, pull-through cache for Docker Hub/GHCR/Quay, replication to other regions/accounts

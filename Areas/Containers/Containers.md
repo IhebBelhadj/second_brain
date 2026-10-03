@@ -13,7 +13,7 @@ Read top to bottom. Links in *italics* are notes not written yet (the roadmap).
 
 ## 1. Images and containers
 - [[Docker]]: from "it works on my machine" to an image. Layers and the build cache, instruction order, secrets that stay in layers, multi-stage builds, BuildKit cache and secret mounts, PID 1 and signals, ports and bind addresses, volumes, the build-once deployment flow, multi-arch builds, and the production traps (published ports bypassing the firewall, Docker Hub limits behind NAT, full disks, exit 137)
-- [[Docker image tags]]: tags vs digests, why `latest` isn't "newest", tags that move under you, unique commit tags and registry immutability, deploying by digest, build once and promote, pinning base images, multi-arch indexes, retention policies that delete production
+- [[Docker image tags]]: learning tags hands-on (untagged images, `-t`, several tags on one image, rebuilding moves a tag, full names with the registry, pushing, digests vs tags, pulling on other machines), choosing a tagging scheme (commit, release, floating, environment tags), build once and promote, deploying by digest, and what goes wrong (`latest`, races, moving base images, fake rollbacks, multi-arch, retention)
 - Not written yet: *[[Container internals]]* (namespaces, cgroups, overlay filesystems, OCI runtimes) · *[[Docker networking]]* (bridge, host, overlay networks, DNS between containers) · *[[Docker Compose]]*
 
 ## 2. Orchestration

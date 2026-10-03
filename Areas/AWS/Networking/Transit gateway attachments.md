@@ -22,6 +22,8 @@ How routing through attachments works step by step is in [[Transit gateway routi
 | "Attaching = propagating" | Attaching connects the network. Propagation is a separate step that installs that network's routes into a TGW route table |
 | "An attachment is just a cable" | It's also a **policy boundary**: each attachment is associated with one TGW route table and propagates into chosen ones. That's where segmentation is built |
 | "A VPC attachment is somewhere in the VPC, abstractly" | It's concrete: a TGW-managed network interface in **one subnet per AZ** I selected. Traffic enters the TGW through the interface in its own AZ |
+| "A route must point at an IP or an interface, so an attachment must secretly be one" | A route points at a **forwarding action**. An attachment ID is one, like a tunnel interface, a next-hop object or an MPLS label. The attachment has no IP, no MAC, no ARP table |
+| "My instance ARPs for the TGW" | Nothing in a VPC ARPs for the TGW. The instance sends off-subnet traffic to the VPC router, and AWS's network applies the route table and delivers the packet |
 
 ## Start from a physical router
 
@@ -77,6 +79,140 @@ Now the route table reads:
 
 which is: **route → attachment → underlying connectivity**. When I see `10.0.0.0/16 → VPN attachment`, I read it as: *"to reach 10.0.0.0/16, send the packet through the TGW's connection toward the VPN-connected network"*.
 
+## Is an attachment a network interface?
+
+The real puzzle: a route like `10.20.0.0/16 → tgw-attach-0bb` points at something that isn't an IP address and doesn't look like an interface. Two explanations come to mind:
+
+- **A.** AWS hides the real implementation: underneath there are ordinary interfaces, and the attachment is a friendly name for them
+- **B.** The attachment *is* a network interface, with an IP and a MAC address, like `eth1`
+
+The accurate answer is **closer to A, with one warning: don't assume what the hidden part looks like.** The attachment is an AWS-managed **logical forwarding endpoint**. It's not an IP/MAC interface, and I can't ask "what is the MAC of `tgw-attach-0bb`, what's its IP, what's its ARP table": those properties don't exist in the TGW's model. What AWS runs underneath (internal interfaces, encapsulation, its own fabric, hardware offload…) is an implementation detail I neither configure nor depend on.
+
+```mermaid
+flowchart TB
+    R["TGW route table<br/>10.20.0.0/16 → tgw-attach-0bb"] --> A["Attachment<br/>(the abstraction I see and configure)"]
+    A --> B["── AWS boundary ──"]
+    B --> D["AWS internal data plane<br/>(not exposed, not configurable)"]
+    D --> V["VPC-B"]
+    classDef hidden fill:#e5e7eb,stroke:#6b7280,color:#111827
+    class B,D hidden
+```
+
+### A route doesn't need an IP or a MAC
+
+This is the networking principle that resolves the puzzle: **a routing table maps destinations to forwarding actions, and a forwarding action doesn't have to be an IP address or an Ethernet interface.** The "next hop" is whatever lets the forwarding plane pick a path ([[Routing tables#What a route can point at]]):
+
+```text
+10.20.0.0/16 via 192.168.1.1 dev eth1   ← next-hop IP, resolved to a MAC by ARP
+10.20.0.0/16 dev wg0                    ← tunnel interface: no next-hop IP, no ARP
+10.20.0.0/16 nhid 10                    ← a next-hop object (Linux)
+10.20.0.0/16 → VRF blue                 ← continue the lookup in another table
+MPLS label 200 → next router            ← switch on a label, not on IPs
+10.20.0.0/16 → tgw-attach-0bb           ← AWS: an attachment ID
+```
+
+They all end up in *some* forwarding mechanism. On a Linux router, `eth1` does have an IP, a MAC, an MTU and a link state, and ARP fills in the destination MAC. A WireGuard interface already doesn't need ARP. An MPLS router forwards on labels: the label is an identifier the forwarding plane understands, not an Ethernet address. An attachment ID is the same kind of thing: a **forwarding-domain identifier**. The TGW does:
+
+```mermaid
+flowchart LR
+    P["Packet to 10.20.1.50"] --> L["Longest-prefix lookup<br/>in the associated TGW table"]
+    L --> M["10.20.0.0/16"]
+    M --> I["Attachment ID<br/>tgw-attach-0bb"]
+    I --> F["AWS forwarding context<br/>for that attachment"]
+    F --> V["VPC-B"]
+```
+
+The attachment ID is enough for AWS's forwarding system to select the right path, just like a label or a next-hop ID.
+
+### What's really visible underneath, per type
+
+The attachment *object* never has an IP or a MAC. But some attachment types are built on things that do have addresses, and those are visible. None of them is what a TGW route points at:
+
+| Attachment | Addressed things I can see | Do routes target them? |
+|---|---|---|
+| **VPC** | Requester-managed network interfaces in the attachment subnets, one per AZ, each with a private IP from the subnet | No. VPC routes target `tgw-…`, TGW routes target the attachment |
+| **VPN** | Tunnel outside IPs (public), tunnel inside IPs (`169.254.x.x/30`, used for BGP) | No. They're the IPsec and BGP endpoints, not route targets |
+| **Direct Connect** | The VLAN and the BGP peer IPs of each VIF | No |
+| **Connect** | GRE tunnel addresses and BGP peer addresses (taken from the TGW's optional **CIDR block**, the field I could leave blank when creating a TGW, see [[Connecting VPCs#Option 2: transit gateway]]) | No |
+| **Peering** | Nothing | |
+
+So for VPN, DX and Connect there really are concrete protocols with real addresses underneath (IPsec, BGP, Ethernet/VLAN, GRE), which is why those attachments can be understood in ordinary networking terms. For a VPC attachment, the visible interfaces are landing points for AWS's own delivery, not neighbours.
+
+### Why nothing in the VPC ARPs for the TGW
+
+A good sanity check. VPC-A has `10.20.0.0/16 → tgw-0dd`. EC2-A sends to `10.20.1.50`:
+
+1. EC2-A's OS sees `10.20.1.50` isn't on its subnet, so it sends the packet to its default gateway: the subnet's **VPC router** address (the `.1` of the subnet, one of the 5 reserved addresses)
+2. It ARPs for that `.1`, and **AWS's virtualisation layer answers**, not a real router. There's no shared Ethernet segment in a VPC: frames never travel on a real LAN, the hypervisor intercepts them
+3. AWS's network applies VPC-A's route table to the packet, finds `10.20.0.0/16 → tgw-0dd`, and delivers it (encapsulated in AWS's own fabric) to the TGW's landing interface in the same AZ
+4. At no point does the instance learn a TGW IP or MAC. It never even knew the TGW existed
+
+The instance did one ARP, for the VPC router, and even that answer was synthesised. The TGW isn't an Ethernet neighbour on my subnet, which is exactly why it doesn't need to look like one.
+
+### VPC route tables already work this way
+
+I'd met this abstraction before the TGW. A VPC route table never says `10.20.0.0/16 → 192.168.5.1`. Every target is an **object**:
+
+```text
+0.0.0.0/0       → igw-0aa      (internet gateway)
+0.0.0.0/0       → nat-0bb      (NAT gateway)
+10.30.0.0/16    → pcx-0cc      (peering)
+10.0.0.0/16     → vgw-0dd      (VPN gateway)
+10.20.0.0/16    → tgw-0ee      (transit gateway)
+10.99.0.0/16    → eni-0ff      (an appliance's network interface)
+```
+
+"Send this destination to that resource", and AWS handles the forwarding underneath. The TGW does the same one level deeper:
+
+| Level | Route | Target is |
+|---|---|---|
+| VPC route table | `10.20.0.0/16 → tgw-0ee` | The TGW resource |
+| TGW route table | `10.20.0.0/16 → tgw-attach-0bb` | An attachment |
+
+### Why objects instead of IPs
+
+Because the TGW joins networks that **don't share any common Layer 3 next hop**: a VPC, an IPsec VPN, a VLAN on a fibre, a GRE tunnel, another TGW in another region. If routes had to say `destination → IP`, AWS would have to invent an artificial addressing scheme over all of them. With `destination → attachment`, the routing plane stays uniform and each attachment type uses whatever mechanism it needs.
+
+And it spares me from reasoning about the layers underneath each type:
+
+| Without the abstraction, I'd have to reason about… | |
+|---|---|
+| VPC | Interfaces, MACs, ARP, AWS's encapsulation, its internal fabric |
+| VPN | Tunnel interfaces, outer IPs, inner IPs, IPsec SAs |
+| Direct Connect | Ethernet, VLANs, VIFs, BGP sessions |
+
+The TGW gives the routing plane just two things, **destination** and **attachment**, and AWS's forwarding system resolves the rest.
+
+### How to draw it
+
+Not like this, which implies an implementation AWS doesn't expose:
+
+```text
+EC2 ── Ethernet ── ENI ── Ethernet ── TGW
+```
+
+But like this, with attachments as managed forwarding boundaries:
+
+```mermaid
+flowchart TB
+    A["VPC-A"] --> RT1["VPC route table<br/>10.20.0.0/16 → tgw"]
+    RT1 --> AA["VPC-A attachment<br/>(managed boundary)"]
+    AA --> T["TGW route table<br/>10.20.0.0/16 → VPC-B attachment"]
+    T --> AB["VPC-B attachment<br/>(managed boundary)"]
+    AB --> B["VPC-B"]
+    classDef att fill:#fef3c7,stroke:#92400e,color:#111827
+    class AA,AB att
+```
+
+### What this means in practice
+
+- **No neighbour to ping or ARP**: I can't ping "the attachment" or see it in an ARP table. Testing is end to end (host to host) plus AWS's own tools
+- **Debugging uses objects, not neighbours**: which table an attachment is associated with, what's propagated (`search-transit-gateway-routes`), Route Analyzer between two attachments, TGW flow logs (which record attachment IDs), per-attachment metrics (packets dropped for no route / blackhole)
+- **The attachment ID is stable** even if AWS changes what's underneath. My routes, IaC and policies reference the ID and keep working
+
+> [!abstract] The principle
+> A routing table maps destinations to forwarding actions; the action doesn't have to be an IP or an Ethernet interface. AWS uses `destination → attachment` because the TGW is a managed transit router joining heterogeneous networks. The attachment is a logical forwarding and connection object; the transport underneath is AWS's implementation detail, except for VPN, DX and Connect, where real protocols (IPsec, BGP, Ethernet/VLAN, GRE) are visible and work as usual.
+
 ## What each attachment runs underneath
 
 The useful question isn't "what protocol is the attachment?" but **"what network does this attachment connect, and what mechanisms exist on that connection?"**
@@ -106,7 +242,7 @@ BGP sits **alongside** the VPN, DX and Connect connectivity as the route-exchang
 
 ### VPC attachment
 
-What it physically is: when I create it, I pick **one subnet per AZ**, and the TGW places a network interface in each. That interface is the "port".
+What it physically is: when I create it, I pick **one subnet per AZ**, and the TGW places a network interface in each. These are real, visible interfaces: in the EC2 console they show up as requester-managed network interfaces (described as belonging to the transit gateway attachment), each with a private IP from its subnet. But they're the TGW's **landing points** in my VPC, not next hops I route to: VPC routes target `tgw-…`, never these interfaces' IPs (more in [[#Is an attachment a network interface?]]).
 
 ```mermaid
 flowchart LR
@@ -274,6 +410,15 @@ Same destination (a TGW route table), same mechanism at the end (propagation), d
 
 ## Practice
 
+> [!example]- Can I find the MAC address of `tgw-attach-0bb` and ping it?
+> No. An attachment is a logical forwarding object with no IP, MAC or ARP entry. For a VPC attachment there are visible landing interfaces with subnet IPs, but routes never target them and they aren't neighbours to test against.
+
+> [!example]- EC2-A sends to `10.20.1.50` through the TGW. Which ARP request does it make, and who answers?
+> One, for its subnet's VPC router address (`.1`). AWS's virtualisation layer answers. It never ARPs for the TGW.
+
+> [!example]- Name three non-AWS cases where a route points at something without a next-hop IP.
+> A tunnel interface (`dev wg0`), an MPLS label, a next-hop object (`nhid`), a VRF, a blackhole.
+
 > [!example]- What protocol does a VPC attachment speak with the TGW?
 > None that I configure or see. AWS delivers packets between the VPC and the TGW through the TGW's interfaces in the attachment subnets, and already knows the VPC's CIDRs, so there's no routing protocol either.
 
@@ -290,6 +435,8 @@ Same destination (a TGW route table), same mechanism at the end (propagation), d
 > Both are over the TGW's limits for their path: VPC ↔ VPC carries up to 8 500 bytes, VPN 1 500. Larger packets are dropped, so the hosts must use smaller MTU/MSS.
 
 ## Easy to get wrong
+- Picturing the TGW as an Ethernet neighbour of my instances, reachable by ARP
+- Assuming the attachment is "really an ENI with an IP": for VPC attachments there are landing interfaces, but routes never point at them, and other types have none
 - Asking "what protocol is the attachment?" instead of "what runs on this connection?"
 - Treating BGP and the attachment as the same thing
 - Thinking a VPC attachment exchanges routes by BGP
@@ -324,3 +471,11 @@ TGW MTU for VPC/DX/peering/Connect vs VPN? :: 8 500 bytes vs 1 500
 How do I read `10.0.0.0/16 → VPN attachment`? :: To reach 10.0.0.0/16, send the packet through the TGW's connection toward the VPN-connected network
 Cross-account VPC attachment lifecycle? :: Created by the VPC owner, pendingAcceptance until the TGW owner accepts (or auto-accept)
 How is a TGW billed? :: Per attachment-hour plus per GB processed
+Does a TGW attachment have an IP or MAC address? :: No. It's a logical forwarding endpoint, not an IP/MAC interface
+How can a route point at something with no IP or MAC? :: A route maps a prefix to a forwarding action; the action can be an object (like a tunnel interface, a next-hop ID or an MPLS label). An attachment ID is one
+Is the TGW "hiding real interfaces"? :: It hides its implementation, but don't assume it's ordinary interfaces: the attachment is the only model AWS exposes
+What visible interfaces does a VPC attachment create, and do routes target them? :: Requester-managed interfaces in the attachment subnets with subnet IPs. No, routes target tgw-… / the attachment
+What addressed things exist under VPN, DX and Connect attachments? :: VPN: tunnel outside/inside IPs. DX: VLAN and BGP peer IPs. Connect: GRE/BGP addresses from the TGW CIDR block
+Why doesn't an instance ARP for the TGW? :: It sends off-subnet traffic to the VPC router (.1), whose ARP reply comes from AWS's virtualisation layer; AWS applies the route table and delivers to the TGW
+Do VPC route tables accept a next-hop IP? :: No, only objects: igw, nat, pcx, vgw, tgw, eni, endpoints
+Why did AWS choose destination → attachment instead of destination → IP? :: The TGW joins networks with no common L3 next hop (VPC, IPsec, VLAN, GRE, other TGWs); objects keep routing uniform

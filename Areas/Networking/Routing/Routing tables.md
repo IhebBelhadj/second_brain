@@ -77,6 +77,23 @@ On a router running several routing protocols, two protocols might both offer a 
 
 Lower = more trusted. The winner goes into the table, **then** the metric only compares routes from the same protocol. Linux has no admin distance. Each routing daemon (FRR, BIRD…) decides what to install, and the kernel just uses prefix length + metric.
 
+## What a route can point at
+
+A route is fundamentally **destination prefix → forwarding action**. The action is often "send to next-hop IP X", but it doesn't have to be: a next hop is just whatever lets the forwarding plane decide where the packet goes next.
+
+| The route points at | Example | How the packet actually leaves |
+|---|---|---|
+| A **next-hop IP** on a shared link | `10.20.0.0/16 via 192.168.1.1 dev eth0` | The router resolves `192.168.1.1` to a MAC with [[ARP]], then sends a frame to that MAC |
+| An **interface only** (point-to-point, tunnel) | `10.20.0.0/16 dev wg0`, `dev tun0`, a GRE or PPP link | There's only one possible receiver on the other end, so no next-hop IP and **no ARP**: the packet is simply handed to the interface (which may encrypt and encapsulate it) |
+| A **next-hop object** | Linux `ip nexthop add id 10 via 192.168.1.1 dev eth0`, then `ip route add 10.20.0.0/16 nhid 10` | Many routes share one object; change the object, every route follows. Routers do the same internally |
+| **Another table / VRF** | Route leaking into VRF `blue`, `ip rule … lookup 100` | The lookup continues somewhere else |
+| A **drop action** | `blackhole`, `unreachable`, `null0` | Discarded (with or without an ICMP error) |
+| A **label** | MPLS: push label 200 and send to the next router | Routers along the path switch on labels, not on IP addresses |
+
+How a router turns a route into a frame: the **FIB** (below) gives the next hop, and a separate **adjacency** table holds the ready-made Layer 2 information for it (destination MAC, outgoing interface), built from ARP. Only links that need Layer 2 addressing (Ethernet) need an adjacency with a MAC; tunnels and point-to-point links don't.
+
+So "a route points at something with no IP and no MAC" isn't exotic. Tunnels do it, MPLS does it, and cloud routers do it everywhere: a cloud route table points at **objects** (a gateway ID, an attachment ID) and the provider's network resolves the object to a path (see "In AWS" below, and [[Transit gateway attachments#Is an attachment a network interface?]]).
+
 ## RIB vs FIB
 
 - **RIB** (Routing Information Base): every route the router knows, from every source, including backups
@@ -134,7 +151,7 @@ That last line is essential: without it, the encrypted packets to the VPN server
 
 A [[VPC]] route table is the same idea, attached to **subnets**:
 - Longest prefix match applies (`10.0.0.0/16 → local` vs `0.0.0.0/0 → igw-…`)
-- Targets are AWS objects instead of IPs: internet gateway, NAT gateway, peering connection, transit gateway, virtual private gateway (VPN), a network interface, a firewall endpoint
+- Targets are AWS objects instead of IPs: internet gateway, NAT gateway, peering connection, transit gateway, virtual private gateway (VPN), a network interface, a firewall endpoint. A VPC route table **never** takes a next-hop IP: the VPC network resolves the object to a path itself ([[Transit gateway attachments#Is an attachment a network interface?]])
 - Every table has the **`local`** route for the VPC CIDR
 - Routes can come from me (**static**) or be learned from a VPN / Direct Connect through BGP (**propagated**). For the same prefix, **static beats propagated**
 - A **transit gateway** has its own route tables, and several of them act like separate routing domains (see [[Connecting VPCs]])
@@ -155,6 +172,10 @@ A [[VPC]] route table is the same idea, attached to **subnets**:
 
 ## Flashcards
 #flashcards
+
+What is a route, fundamentally? :: Destination prefix → forwarding action. The action can be a next-hop IP, an interface, a next-hop object, another table, a drop, or a label
+Why does `10.20.0.0/16 dev wg0` need no next-hop IP and no ARP? :: A point-to-point/tunnel interface has only one possible receiver; the packet is handed to the interface
+What is an adjacency table? :: Ready-made Layer 2 info (MAC, interface) for each next hop, built from ARP, used with the FIB to build frames
 
 What does a routing table decide? :: For each packet's destination: the outgoing interface and next hop
 What is longest prefix match? :: Among all matching routes, the most specific prefix (largest /n) wins

@@ -21,6 +21,7 @@ AWS/
 │   ├── Lightsail.md                simple VPS
 │   └── EC2 vs Lightsail vs Lambda.md   which to pick
 ├── Networking/
+│   ├── AWS networking.md           sub-index: reading order in 5 stages, prerequisites, question → note table, roadmap
 │   ├── VPC.md                      subnets, route tables, internet/NAT gateways, console wizard
 │   ├── Security groups.md          stateful per-interface firewall vs NACLs
 │   ├── Connecting VPCs.md          peering vs transit gateway, transitivity

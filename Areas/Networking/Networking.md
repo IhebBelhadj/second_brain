@@ -78,7 +78,7 @@ flowchart TD
 - [[Nested VPNs]]: chained VPNs (branch → HQ → cloud, a routing problem: transitivity, selectors, return paths, hairpinning) vs stacked VPNs (tunnel in a tunnel, an MTU problem), and the fixes
 
 ## 9. Applied: cloud networking (AWS today)
-Every concept above shows up here under a product name. The general idea is in the sections above, the notes below are about how one provider packages it.
+Every concept above shows up here under a product name. The general idea is in the sections above, the notes below are about how one provider packages it. Reading order for the AWS side, in 5 stages → [[AWS networking]].
 - [[VPC]]: a private network in the cloud: subnets, CIDR ranges, route tables, internet and NAT gateways
 - [[Security groups]]: stateful filtering per network interface (section 5 applied)
 - [[Connecting VPCs]]: peering vs a central router (transit gateway), transitive routing

@@ -13,21 +13,32 @@ tags: [topic]
 3. Then dive into a domain below
 
 ## Networking (where things live)
+Full reading path, prerequisites and a "which note answers…" table → [[AWS networking]]
+
+**One VPC**
 - [[VPC]]: my private network. Subnets, route tables, internet gateway, NAT
-- [[Connecting VPCs]]: peering vs transit gateway
-- [[Proxies, load balancing and discovery in AWS]]: ALB, NLB, GWLB, CloudFront, API Gateway, Global Accelerator, Cloud Map, Service Connect, VPC Lattice, and egress control, mapped to the general concepts
-- [[Site-to-Site VPN]]: the managed IPsec VPN. Customer gateway, virtual private gateway, two tunnels, static vs BGP, route propagation, CloudHub, limits (1.25 Gbps, 100 routes, MSS 1379) and the "tunnel UP but nothing works" checklist
-- [[Transit gateway]]: the hub that replaces one VGW per VPC. Association vs propagation, segmentation, VPN ECMP, inspection VPC and appliance mode, peering, RAM, Connect attachments
+- [[Security groups]]: the firewall on each resource, and how it differs from NACLs
 - [[VPC IP address planning]]: why every VPC CIDR should come from a plan. AWS rules (/16–/28, 5 reserved, no resizing), one block per environment, how it shrinks VPC/TGW/BGP/SG rules, a standard subnet layout, AWS IPAM pools, EKS pod ranges
-- [[BGP in AWS hybrid networking]]: BGP carries routes, not traffic. The chain office → BGP → VPN attachment → propagation → TGW table, what BGP never does (VPC routes), what AWS announces back, BGP vs propagation, segmentation still in TGW tables, failover between tunnels, static vs BGP, Direct Connect
+- [[Bastion host]]: how I get into servers sitting in a private subnet
+
+**Services inside AWS**
+- [[Route 53]]: DNS, turns `myapp.com` into an address. Delegation from the registrar, Alias vs CNAME, private hosted zones (and the no-fallback trap), health checks and failover timing, routing policies combined, Resolver endpoints for hybrid DNS, DNSSEC and DNS Firewall
+- [[Proxies, load balancing and discovery in AWS]]: ALB, NLB, GWLB, CloudFront, API Gateway, Global Accelerator, Cloud Map, Service Connect, VPC Lattice, and egress control, mapped to the general concepts
+
+**Many VPCs**
+- [[Connecting VPCs]]: peering vs transit gateway
+- [[Transit gateway]]: the hub that replaces one VGW per VPC. Association vs propagation, segmentation, VPN ECMP, inspection VPC and appliance mode, peering, RAM, Connect attachments
 - [[Transit gateway attachments]]: what an attachment is from a networking view (a managed interface, not a protocol), what each type runs underneath (VPC, VPN, DX, peering, Connect), MTU, why AWS designed the TGW around them, the router/VRF analogy
 - [[Transit gateway routing]]: the two routing decisions (VPC table → TGW table), attach vs associate vs propagate, default tables, a packet traced from the office and back, static vs propagated, limiting propagation, short VPC routes
+
+**AWS ↔ my network**
+- [[Site-to-Site VPN]]: the managed IPsec VPN. Customer gateway, virtual private gateway, two tunnels, static vs BGP, route propagation, CloudHub, limits (1.25 Gbps, 100 routes, MSS 1379) and the "tunnel UP but nothing works" checklist
+- [[BGP in AWS hybrid networking]]: BGP carries routes, not traffic. The chain office → BGP → VPN attachment → propagation → TGW table, what BGP never does (VPC routes), what AWS announces back, BGP vs propagation, segmentation still in TGW tables, failover between tunnels, static vs BGP, Direct Connect
 - [[Direct Connect]]: a private physical link. Dedicated vs hosted, private/transit/public VIFs, Direct Connect gateway, VPN as backup, resilience, encryption, and what it takes to reach one instance over it
-- [[Hybrid connectivity architectures]]: the problems in the order they show up (many VPCs, bandwidth, failover, overlap, DNS, a client network that's already a chain of VPNs, inspection, multi-region) and the design for each
 - [[Connecting AWS to a private network]]: the managed VPN, and eight workarounds (EC2 as a VPN router, dial-out tunnels, mesh, SSH, connectors…) with where each one breaks
-- [[Route 53]]: DNS, turns `myapp.com` into an address. Delegation from the registrar, Alias vs CNAME, private hosted zones (and the no-fallback trap), health checks and failover timing, routing policies combined, Resolver endpoints for hybrid DNS, DNSSEC and DNS Firewall
-- [[Bastion host]]: how I get into servers sitting in a private subnet
-- [[Security groups]]: the firewall on each resource, and how it differs from NACLs
+
+**Designing it**
+- [[Hybrid connectivity architectures]]: the problems in the order they show up (many VPCs, bandwidth, failover, overlap, DNS, a client network that's already a chain of VPNs, inspection, multi-region) and the design for each
 
 ## Storage (where my data lives)
 - [[S3]]: object storage. Buckets and keys (no real folders), storage classes and lifecycle, versioning, replication, who can access a bucket, presigned URLs, gateway endpoints, and the 403s

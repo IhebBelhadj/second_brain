@@ -9,26 +9,42 @@ aliases: [Check permutation, URLify, Palindrome permutation, One away, CtCI chap
 # Arrays and strings problems
 
 > [!abstract] In one sentence
-> The problems from *Cracking the Coding Interview* chapter 1 that I solved, each with the idea that cracks it, a clean solution, its cost, and what my own version gets wrong. Most of them reduce to three tools: **counting characters with a [[Hash table]]**, **comparing with two indexes** instead of building new strings, and **bit vectors** as a tiny set.
+> The *Cracking the Coding Interview* chapter 1 problems I solved, worked through as a method: pin down the input model, write the brute force and its cost, find the **bottleneck** (usually a search inside a loop or repeated copying), and replace it with one of four tools: a **frequency table**, a **bit vector**, **two indexes** moving in step, or **writing from the end** of a buffer.
 
-## The recurring patterns
+## 1. The method
 
-| Pattern | Idea | Problems below |
+```mermaid
+flowchart TD
+    A["1. Input model<br/>case? spaces? alphabet size?<br/>mutable buffer or immutable string?"] --> B["2. Brute force<br/>+ its time and space"]
+    B --> C["3. Bottleneck<br/>search inside a loop? sorting?<br/>copying substrings? shifting?"]
+    C --> D{"4. Which tool removes it?"}
+    D -- "comparing multisets of characters" --> F["Frequency table<br/>(dict, or array of 26/128)"]
+    D -- "only parity / presence, small alphabet" --> V["Bit vector<br/>(XOR toggles, AND tests)"]
+    D -- "two sequences compared with<br/>a bounded number of differences" --> T["Two indexes<br/>moving in step"]
+    D -- "output longer than input<br/>in the same buffer" --> E["Fill from the end"]
+    F & V & T & E --> G["5. Edge cases<br/>empty, one char, all same, max length"]
+```
+
+Step 1 decides correctness, not just speed: "is `Tact Coa` a palindrome permutation?" is true only if case and spaces are ignored. Step 3 is where the improvement comes from: name the exact operation that makes the brute force slow.
+
+### Cost model facts for strings in Python
+
+| Operation | Cost | Consequence |
 |---|---|---|
-| **Frequency count** | Count each character in a dict (or a fixed array of 26/128), then reason about the counts | Check permutation, palindrome permutation |
-| **Bit vector** | One integer, one bit per possible character: a set in a single number. Toggle with XOR | Palindrome permutation |
-| **Two indexes / one pass** | Walk both strings with indexes, allow one difference, don't build substrings | One away |
-| **Work from the end** | When the output is longer than the input in the same buffer, fill it from the back so nothing gets overwritten | URLify |
+| `s[i]` | O(1) | Indexing is fine |
+| `s[i:j]` | O(j − i), **copies** | Slicing in a loop turns O(n) into O(n²) |
+| `s += t` in a loop | Copies `s` each time (CPython sometimes optimizes, don't rely on it) | Collect parts in a list, `"".join(parts)` once |
+| `sorted(s)` | O(n log n) | Often replaceable by counting in O(n) |
+| `Counter(s)` / dict counting | O(n), O(k) space (k distinct characters) | k ≤ alphabet size |
+| Fixed array of 26 / 128 counts | O(n), O(1) space | When the alphabet is known and small |
 
-Before coding any of them: **clarify the input** (case-sensitive? spaces count? ASCII or Unicode?). Half of my bugs below are an unasked question about the input.
+Strings are **immutable** in Python and Java: "in-place" string problems are about character arrays (C, Java `char[]`), which in Python means a `list` of characters.
 
-## 1.2 Check permutation
+## 2. Check permutation (1.2)
 
-> Given two strings, decide if one is a permutation of the other. `"listen"`, `"silent"` → true.
+> Is one string a permutation of the other? `"listen"`, `"silent"` → true.
 
-**Idea:** same length and same character counts.
-
-My solution is correct:
+**Model**: same multiset of characters. **Brute force**: for each character of s1, find and remove a matching one in s2: O(n²). **Bottleneck**: the search inside the loop. **Tools**: sort both (O(n log n)), or count (O(n)).
 
 ```python
 def check_permutation(s1, s2):
@@ -38,24 +54,21 @@ def check_permutation(s1, s2):
     for ch in s1:
         freq[ch] = freq.get(ch, 0) + 1
     for ch in s2:
-        if freq.get(ch, 0) == 0:     # more of ch in s2 than in s1
+        if freq.get(ch, 0) == 0:       # s2 has more of ch than s1
             return False
         freq[ch] -= 1
     return True
 ```
 
-| Approach | Time | Extra space |
-|---|---|---|
-| Count with a dict (above), or `Counter(s1) == Counter(s2)` | O(n) | O(k), k = distinct characters |
-| Sort both and compare: `sorted(s1) == sorted(s2)` | O(n log n) | O(n) |
+This is my solution, and it's correct. Why it's correct: the length check plus "never go below zero" means s2 uses each character at most as often as s1, with the same total, so the counts are equal. Without the length check, `"ab"` vs `"a"` would pass. For ASCII, a `[0] * 128` array instead of a dict is O(1) space and faster.
 
-The length check isn't just an optimization: without it, `"ab"` vs `"abc"` would pass the loop (the second loop never sees a missing character).
+Unicode caveat: `"é"` can be one code point (U+00E9) or two (`e` + combining accent). Two visually identical strings can fail the check; normalize first (`unicodedata.normalize("NFC", s)`) if the input is user text.
 
-## 1.3 URLify
+## 3. URLify (1.3)
 
-> Replace every space with `%20`. The book's version: a character array with enough free space at the end, and the "true length" of the string. `"Mr John Smith    ", 13` → `"Mr%20John%20Smith"`.
+> Replace each space with `%20`. Given a character array with enough free space at the end and the "true length": `"Mr John Smith    ", 13` → `"Mr%20John%20Smith"`.
 
-**Idea (in place, from the end):** count the spaces in the true length, compute the final length (`true_length + 2 × spaces`), then copy characters **from the back**, writing `0`, `2`, `%` for each space. Going backwards means I never overwrite a character I haven't copied yet.
+**Model**: in place, the output (true_length + 2·spaces) is longer than the input, in the same buffer. **Brute force**: scan left to right, shift everything right by 2 at each space: O(n²). **Bottleneck**: the shifting. **Tool**: compute the final length, then fill **from the end**. The write index starts at the final end and is always ≥ the read index, so no unread character is ever overwritten. O(n), O(1) extra.
 
 ```python
 def urlify(chars, true_length):          # chars: list with free space at the end
@@ -71,25 +84,30 @@ def urlify(chars, true_length):          # chars: list with free space at the en
     return chars[:true_length + 2 * spaces]
 ```
 
-In Python, strings are immutable, so the idiomatic answer is `s[:true_length].replace(" ", "%20")`. The in-place version is what the interview is about (C, Java char arrays).
+`"a  b"` (two spaces) becomes `a%20%20b`: each space is replaced, nothing is collapsed. In Python with a real string, `s[:true_length].replace(" ", "%20")`.
 
-**What my version does:** splits into words, then joins them with `%20`, adding one **after every word**. Run results:
+**My version** split the input into words and appended `%20` after each word:
 
-| Input | Mine | Expected |
+```python
+if buffer != ' ':          # meant: != ''
+    list_words.append(buffer)
+for word in list_words:
+    res += (word + '%20')
+```
+
+| Input | My output | Expected |
 |---|---|---|
 | `"Mr John Smith"` | `Mr%20John%20Smith%20` | `Mr%20John%20Smith` |
 | `"Mr John Smith    "` | `Mr%20John%20Smith%20%20` | `Mr%20John%20Smith` (true length 13) |
-| `"a  b"` | `a%20b%20` | `a%20%20b` (each space replaced) |
+| `"a  b"` | `a%20b%20` | `a%20%20b` |
 
-Three issues: a trailing `%20` after the last word, `if buffer != ' '` should be `!= ''` (an empty last word gets added, giving the extra `%20%20`), and consecutive spaces are collapsed instead of each one replaced. Building `res += word + '%20'` in a loop also copies the string each time (O(n²) worst case, `"".join` avoids it).
+Three issues: `%20` after the last word, the `!= ' '` test adds an empty word when the input ends with spaces, and consecutive spaces collapse because the problem was modeled as "join words" instead of "replace each space". Plus `res +=` in a loop.
 
-## 1.4 Palindrome permutation
+## 4. Palindrome permutation (1.4)
 
-> Is the string a permutation of a palindrome? `"Tact Coa"` → true (`"taco cat"`). Spaces and case are ignored.
+> Is the string a permutation of a palindrome? `"Tact Coa"` → true (`"taco cat"`). Case and non-letters are ignored.
 
-**Idea:** a palindrome reads the same both ways, so every character appears an **even** number of times, except **at most one** (the middle one, for odd lengths). The order doesn't matter, only the counts.
-
-**With a dict** (my `is_palandrome`): count, then count how many characters have an odd count. Correct logic, but it doesn't ignore spaces or case: `"Tact Coa"` returns **False** (the space appears once, `T` and `t` are different).
+**Model**: a palindrome has every character an even number of times except at most one (the middle). Order is irrelevant, only **parity** of counts. **Tools**: frequency table, or, since only parity matters, a **set of odd characters** or a **bit vector**.
 
 ```python
 def palindrome_permutation(s):
@@ -97,52 +115,42 @@ def palindrome_permutation(s):
     for ch in s.lower():
         if not ch.isalpha():
             continue
-        odd ^= {ch}                  # toggle: in the set = odd count so far
+        odd ^= {ch}                      # toggle membership = flip parity
     return len(odd) <= 1
 ```
 
-**With a bit vector** (my `is_palandrome_binary`): one integer, bit k = "letter k has been seen an odd number of times". XOR toggles it. At the end, at most one bit may be set, and a number with at most one bit set satisfies `x & (x - 1) == 0`:
+### The bit vector version
+
+One integer, bit k = parity of letter k (`a` = bit 0). XOR with `1 << k` flips it. At the end, the string qualifies if **at most one bit is set**. A number has at most one bit set iff `x & (x − 1) == 0`: subtracting 1 flips the lowest set bit and every bit below it, so the AND clears exactly the lowest set bit, and the result is 0 iff that was the only one.
 
 ```
-x      = 0b0010000   (one bit set)
-x - 1  = 0b0001111
-x & (x - 1) = 0      → true
-
-x      = 0b0010100   (two bits set)
-x - 1  = 0b0010011
-x & (x - 1) = 0b0010000 ≠ 0 → false
+x         = 0b0010000   one bit set       x & (x-1) = 0           → ok
+x - 1     = 0b0001111
+x         = 0b0010100   two bits set      x & (x-1) = 0b0010000   → not ok
+x - 1     = 0b0010011
 ```
 
-My version computes `bit = ord(char) - ord('a')` for **every** character. For a space or an uppercase letter, that's negative, and `1 << -65` raises `ValueError: negative shift count` (that's what `"Tact Coa"` does). Fix: lowercase first and skip anything outside `a`–`z`.
+```python
+def palindrome_permutation_bits(s):
+    bits = 0
+    for ch in s.lower():
+        if "a" <= ch <= "z":
+            bits ^= 1 << (ord(ch) - ord("a"))
+    return bits & (bits - 1) == 0
+```
+
+**My versions**: the dict version had the right logic but counted every character, so `"Tact Coa"` returned **False** (the space and the two cases of `t` count separately). The bit version computed `ord(char) - ord('a')` for every character: a space gives −65, and `1 << -65` raises `ValueError: negative shift count`. The fix in both: normalize case and filter to the alphabet first (step 1 of the method).
 
 | Approach | Time | Space |
 |---|---|---|
-| Dict / set of odd characters | O(n) | O(k) |
-| Bit vector | O(n) | O(1): one integer (only works for a small fixed alphabet) |
+| Dict/set | O(n) | O(k) |
+| Bit vector | O(n) | O(1), one integer (works only for a small, known alphabet) |
 
-## 1.5 One away
+## 5. One away (1.5)
 
-> Edits are: insert a character, remove a character, replace a character. Are two strings at most one edit apart? `pale, ple` → true. `pales, pale` → true. `pale, bale` → true. `pale, bake` → false.
+> Insert, remove or replace one character. Are two strings zero or one edit apart? `pale, ple` → true, `pales, pale` → true, `pale, bale` → true, `pale, bake` → false.
 
-**Idea:** insert and remove are the same check seen from the other string. So:
-- Lengths differ by more than 1 → false
-- Same length → at most **one position** differs (replace)
-- Lengths differ by 1 → skipping **one** character in the longer string makes them equal (insert/remove)
-
-My **first attempt** (`one_away`, which I marked `# wrong` myself) tries to repair the strings while scanning. Running it confirms it fails both ways:
-
-| Input | First attempt | Correct |
-|---|---|---|
-| `pale, ple` | False | **True** |
-| `baller, baler` | False | **True** |
-| `ab, ba` | True | **False** (two replaces) |
-| `pale, pa` | True | **False** (two removals) |
-
-The last two show a structural problem: the loop only runs to the length of the **shorter** string, so extra characters at the end of the longer one are never examined.
-
-My **refined version** (`one_away_refined`) passes all of these. It swaps so `s1` is the shorter, finds the **first** difference, and decides there: same length → the rest after `i` must match (`s1[i+1:] == s2[i+1:]`), different length → `s1[i:] == s2[i+1:]` (skip one character in the longer). No difference found → equal, or one extra character at the end: true.
-
-It's O(n) time, but the slices copy the rest of the strings (O(n) memory). The two-index version avoids copies:
+**Model**: insert into one string = remove from the other, so there are only two cases. Lengths differ by more than 1 → false. Equal lengths → at most one position differs. Lengths differ by 1 → removing one character of the longer string gives the shorter. **Brute force**: try every possible single edit: O(n²) or worse. **Tool**: **two indexes** walking both strings, allowing one mismatch.
 
 ```python
 def one_away(a, b):
@@ -158,51 +166,70 @@ def one_away(a, b):
                 return False
             found_diff = True
             if len(a) == len(b):
-                i += 1                    # replace: move both
+                i += 1                    # replace: advance both
         else:
-            i += 1                        # match: move the shorter
-        j += 1                            # the longer always moves
+            i += 1                        # match: advance the shorter
+        j += 1                            # the longer always advances
     return True
 ```
 
+O(n) time, O(1) space. Tested on all the book's cases plus `ab, ba` (false: two replacements), `pale, pa` (false: two removals), `apple, aple`, `a, b`, `"", a`.
+
+**My first attempt** tried to repair the strings while scanning, and only looped up to the shorter length:
+
+| Input | First attempt | Correct |
+|---|---|---|
+| `pale, ple` | False | True |
+| `baller, baler` | False | True |
+| `ab, ba` | True | False |
+| `pale, pa` | True | False |
+
+Looping to `min(len)` never looks at the tail of the longer string, so differences there are invisible (`pale, pa`). **My refined version** finds the first mismatch and compares the rests with slices (`s1[i+1:] == s2[i+1:]` for equal lengths, `s1[i:] == s2[i+1:]` otherwise): correct on every case, O(n) time but O(n) extra space for the slices, which the two-index version avoids.
+
+## 6. Generalizations worth knowing
+
+| Problem | Extends | Tool |
+|---|---|---|
+| Group anagrams | Check permutation | Hash map from a canonical key (sorted string or a 26-count tuple) to the list of words |
+| Find all anagrams of p in s | Check permutation | Sliding window of length len(p) with a running count array: O(n) |
+| Edit distance (any number of edits) | One away | Dynamic programming over prefixes: O(n·m) (*[[Dynamic programming]]*) |
+| Longest palindromic substring | Palindrome | Expand around each center: O(n²), or Manacher O(n) |
+| String compression `aabcccccaaa → a2b1c5a3` (1.6) | | One pass with a run counter, parts joined at the end |
+
 ## Practice
 
-> [!example]- Is `"aabbccd"` a permutation of a palindrome? And `"aabbcd"`?
-> `"aabbccd"`: only `d` has an odd count → yes (`abcdcba`). `"aabbcd"`: `c` and `d` odd → no.
+> [!example]- Is `"aabbccd"` a permutation of a palindrome? `"aabbcd"`?
+> `"aabbccd"`: only `d` is odd → yes (`abcdcba`). `"aabbcd"`: `c` and `d` are odd → no.
 
-> [!example]- What is `0b1011000 & (0b1011000 - 1)`, and what does it say?
-> `0b1011000 - 1 = 0b1010111`, AND = `0b1010000` ≠ 0: more than one bit set.
+> [!example]- What is `0b1011000 & (0b1011000 - 1)` and what does it mean?
+> `0b1011000 − 1 = 0b1010111`, AND = `0b1010000` ≠ 0: more than one bit is set.
 
-> [!example]- `one_away("apple", "aple")`: trace the two-index version.
-> Lengths 4 and 5, a = "aple", b = "apple". a,a match; p,p match; l vs p differ → found_diff, lengths differ so only j moves; l vs l match; e vs e match. Returns True.
+> [!example]- Trace the two-index `one_away("apple", "aple")`.
+> a = "aple", b = "apple". a/a, p/p match. l vs p differ → found_diff, lengths differ so only j moves. l/l, e/e match. True.
 
-> [!example]- Why does URLify fill the buffer from the end?
-> The output is longer than the input in the same array. Writing from the front would overwrite characters not copied yet. From the back, the write index is always ahead of (or equal to) the read index.
+> [!example]- Why does URLify's backwards fill never overwrite an unread character?
+> Write starts at the final end (≥ read) and moves left 1 per normal character (as does read) and 3 per space (read moves 1), so the gap write − read only shrinks at spaces and reaches 0 exactly when no spaces remain to the left.
 
-## Easy to get wrong
-- Not asking: case-sensitive? spaces count? which alphabet?
-- Forgetting the length check in check permutation
-- Bit tricks on characters outside the expected range (negative shifts)
-- Only scanning up to the shorter string's length and missing trailing differences
-- Building strings with `+=` in a loop instead of `"".join`
-- Slicing in a loop (`s[i+1:]`) when two indexes would do
+> [!example]- Check permutation for ASCII strings in O(1) extra space.
+> A 128-entry count array: increment for s1, decrement for s2, fail on a negative count; plus the length check.
 
 ## Related
-- Data structures:: [[Hash table]] (frequency counts)
-- Techniques:: *[[Two pointers]]*, *[[Bit manipulation]]*
-- Number representation:: [[Number base conversion]]
+- Tools:: [[Hash table]] (frequency tables), [[Number base conversion]] (bits and binary)
+- Techniques:: *[[Two pointers]]*, *[[Bit manipulation]]*, *[[Dynamic programming]]*
 - Area:: [[Data structures and algorithms]]
 
 ## Flashcards
 #flashcards
 
-How to check if two strings are permutations of each other? :: Same length and same character counts (dict/Counter), O(n)
-Condition for a string to be a permutation of a palindrome? :: At most one character has an odd count
-How to track odd/even counts with a bit vector? :: XOR toggles one bit per character
-How to test that at most one bit is set in x? :: x & (x - 1) == 0
-Why does URLify fill from the end? :: The output is longer than the input in the same buffer, so writing backwards never overwrites unread characters
-Idiomatic Python URLify? :: s[:true_length].replace(" ", "%20")
-One away: the three cases? :: Length difference > 1 false. Same length: at most one differing position. Length differs by 1: skip one character in the longer string
-Why are insert and remove the same check in one away? :: Inserting into one string is removing from the other
-Why is `res += word` in a loop slow in Python? :: Strings are immutable, each += copies: use "".join
-What question should I ask before solving a string problem? :: Case sensitivity, whether spaces count, and the character set (ASCII/Unicode)
+Five steps to attack an array/string problem? :: Input model, brute force + cost, name the bottleneck, pick the tool, edge cases
+Why is slicing in a loop dangerous in Python? :: Each slice copies: O(n) per slice, O(n²) overall
+Check permutation in O(n)? :: Length check + frequency counts (dict or 128-array)
+Why does check permutation need the length check? :: Without it, a shorter s2 passes the "never below zero" test
+Palindrome permutation condition? :: At most one character has an odd count
+Why does x & (x − 1) == 0 mean at most one bit set? :: x − 1 flips the lowest set bit and those below it, so the AND clears exactly the lowest set bit
+How does a bit vector track character parity? :: XOR with 1 << k flips bit k for letter k
+Why fill URLify from the end? :: The output is longer than the input in the same buffer: writing backwards never overwrites unread characters
+One away: the three cases? :: Length difference > 1 false; same length at most one differing position; length differs by 1, skip one char in the longer
+Why does looping only to the shorter length break one away? :: Differences in the tail of the longer string are never examined
+Group anagrams key? :: The sorted word or a 26-count tuple
+Unicode trap in string comparison? :: The same visible character can be one or several code points: normalize (NFC) first

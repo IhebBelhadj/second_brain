@@ -28,35 +28,35 @@ flowchart TD
 ## 1. Foundations
 - *[[Big-O notation]]*: measuring cost as the input grows. O(1), O(log n), O(n), O(n log n), O(n²), amortized cost, time vs space
 - [[Recursion]]: how to solve recursive problems. My 5-step method made precise (induction, termination), designing the function's parameters, how many calls (linear, divide and conquer, choices), the combine for count/exists/best/list, base cases, cost from the recursion tree, memoization, backtracking and pruning, worked examples, debugging
-- [[Number base conversion]]: repeated division and Horner's method, hex/octal by grouping bits, where bases show up (IPs, MACs, chmod)
+- [[Number base conversion]]: positional notation, division and Horner's rule, regrouping bits, fractions and why 0.1 isn't exact, two's complement and overflow, bit operations, endianness and network byte order
 - Not written yet: *[[Bit manipulation]]*
 
 ## 2. Linear structures
-- [[Linked list]]: singly, doubly, circular. Costs vs arrays, reversing, fast/slow pointers (middle, Floyd's cycle detection), the dummy head, LRU caches, and the bugs in my implementation
+- [[Linked list]]: cost model and cache locality, a method for rewiring pointers, sentinels (Linux `list_head`), reversal, two-pointer techniques with Floyd's proof, LRU cache, skip lists, and the bugs in my implementation
 - Not written yet: *[[Arrays and dynamic arrays]]* · *[[Stacks and queues]]*
 
 ## 3. Hashing
-- [[Hash table]]: hash → bucket, collisions (chaining vs open addressing), load factor and resizing, why O(1) is average/amortized, hash flooding, the shared-object bug in my version, hashing in Kafka, load balancers and switches
+- [[Hash table]]: hashing vs compression, the hash/equality contract, chaining vs open addressing (probe math, tombstones), resizing and amortization, Python/Java/Swiss table internals, hash flooding, partitioning, the shared-bucket bug
 - Not written yet: *[[Consistent hashing]]*
 
 ## 4. Trees
-- [[Binary search tree]]: the ordering rule, search/insert/delete (three cases, in-order successor), sorted in-order traversal, why O(log n) needs balance
+- [[Binary search tree]]: the interval invariant, search/insert/delete with proofs, successor/floor/range/LCA, order statistics, height and rotations, AVL/red-black/B+ trees, BST vs hash table
 - Not written yet: *[[Balanced trees]]* (AVL, red-black, B-trees) · *[[Heaps]]* · *[[Tries]]*
 
 ## 5. Graphs
-- [[Breadth-first search]]: queue + visited-on-enqueue, waves by distance, shortest paths by edge count, grids
-- [[Depth-first search]]: recursion or a stack, `continue` not `pass`, pre/in/post-order tree traversals, components, directed cycle detection, topological order
+- [[Breadth-first search]]: the queue invariant and shortest-path proof, path reconstruction, levels, multi-source, BFS over states, 0-1 BFS, bidirectional, bipartiteness
+- [[Depth-first search]]: discovery/finish times, edge classification, directed vs undirected cycles, topological sort (DFS and Kahn), iterative DFS limits, traversal orders, components, bridges, SCC
 - Not written yet: *[[Graph representations]]* · *[[Topological sort]]* · *[[Dijkstra's algorithm]]*
 
 ## 6. Sorting and searching
-- [[Merge sort]]: divide and conquer, merging, O(n log n) always, stability, external sorting for data bigger than memory
+- [[Merge sort]]: merge invariant and stability, recurrence and the Ω(n log n) lower bound, bottom-up and linked-list versions, counting inversions, k-way merge and external sorting, Timsort
 - Not written yet: *[[Quicksort]]* · *[[Binary search]]*
 
 ## 7. Techniques
 - Not written yet: *[[Two pointers]]* · *[[Backtracking]]* · *[[Dynamic programming]]*
 
 ## 8. Problems
-- [[Arrays and strings problems]]: Cracking the Coding Interview chapter 1 (check permutation, URLify, palindrome permutation, one away), the patterns behind them, and what my solutions get wrong
+- [[Arrays and strings problems]]: a 5-step method (input model → brute force → bottleneck → tool → edge cases) applied to CtCI chapter 1, with my versions' failures
 
 ## Related areas
 - [[Networking]]: routing tables (prefix tries), switch MAC tables (hash tables), Spanning Tree (graphs without loops)

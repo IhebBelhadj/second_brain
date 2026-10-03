@@ -4,77 +4,182 @@ created: 2026-10-02
 topic: Data structures and algorithms
 confidence: 1
 tags: [dsa, data-structures, hashing]
-aliases: [Hash map, Hashmap, Hash tables, Hash function, Load factor, Separate chaining, Open addressing]
+aliases: [Hash map, Hashmap, Hash tables, Hash function, Load factor, Separate chaining, Open addressing, Linear probing]
 ---
 # Hash table
 
 > [!abstract] In one sentence
-> A hash table stores key → value pairs in an array of **buckets**: a **hash function** turns the key into a number, `hash(key) % number_of_buckets` picks the bucket, and the pair goes there. Lookup jumps straight to the right bucket instead of searching, so insert, lookup and delete are **O(1) on average**, as long as **collisions** (several keys in one bucket) stay rare by keeping the table from getting too full.
+> A hash table maps keys to values by computing **`index = h(key) mod m`** into an array of m slots, so a lookup touches one slot (plus a few on **collision**) instead of searching. Its O(1) is an **expected, amortized** bound that rests on three engineering choices: a hash function that spreads keys uniformly, a collision strategy, and a **resize policy** that keeps the load factor α = n/m bounded.
 
-## Common misconceptions
-
-**Wrong mental model #1:** "Hash tables are O(1), period."
-
-**What's actually true:** O(1) **on average**, assuming a good hash function and a table that **resizes** before it fills up. The worst case is every key landing in one bucket: O(n) per operation (or O(log n) if buckets are balanced trees). Resizing itself costs O(n) once in a while, which averages out to O(1) per insert (**amortized**).
-
-**Wrong mental model #2:** "Two different keys never get the same hash."
-
-**What's actually true:** collisions are **guaranteed** (the pigeonhole principle: infinitely many possible keys, a few buckets). Even with perfect 64-bit hashes, `% 8` maps them to 8 buckets. Every hash table needs a **collision strategy**, and the table must still compare the actual keys (`==`) to find the right one.
-
-**Wrong mental model #3:** "Any object can be a key."
-
-**What's actually true:** a key's hash must **never change** while it's in the table, and equal keys must have equal hashes. That's why Python refuses lists and dicts as keys (`TypeError: unhashable type: 'list'`) and accepts strings, numbers and tuples of those. A key whose hash changed is still in the table, in a bucket nobody will ever look in again.
-
-## Build-up
-
-### Stage 1: from a key to a bucket
+## 1. The pipeline: key → hash → slot
 
 ```mermaid
 flowchart LR
-    K1["key: 'alice'"] --> H["hash()"] --> N1["8217364549"] --> M["% 8"] --> B5["bucket 5"]
-    K2["key: 'bob'"] --> H2["hash()"] --> N2["3394112620"] --> M2["% 8"] --> B4["bucket 4"]
-    K3["key: 'carol'"] --> H3["hash()"] --> N3["1129031741"] --> M3["% 8"] --> B5b["bucket 5 (collision!)"]
-
-    classDef col fill:#fde2e2,stroke:#c0392b,color:#000
-    class B5b col
+    K["key"] --> H["hash function<br/>key → 64-bit integer"] --> C["compression<br/>integer → 0..m−1"] --> S["slot"]
+    S --> E{"slot holds<br/>this key?"}
+    E -- "compare with ==" --> F["found"]
+    E -- "different key" --> R["collision strategy:<br/>next in chain / next probe"]
 ```
 
-A good hash function spreads keys **uniformly** over buckets and is fast. Python's `hash()` is randomized per process for strings (`PYTHONHASHSEED`), so the same string hashes differently in two runs: fine for an in-memory table, wrong for anything stored or shared between processes.
+Two separate steps that are often confused:
+- **Hashing**: turn an arbitrary key into a fixed-size integer. Must be **deterministic** and consistent with equality: `a == b ⇒ h(a) == h(b)`. Should spread similar keys far apart (**avalanche**: one changed input bit flips about half the output bits)
+- **Compression**: map that integer to a slot. `h % m` with m prime uses all bits; `h & (m − 1)` with m a power of two is a single AND but **only keeps the low bits**, so tables that use it (Python, Java) either mix the hash first (Java XORs the high 16 bits into the low ones) or perturb their probe sequence with the high bits (Python)
 
-### Stage 2: collisions, two strategies
+Collisions are unavoidable (pigeonhole), so every slot access still **compares the stored key with **. Storing the full hash next to the key lets the table skip most expensive comparisons (compare hashes first).
 
-| | **Separate chaining** | **Open addressing** |
+### The hash/equality contract
+
+| Rule                                         | Consequence if broken                                                         |
+| -------------------------------------------- | ----------------------------------------------------------------------------- |
+| `a == b` ⇒ `hash(a) == hash(b)`              | Equal keys land in different slots: duplicates, lookups that miss             |
+| `hash(k)` constant while `k` is in the table | The key sits in a slot nobody will probe again: it's "lost" but still counted |
+| Hash quality: distinct keys rarely collide   | Long chains/probe runs: O(n) operations                                       |
+
+Python enforces the second rule by refusing mutable built-ins as keys (`TypeError: unhashable type: 'list'`). A user class that defines `__eq__` without `__hash__` becomes unhashable for the same reason.
+
+## 2. Collision resolution
+
+### Separate chaining
+
+Each slot holds a small collection of the entries that hash there.
+
+- Expected chain length = **α**. Unsuccessful search: ~1 + α slots examined. Successful: ~1 + α/2
+- Never "full": α can exceed 1, it just gets slower
+- Delete is simple: remove from the chain
+- Chains as lists are pointer-chasing (cache misses). Java's `HashMap` converts a bucket to a **red-black tree** once it holds 8+ entries (and the table has 64+ buckets), capping a bad bucket at O(log k)
+
+### Open addressing
+
+All entries live in the array itself. On collision, follow a **probe sequence** until an empty slot.
+
+| Probing | Sequence | Trait |
 |---|---|---|
-| Idea | Each bucket holds a small collection ([[Linked list]], or a tree) of all its pairs | One pair per slot. On collision, **probe** other slots (next one, quadratic jumps, double hashing) until a free one |
-| Full table? | Never full, chains just get longer | Must resize before full, slows down a lot past ~70% |
-| Delete | Remove from the chain | Leave a **tombstone**, otherwise later probes stop too early and lose keys |
-| Memory/cache | Pointers, scattered nodes | Contiguous array, cache-friendly |
-| Used by | Java `HashMap` (lists, turned into **red-black trees** past 8 entries per bucket) | Python `dict`, Go maps (variants), Rust `HashMap` (SwissTable) |
+| **Linear** | h, h+1, h+2, … | Best cache behavior, but **primary clustering**: runs of occupied slots merge and grow |
+| **Quadratic** | h, h+1, h+4, h+9, … | Breaks primary clusters, keys with the same h still share a path (secondary clustering) |
+| **Double hashing** | h, h+d, h+2d, … with d = h₂(key) | Different keys get different paths, closest to uniform |
+| **Robin Hood** (linear variant) | On insert, a key far from home takes the slot of one closer to home | Evens out probe lengths, lowers variance |
 
-**My implementation uses chaining with a [[Binary search tree]] in each bucket**: the same idea as Java 8's tree buckets. A bucket with many colliding keys costs O(log k) instead of O(k), *if* the tree stays balanced.
+Expected probes under uniform hashing: unsuccessful search ≈ **1 / (1 − α)**, successful ≈ (1/α)·ln(1/(1 − α)). At α = 0.5: 2 probes. At α = 0.9: 10. Linear probing degrades faster (≈ ½(1 + 1/(1 − α)²) for a miss: 50.5 at α = 0.9). Hence open-addressing tables resize early (Python at α = 2/3, many linear-probing tables at 0.5–0.7).
 
-### Stage 3: load factor and resizing
+**Deletion needs tombstones.** Emptying a slot would cut the probe chain: a key stored *after* it would become unreachable (lookups stop at the first empty slot). The slot is marked **deleted**: lookups skip it and continue, inserts may reuse it. Too many tombstones slow lookups, so a rehash also purges them.
 
-**Load factor** = number of entries / number of buckets. As it grows, chains get longer (or probes longer) and O(1) erodes.
+```python
+class LinearProbing:
+    EMPTY, TOMB = object(), object()
 
-The fix: past a threshold (0.75 in Java, about 2/3 in Python), allocate a table about **twice** as big and **re-insert every entry** (rehash), since `hash % 8` and `hash % 16` give different buckets.
+    def __init__(self, cap=8):
+        self.keys, self.vals, self.n = [self.EMPTY] * cap, [None] * cap, 0
 
-```mermaid
-flowchart LR
-    A["8 buckets, 6 entries<br/>load 0.75"] -- "next insert crosses<br/>the threshold" --> B["Allocate 16 buckets"]
-    B --> C["Re-insert all 7 entries<br/>(each bucket recomputed)"]
-    C --> D["16 buckets, 7 entries<br/>load 0.44"]
+    def _probe(self, key):
+        i = hash(key) % len(self.keys)
+        while True:
+            yield i
+            i = (i + 1) % len(self.keys)
+
+    def get(self, key):
+        for i in self._probe(key):
+            k = self.keys[i]
+            if k is self.EMPTY:
+                return None                       # end of the chain: absent
+            if k is not self.TOMB and k == key:
+                return self.vals[i]
+
+    def delete(self, key):
+        for i in self._probe(key):
+            k = self.keys[i]
+            if k is self.EMPTY:
+                return False
+            if k is not self.TOMB and k == key:
+                self.keys[i], self.vals[i] = self.TOMB, None   # keep the chain intact
+                self.n -= 1
+                return True
 ```
 
-That one insert costs O(n), but doubling means it happens rarely enough that **n inserts cost O(n) in total**: O(1) amortized per insert.
+(`put` walks the same probe, remembers the first tombstone, updates in place if the key exists, otherwise writes into the first tombstone or the empty slot, and resizes past α = 0.5.)
 
-### Stage 4: when hashing goes wrong
+## 3. Resizing and the amortized O(1)
 
-- **Bad hash function**: hashing a user ID by its last digit, or `hash = len(key)`: most keys pile into few buckets
-- **Hash flooding (a denial-of-service attack)**: an attacker sends thousands of HTTP parameters crafted to collide in the server's hash table, turning each request into O(n²) work. That's why Python, Ruby, Rust and others **randomize** string hashing per process (SipHash with a secret seed)
-- **Modulo and structure**: `% size` with a power-of-two size only uses the low bits of the hash, so a weak hash with patterns in the low bits collides a lot. Prime sizes or a mixing step fix it
+When α passes the threshold, allocate m' ≈ 2m and **reinsert every entry** (each one's slot depends on m). One insert costs O(n), but with doubling the total copy work over n inserts is n + n/2 + n/4 + … < 2n: **O(1) amortized** per insert.
 
-## Bugs in my implementation
+A minimal chained table with resizing:
+
+```python
+class HashTable:
+    def __init__(self, capacity=8):
+        self.buckets = [[] for _ in range(capacity)]   # a NEW list per bucket
+        self.size = 0
+
+    def _bucket(self, key):
+        return self.buckets[hash(key) % len(self.buckets)]
+
+    def put(self, key, value):
+        b = self._bucket(key)
+        for i, (k, _) in enumerate(b):
+            if k == key:
+                b[i] = (key, value)
+                return
+        b.append((key, value))
+        self.size += 1
+        if self.size / len(self.buckets) > 0.75:
+            self._resize(2 * len(self.buckets))
+
+    def get(self, key, default=None):
+        for k, v in self._bucket(key):
+            if k == key:
+                return v
+        return default
+
+    def _resize(self, capacity):
+        old, self.buckets = self.buckets, [[] for _ in range(capacity)]
+        for b in old:
+            for k, v in b:
+                self.buckets[hash(k) % capacity].append((k, v))
+```
+
+100 inserts starting at 8 buckets end at 256 buckets (resizes at 7, 13, 25, 49, 97 entries).
+
+Two production refinements:
+- **Incremental rehashing** (Redis): keep both tables, move a few buckets on each operation, so no single request pays the full O(n) pause. Matters for latency-sensitive servers with millions of keys
+- **Shrinking**: tables that grew during a spike keep their memory unless the implementation shrinks below a low threshold (Python dicts don't shrink on delete, only on rebuild)
+
+## 4. Real implementations
+
+| Implementation | Strategy | Notable design |
+|---|---|---|
+| **Python `dict`** | Open addressing, perturbed probing (`i = 5i + 1 + perturb`, perturb shifts in the high hash bits) | **Compact layout** (3.6+): a sparse array of small indices + a dense array of entries in insertion order. Less memory, fast iteration, **insertion order guaranteed** (3.7+). Resizes at α = 2/3 |
+| **Java `HashMap`** | Chaining, power-of-two table, `h ^ (h >>> 16)` mixing | Treeifies buckets ≥ 8 entries. Resizes at 0.75 |
+| **Go `map`** | Buckets of 8 slots + overflow buckets; newer versions use Swiss tables | Incremental growth |
+| **Rust `HashMap`, Abseil `flat_hash_map`** | **Swiss table**: open addressing with a metadata byte per slot (7 hash bits) | Checks 16 slots at once with one SIMD instruction |
+
+### Hash flooding
+
+If an attacker can choose keys (HTTP parameters, JSON fields) and knows the hash function, they can send thousands of keys that collide, turning each insert into O(n) and a request into O(n²) CPU: a denial of service (the 2011 attacks on PHP, Java, Python, Ruby web servers). The fix is a **keyed hash** with a secret per-process seed: Python, Rust and others use **SipHash** for strings. Consequence: Python's `hash("abc")` differs between runs (`PYTHONHASHSEED`), so it must never be persisted or used to route data between processes.
+
+## 5. Hashing beyond the in-memory table
+
+| Use | What changes |
+|---|---|
+| **Partitioning** across machines ([[Kafka]] partitions, sharded databases) | `hash(key) % N` is a hash table whose "slots" are machines. Changing N remaps almost every key: the resize problem, but data must physically move |
+| **Consistent hashing** ([[Load balancing]], distributed caches) | Keys and servers on a ring: adding a server moves only ~1/N of the keys. *[[Consistent hashing]]* |
+| **Switch MAC tables, routing caches, conntrack** | Hash tables in network devices and kernels. Filling a switch's MAC table with random source MACs (**MAC flooding**) makes it flood every frame ([[Hubs, switches and routers]]) |
+| **Caches** ([[DNS]] resolvers, memcached, Redis) | A hash table + an eviction policy ([[Linked list]] for LRU) |
+| **Bloom filters** | k hash functions setting bits: "definitely not present" or "probably present", tiny memory. Databases skip disk reads with them |
+| **Cryptographic hashes** (SHA-256) | Different goal: infeasible to find collisions or invert. Too slow for table indexing, used for integrity and content addressing |
+
+## 6. Hash tables as a problem-solving tool
+
+The reflex: "I'm about to search a collection inside a loop" → build a hash set/map first and make each search O(1).
+
+| Pattern | Example | From → to |
+|---|---|---|
+| Seen-set | First duplicate, "does x exist" | O(n²) → O(n) |
+| Complement lookup | Two-sum: for each x, is `target − x` already seen? | O(n²) → O(n) |
+| Frequency map | Anagrams, palindrome permutation ([[Arrays and strings problems]]) | Sorting O(n log n) → O(n) |
+| Grouping by a canonical key | Group anagrams by `sorted(word)` or a letter-count tuple | |
+| Memoization | Cache results by arguments ([[Recursion]]) | Exponential → polynomial |
+| Index map | Value → position, for O(1) "where is x" | |
+
+## 7. Bugs in my implementation
 
 My table was created like this:
 
@@ -82,70 +187,56 @@ My table was created like this:
 self.table = [BST()] * size
 ```
 
-`[x] * size` creates a list of `size` **references to the same object**. All buckets are **one shared BST**: every key goes into the same tree, and the "hash table" is just a BST with extra steps. It still returns correct results, which is what makes this bug hard to notice.
+`[x] * size` repeats a **reference** to one object: all slots are the same BST, so every key goes into one tree and the "hash table" is a BST with an O(1) detour. Lookups still return correct values, which is why the bug is invisible in tests that only check results. Correct: `[BST() for _ in range(size)]`. The same trap: `[[0] * 3] * 3` makes three references to one row.
 
-```python
-self.table = [BST() for _ in range(size)]   # a new BST per bucket
-```
-
-The same trap hits `[[0] * 3] * 3` for a 2D grid: changing `grid[0][0]` changes all three rows.
-
-Missing compared to a real hash table: no **resizing** (with a fixed size, the load factor grows forever), no **delete**, and keys must be **comparable** (`<`, `>`) as well as hashable because of the BST buckets, which a chained list wouldn't require.
-
-## Where hash tables show up in systems
-- **Python `dict` and `set`**, every language's maps, object attributes, symbol tables in compilers
-- **Caches**: memcached, Redis, a DNS resolver's cache ([[DNS]]), with a [[Linked list]] for LRU eviction
-- **Network devices**: a switch's MAC address table maps MAC → port. Filling it with fake MACs (**MAC flooding**) makes the switch flood every frame to all ports ([[Hubs, switches and routers]])
-- **Partitioning data**: [[Kafka]] picks a partition with `hash(key) % partitions`. Adding partitions changes the modulo, so keys move: the same problem as resizing, but across machines
-- **Load balancers and distributed caches**: plain `hash % servers` moves almost every key when a server is added. **Consistent hashing** moves only ~1/N of them ([[Load balancing]], *[[Consistent hashing]]*)
-- **Databases**: hash indexes and hash joins
-- **Deduplication and integrity**: content hashes (SHA-256) identify files and blocks, but those are cryptographic hashes, a different job than bucket selection
+Design notes on that version, compared with section 3:
+- Using a [[Binary search tree]] per bucket is the Java-style treeified bucket, but it requires keys to be **orderable** (`<`) as well as hashable, and an unbalanced BST bucket gives no worst-case guarantee
+- No resizing: α grows without bound, and the expected O(1) disappears as n grows past `size`
+- No delete
 
 ## Practice
 
-> [!example]- 8 buckets, 6 entries, threshold 0.75. What happens on the next insert, and what does it cost?
-> 7/8 = 0.875 > 0.75, so the table grows to 16 buckets and re-inserts all 7 entries: O(n) for that insert, O(1) amortized overall.
+> [!example]- Open addressing at α = 0.8 vs 0.5: expected probes for a failed lookup under uniform hashing?
+> 1/(1 − α): 5 at 0.8, 2 at 0.5. Linear probing is worse (≈ 13 at 0.8), which is why it resizes earlier.
 
-> [!example]- Why can't a Python list be a dict key, but a tuple can?
-> A list is mutable: its hash would change if its contents changed, leaving it in the wrong bucket. A tuple of hashable items is immutable, so its hash is stable.
+> [!example]- Why can't open addressing simply empty a slot on delete?
+> Lookups stop at the first empty slot. Emptying a slot in the middle of a probe run hides every key inserted after it in that run. A tombstone keeps the run connected.
 
-> [!example]- `[BST()] * 4` vs `[BST() for _ in range(4)]`?
-> The first is 4 references to one BST (all buckets shared). The second creates 4 independent BSTs.
+> [!example]- A table doubles at α > 0.75 starting from 8 slots. How many total element moves for 1000 inserts?
+> Resizes happen at 7, 13, 25, 49, 97, 193, 385 and 769 entries: 1538 moves in total, under 2n, so O(1) amortized per insert.
 
-> [!example]- Count how many times each word appears in a text. Data structure and cost?
-> A hash table word → count (`dict` or `collections.Counter`): O(1) average per word, O(n) total.
+> [!example]- Two-sum: indices of two numbers adding to `target` in O(n).
+> One pass with a dict value → index: for each `x` at `i`, if `target - x` is in the dict, return both indices, otherwise store `x → i`.
 
-## Easy to get wrong
-- "O(1) always": average and amortized, worst case O(n)
-- Forgetting that the keys themselves must still be compared after landing in a bucket
-- Mutable keys, or keys whose `__hash__` doesn't match `__eq__`
-- `[obj] * n` sharing one object across all slots
-- No resizing: performance degrades as the load factor grows
-- Deleting in open addressing without tombstones
-- Relying on Python's `hash()` of strings across processes (randomized)
-- Using `hash % n` to spread keys over servers and moving everything when n changes
+> [!example]- A service shards users with `hash(user_id) % 4`. It moves to 5 shards. Roughly what fraction of users move?
+> About 80%: a key stays only if `h % 4 == h % 5`, which holds for 4 of every 20 values. Consistent hashing would move about 1/5.
 
 ## Related
-- Buckets built with:: [[Linked list]] (chaining), [[Binary search tree]] (my tree buckets)
-- Compared with:: [[Binary search tree]] (ordered, O(log n) if balanced)
-- Used in problems:: [[Arrays and strings problems]] (frequency counting)
+- Buckets built with:: [[Linked list]], [[Binary search tree]]
+- Compared with:: [[Binary search tree]] (ordered, O(log n) when balanced, range queries)
+- Used in:: [[Arrays and strings problems]], [[Recursion]] (memoization)
 - In systems:: [[Kafka]], [[Load balancing]], [[DNS]], [[Hubs, switches and routers]]
 - Area:: [[Data structures and algorithms]]
 
 ## Flashcards
 #flashcards
 
-How does a hash table find a key's bucket? :: hash(key) modulo the number of buckets
-Average and worst-case cost of hash table lookup? :: O(1) average, O(n) worst case (all keys colliding)
-Why are collisions unavoidable? :: Many more possible keys than buckets (pigeonhole principle)
-Separate chaining vs open addressing? :: Chaining: each bucket holds a list/tree of entries. Open addressing: one entry per slot, probe other slots on collision
-What is the load factor? :: Entries divided by buckets
-What happens when the load factor passes its threshold? :: The table grows (usually doubles) and every entry is rehashed into the new buckets
-Why is insert O(1) amortized despite O(n) resizes? :: Doubling makes resizes rare enough that n inserts cost O(n) total
-Why do deletes in open addressing need tombstones? :: An empty slot would stop later probes early and hide keys stored after it
-What does Java's HashMap do with long bucket chains? :: Converts them to red-black trees (O(log k) per bucket)
-Two rules for hash table keys? :: The hash must not change while stored, and equal keys must have equal hashes
-Why is Python's string hash randomized per process? :: To prevent hash-flooding denial-of-service attacks
-What's wrong with `[BST()] * size`? :: All slots reference the same single BST object
-Why does adding Kafka partitions move keys? :: The partition is hash(key) % partitions, so changing the count changes the result, like a hash table resize
-What does consistent hashing improve over hash % servers? :: Adding or removing a server moves only about 1/N of the keys
+Hashing vs compression in a hash table? :: Hashing maps the key to a fixed-size integer, compression maps that integer to a slot (mod m or mask)
+Why do power-of-two tables mix the hash first? :: h & (m−1) keeps only the low bits, so patterns in them would collide
+The hash/equality contract? :: a == b implies hash(a) == hash(b), and a key's hash must not change while stored
+Expected chain length with separate chaining? :: The load factor α = n/m
+Expected probes for a failed lookup with open addressing (uniform)? :: 1/(1 − α)
+What is primary clustering? :: In linear probing, occupied runs merge and grow, lengthening probes
+Why does open addressing need tombstones? :: An emptied slot would end probe sequences early and hide later keys
+Why is insert O(1) amortized despite O(n) resizes? :: Doubling makes the total copy work a geometric series under 2n
+What is incremental rehashing? :: Keeping old and new tables and migrating a few buckets per operation (Redis), avoiding long pauses
+Python dict internals? :: Open addressing with perturbed probing, compact layout (index array + dense ordered entries), resize at 2/3
+Java HashMap's defense against long buckets? :: Buckets with 8+ entries become red-black trees
+What is a Swiss table? :: Open addressing with a metadata byte per slot, probing 16 slots per SIMD instruction
+What is hash flooding? :: Sending keys crafted to collide, making table operations O(n): a DoS
+Defense against hash flooding? :: A keyed hash with a secret per-process seed (SipHash)
+Why must Python's hash() of a string not be persisted? :: It's randomized per process (PYTHONHASHSEED)
+What's wrong with [BST()] * size? :: Every slot references the same single object
+Fraction of keys that move going from hash % 4 to hash % 5? :: About 80%
+What is a Bloom filter? :: k hash functions setting bits: "definitely not present" or "probably present" in tiny memory
+The hash table reflex in algorithm design? :: Replace a search inside a loop by an O(1) set/map lookup

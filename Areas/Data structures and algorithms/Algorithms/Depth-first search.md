@@ -4,148 +4,206 @@ created: 2026-10-02
 topic: Data structures and algorithms
 confidence: 1
 tags: [dsa, algorithms, graphs, dfs, trees]
-aliases: [DFS, Tree traversal, Pre-order traversal, In-order traversal, Post-order traversal]
+aliases: [DFS, Tree traversal, Pre-order traversal, In-order traversal, Post-order traversal, Topological order, Cycle detection]
 ---
 # Depth-first search
 
 > [!abstract] In one sentence
-> Depth-first search (DFS) explores a graph by going **as deep as possible** along one path before backing up to try the next branch, using either **recursion** (the call stack) or an explicit **stack** (last in, first out), plus a **visited** set so cycles don't trap it. It visits everything reachable in **O(V + E)**, and its "go deep, then come back" shape is what makes it the tool for cycle detection, topological ordering, connected components, tree traversals and backtracking.
+> Depth-first search follows one path as deep as it can, then **backtracks** to the most recent node with unexplored edges, using the call stack or an explicit LIFO stack, in **O(V + E)**. What makes DFS more than "a traversal" is the **structure it records**: each node has a discovery time and a finish time, and the moment a node *finishes* (after all its descendants) is what powers cycle detection, topological sorting, strongly connected components, bridges, and every post-order computation on trees.
 
-## Common misconceptions
-
-**Wrong mental model #1:** "Iterative DFS is just BFS with `pop()` instead of `popleft()`."
-
-**What's actually true:** swapping the queue for a stack does give a depth-first order, but the details change:
-- Neighbors are popped in **reverse** of the order they were pushed, so the order differs from the recursive version unless I push them reversed
-- Where I check `visited` matters: the simple, correct version checks **when popping** and skips nodes already visited (a node can sit in the stack more than once)
-
-**Wrong mental model #2:** "The visited check can just `pass` if the node was already seen."
-
-**What's actually true:** `pass` does nothing, and execution continues with the node anyway. It must be **`continue`** (skip the rest of the loop body). That one word is the difference between a traversal and an infinite loop on any graph with a cycle. Both my iterative versions have this bug (below).
-
-**Wrong mental model #3:** "DFS finds the shortest path."
-
-**What's actually true:** DFS finds **a** path, often a long one. Shortest paths in unweighted graphs are [[Breadth-first search]]'s job.
-
-## Build-up
-
-Same graph as in [[Breadth-first search]]:
-
-```mermaid
-flowchart LR
-    N1((1)) --> N2((2))
-    N1 --> N3((3))
-    N2 --> N4((4))
-    N2 --> N5((5))
-    N3 --> N6((6))
-    N5 --> N6
-```
-
-### Stage 1: recursive DFS
-
-The [[Recursion]] method: `_dfs(node)` means "visit node and everything reachable from it that isn't visited yet". Assume it works for the neighbors, then the current step is: mark, visit, recurse into each neighbor.
+## 1. Recursive DFS and the timestamps
 
 ```python
-def dfs(graph, start):
-    visited, order = set(), []
+def dfs_all(graph):
+    WHITE, GRAY, BLACK = 0, 1, 2          # unvisited / on the current path / finished
+    state = {u: WHITE for u in graph}
+    tin, tout, clock = {}, {}, [0]
 
-    def _dfs(node):
-        if node in visited:
-            return
-        visited.add(node)
-        order.append(node)                 # "visit"
-        for neighbor in graph.get(node, []):
-            _dfs(neighbor)
+    def visit(u):
+        state[u] = GRAY
+        tin[u] = clock[0]; clock[0] += 1
+        for v in graph[u]:
+            if state[v] == WHITE:
+                visit(v)
+        state[u] = BLACK
+        tout[u] = clock[0]; clock[0] += 1
 
-    _dfs(start)
-    return order
+    for u in graph:                        # every component
+        if state[u] == WHITE:
+            visit(u)
+    return tin, tout
 ```
 
-`dfs(graph, 1)` → `[1, 2, 4, 5, 6, 3]`: down 1 → 2 → 4 (dead end), back to 2 → 5 → 6, back up to 1 → 3 (6 already visited).
+- **Discovery** (`tin`): when the node turns gray, i.e. enters the recursion stack
+- **Finish** (`tout`): when all its descendants are done and it turns black
 
-```mermaid
-sequenceDiagram
-    participant S as Call stack
-    Note over S: _dfs(1)
-    Note over S: _dfs(1) → _dfs(2)
-    Note over S: _dfs(1) → _dfs(2) → _dfs(4) (dead end, return)
-    Note over S: _dfs(1) → _dfs(2) → _dfs(5) → _dfs(6) (return ×3)
-    Note over S: _dfs(1) → _dfs(3) → _dfs(6) already visited
+**Parenthesis structure**: for any two nodes u, v, the intervals `[tin, tout]` are either nested (one is a descendant of the other in the DFS tree) or disjoint. Never partially overlapping. That's what makes the edge classification below sound.
+
+Cost: each node turns gray and black once, each edge is examined once from its tail: **O(V + E)**. Memory: the recursion depth, up to V on a long path (Python's limit is ~1000, see [[Recursion]]).
+
+## 2. Edge classification
+
+When DFS at u examines an edge u → v, the state of v says what kind of edge it is:
+
+| v's state | Edge type | Meaning |
+|---|---|---|
+| WHITE | **Tree edge** | v is discovered through u |
+| GRAY | **Back edge** | v is an ancestor still on the stack: **a cycle** |
+| BLACK, `tin[u] < tin[v]` | **Forward edge** | v is an already-finished descendant |
+| BLACK, `tin[v] < tin[u]` | **Cross edge** | v is in another, finished branch |
+
+**A directed graph has a cycle iff DFS finds a back edge.** A plain visited set can't tell a back edge (cycle) from a cross or forward edge (two paths merging), which is why directed cycle detection needs the **three** states.
+
+In an **undirected** graph only tree and back edges exist, and every edge appears in both directions, so the edge back to the **parent** must be ignored: a cycle is an edge to an already-visited node **other than the parent**.
+
+```python
+def has_cycle_undirected(graph):
+    seen = set()
+    def visit(u, parent):
+        seen.add(u)
+        for v in graph[u]:
+            if v == parent:
+                continue
+            if v in seen or visit(v, u):
+                return True
+        return False
+    return any(u not in seen and visit(u, None) for u in graph)
 ```
 
-**The limit:** each level of depth is a stack frame. A path of 5,000 nodes (a long chain, a big maze) raises `RecursionError` in Python.
+(With parallel edges between the same pair, skip the parent **edge** by edge ID instead of by node.)
 
-### Stage 2: iterative DFS with an explicit stack
+## 3. Topological sort
+
+A topological order of a DAG lists every node before all nodes it points to (every task after its prerequisites). **Reverse finish order** is one: when u finishes, everything reachable from u has already finished, so u must come before them.
+
+```python
+def topological_order(graph):
+    WHITE, GRAY, BLACK = 0, 1, 2
+    state = {u: WHITE for u in graph}
+    order = []
+    def visit(u):
+        state[u] = GRAY
+        for v in graph[u]:
+            if state[v] == GRAY:
+                raise ValueError("cycle: no topological order")
+            if state[v] == WHITE:
+                visit(v)
+        state[u] = BLACK
+        order.append(u)                    # post-order
+    for u in graph:
+        if state[u] == WHITE:
+            visit(u)
+    return order[::-1]
+```
+
+Dressing example (`shirt → tie → jacket`, `pants → shoes`, `pants → jacket`, `socks → shoes`) gives `socks, pants, shoes, shirt, tie, jacket`: every arrow points forward.
+
+The BFS alternative, **Kahn's algorithm**: repeatedly output a node with in-degree 0 and decrement its successors' in-degrees. If nodes remain with nonzero in-degree, there's a cycle. It's iterative (no recursion limit) and naturally gives "layers" of tasks that can run in parallel. More in *[[Topological sort]]*.
+
+## 4. Iterative DFS
+
+Recursion depth is a real limit in Python, so production DFS is often iterative. The simple correct version pushes neighbors and checks `visited` **when popping**:
 
 ```python
 def dfs_iterative(graph, start):
     visited, order = set(), []
     stack = [start]
     while stack:
-        node = stack.pop()
-        if node in visited:
-            continue                       # continue, not pass
-        visited.add(node)
-        order.append(node)
-        for neighbor in reversed(graph.get(node, [])):   # reversed: same order as recursive
-            if neighbor not in visited:
-                stack.append(neighbor)
+        u = stack.pop()
+        if u in visited:
+            continue                       # a node can be pushed several times
+        visited.add(u)
+        order.append(u)
+        for v in reversed(graph.get(u, ())):   # reversed → same order as recursive
+            if v not in visited:
+                stack.append(v)
     return order
 ```
 
-Same `[1, 2, 4, 5, 6, 3]`. Without `reversed`, it's `[1, 3, 6, 2, 5, 4]`: still a valid DFS, just exploring the last neighbor first. No recursion limit: the stack is a normal list on the heap.
+The stack can hold O(E) entries (a node pushed once per incoming edge). For pre-order traversal that's fine. For algorithms that need **finish times** (topological sort, SCC, bridges), this version isn't enough: a node finishes when all its children are done, so the stack must hold `(node, iterator over its neighbors)` frames and only pop a node when its iterator is exhausted, exactly what the call stack does.
 
-### Stage 3: tree traversals are DFS
+## 5. Tree traversals
 
-On a binary tree there are no cycles, so no `visited` set is needed. The only question is **when** to handle the node relative to its subtrees:
+On a tree there are no cycles, so no visited set. The three depth-first orders differ only in **when the node is handled relative to its subtrees**, and the choice follows from what the computation needs:
 
-| Order | Sequence | Typical use |
-|---|---|---|
-| **Pre-order** | Node, left, right | Copy or serialize a tree (parents before children), print a directory tree |
-| **In-order** | Left, node, right | **Sorted output** of a [[Binary search tree]] |
-| **Post-order** | Left, right, node | Delete/free a tree, compute sizes or heights (children first), evaluate an expression tree |
+| Order | Sequence | Use it when the node needs… | Examples |
+|---|---|---|---|
+| **Pre-order** | node, left, right | …information **from its ancestors** (passed down) | Copy/serialize a tree, print a directory listing, pass depth or bounds down ([[Binary search tree]] validation) |
+| **In-order** | left, node, right | …to be between its subtrees in **sorted** order | BST sorted output, k-th smallest |
+| **Post-order** | left, right, node | …results **from its children** (returned up) | Height, size, diameter, freeing memory, `du` (directory size = sum of children), evaluating expression trees |
 
-For the BST built from 4, 2, 6, 1, 3, 5, 7:
-- Pre-order: 4, 2, 1, 3, 6, 5, 7
-- In-order: 1, 2, 3, 4, 5, 6, 7
-- Post-order: 1, 3, 2, 5, 7, 6, 4
+For the BST from 4, 2, 6, 1, 3, 5, 7: pre-order 4 2 1 3 6 5 7, in-order 1 2 3 4 5 6 7, post-order 1 3 2 5 7 6 4.
 
-My `dfs_pre_order(tree)` on the BST is the pre-order version (visit, then `_dfs(node.left)`, then `_dfs(node.right)`).
-
-### Stage 4: what DFS is actually used for
-
-**Connected components**: run DFS from every unvisited node, each run marks one component. "How many separate networks / islands / friend groups?"
-
-**Cycle detection in a directed graph**: a plain `visited` set isn't enough (reaching a visited node can just mean two paths merge, like 6 above). Use three states:
-- **white**: not visited yet
-- **gray**: on the current path (entered, not finished)
-- **black**: finished
-
-Reaching a **gray** node means an edge back into the current path: a cycle.
+Iterative in-order (useful for BST iterators that yield one key at a time):
 
 ```python
-def has_cycle(graph):
-    WHITE, GRAY, BLACK = 0, 1, 2
-    state = {n: WHITE for n in graph}
-
-    def visit(node):
-        state[node] = GRAY
-        for nb in graph.get(node, []):
-            if state.get(nb, WHITE) == GRAY:
-                return True                      # back edge
-            if state.get(nb, WHITE) == WHITE and visit(nb):
-                return True
-        state[node] = BLACK
-        return False
-
-    return any(state[n] == WHITE and visit(n) for n in graph)
+def inorder_iterative(root):
+    out, stack, node = [], [], root
+    while stack or node:
+        while node:                        # go as far left as possible
+            stack.append(node)
+            node = node.left
+        node = stack.pop()                 # leftmost unvisited
+        out.append(node.key)
+        node = node.right                  # then its right subtree
+    return out
 ```
 
-**Topological order** (do tasks in an order that respects dependencies): the reverse of the order in which nodes turn black. That's how build systems, package managers and schedulers order work, and a cycle means "impossible order" (circular dependency). More in *[[Topological sort]]*.
+## 6. What else DFS solves
 
-**Backtracking** (permutations, sudoku, mazes) is DFS over a tree of choices that isn't stored anywhere: choose, explore deeper, undo ([[Recursion]]).
+| Problem | DFS idea | Cost |
+|---|---|---|
+| **Connected components** (undirected) / flood fill / counting islands | One DFS per unvisited node, each marks one component | O(V + E) |
+| **Path existence** between s and t | DFS from s, stop at t (any path, not the shortest) | O(V + E) |
+| **Bridges and articulation points** (edges/nodes whose removal disconnects the graph) | `low[u]` = smallest `tin` reachable from u's subtree with one back edge. Tree edge u → v is a bridge iff `low[v] > tin[u]` | O(V + E) |
+| **Strongly connected components** (directed) | Tarjan (low-link, one pass) or Kosaraju (DFS, then DFS on the reversed graph in decreasing finish order) | O(V + E) |
+| **Backtracking** (permutations, sudoku, n-queens) | DFS over an implicit tree of choices ([[Recursion]]) | Size of the search tree |
 
-## Bugs in my implementations
+Counting islands on `["110", "100", "011"]` gives 2. Bridges on a triangle 1-2-3 with a tail 3-4-5 are (3, 4) and (4, 5): the triangle's edges each lie on a cycle, the tail's don't.
+
+```python
+def bridges(graph):
+    tin, low, out, clock = {}, {}, [], [0]
+    def dfs(u, parent):
+        tin[u] = low[u] = clock[0]; clock[0] += 1
+        for v in graph[u]:
+            if v == parent:
+                continue
+            if v in tin:                           # back edge
+                low[u] = min(low[u], tin[v])
+            else:                                  # tree edge
+                dfs(v, u)
+                low[u] = min(low[u], low[v])
+                if low[v] > tin[u]:                # v's subtree can't climb above u
+                    out.append((u, v))
+    for u in graph:
+        if u not in tin:
+            dfs(u, None)
+    return out
+```
+
+Bridges and articulation points are literally "single points of failure" in a network topology.
+
+## 7. DFS vs BFS
+
+| | DFS | [[Breadth-first search]] |
+|---|---|---|
+| Frontier structure | Stack (LIFO) | Queue (FIFO) |
+| Order | Deep first, backtrack | By distance |
+| Shortest paths (unweighted) | No | **Yes** |
+| Memory | O(depth) recursion (+ visited) | O(width of the widest level) |
+| Finish times, ancestor/descendant structure | **Yes** (cycles, topo sort, SCC, bridges) | No |
+| Infinite or huge implicit graphs | Can dive forever down one branch (use depth limits / iterative deepening) | Finds shallow solutions first |
+
+## 8. In systems
+
+- **Dependency resolution and build ordering**: make, Bazel, package managers, Terraform's resource graph, systemd units: topological order, and cycle detection to report circular dependencies
+- **Deadlock detection**: a cycle in the wait-for graph between transactions or threads (databases check this and abort one victim)
+- **Garbage collection**: mark phase from the roots (mark-and-sweep is typically DFS with an explicit mark stack)
+- **Filesystem walks**: `find`, `du`, `rm -r` (post-order: children before the directory)
+- **Network resilience**: bridges and articulation points are links/routers whose failure partitions the network. Loop detection in layer 2 topologies is the problem [[Spanning Tree]] solves
+
+## 9. Bugs in my implementations
 
 I wrote iterative DFS twice. The first version:
 
@@ -170,49 +228,35 @@ while len(stack) > 0:
         stack.append(neighbor)
 ```
 
-| Function | Bug | Effect | Fix |
+| Version | Bug | Effect | Fix |
 |---|---|---|---|
-| Iterative, first version | `if node in visited: pass`, and `visited.add` is never called | Every node is processed each time it's popped. With a cycle (`1 → 2 → 1`): **infinite loop**. Without one: duplicates (6 printed twice in the graph above) | `continue`, and `visited.add(node)` after the check |
-| Iterative, second version | Marks visited on push, but `if neighbor in visited: pass` then pushes anyway | Visited neighbors are pushed again: duplicates, infinite loop on cycles | `continue` (or `if neighbor not in visited:` around the push) |
-| Recursive version | `graph[node]` raises `KeyError` for a node with no adjacency entry | Crash on leaf nodes missing from the dict | `graph.get(node, [])` |
-| Recursive versions | Depth = longest path | `RecursionError` beyond ~1000 levels | Iterative version for big graphs |
+| First | `pass` instead of `continue`, and `visited.add` never called | Every pop is processed: duplicates on DAGs (a node reachable by two paths is printed twice), **infinite loop** on any cycle | `continue`, then `visited.add(node)` |
+| Second | `pass` instead of `continue` | Visited neighbors are pushed again: duplicates, infinite loop on cycles | `continue` (or push only `if v not in visited`) |
+| Recursive | `graph[node]` with a node that has no key | `KeyError` on nodes that only appear as neighbors | `graph.get(node, ())` |
 
-Note on marking visited **on push** (as in my second version) in iterative DFS: once fixed with `continue`, it visits everything, but the order isn't always a true depth-first order (a node can be "claimed" by an earlier push before a deeper path reaches it). For traversal that's fine. For algorithms that depend on DFS order (cycle detection, topological sort), mark on pop, or use recursion.
-
-## DFS in systems
-- **Dependency graphs**: build systems (make, Bazel), package managers, Terraform's resource graph, systemd unit ordering: topological order and circular-dependency detection
-- **Deadlock detection**: a cycle in the "waits-for" graph between processes or database transactions
-- **Garbage collectors**: mark phase (reachability from roots)
-- **Filesystem walks**: `find`, `du`, `rm -r` are depth-first (post-order for `rm -r` and `du`: children before the directory)
-- **Network topology**: finding loops in a layer 2 network is a cycle-detection problem ([[Spanning Tree]])
+Marking on push (second version), once fixed, visits every node but not always in true depth-first order: a node can be claimed by an early push before a deeper path reaches it. Harmless for traversal, wrong for anything that depends on DFS structure (finish times, back edges).
 
 ## Practice
 
-> [!example]- Recursive DFS from A on `A: [B, C], B: [D], C: [D, E], D: [F], E: [F], F: []`?
-> A, B, D, F, C, E. (D and F are already visited when reached again from C and E.)
+> [!example]- Directed graph `a → b, b → c, c → a, c → d`. Which edge does DFS from a classify as a back edge?
+> c → a: when DFS at c examines a, a is gray (still on the path a, b, c). That back edge proves the cycle a → b → c → a.
 
-> [!example]- Pre-, in- and post-order of the BST built from 8, 3, 10, 1, 6?
-> Pre: 8, 3, 1, 6, 10. In: 1, 3, 6, 8, 10. Post: 1, 6, 3, 10, 8.
+> [!example]- Topological order of `A → C, B → C, C → D, B → E` by reverse finish order, visiting nodes in the order A, B, C, D, E.
+> DFS(A): C, then D. D finishes, C finishes, A finishes. DFS(B): C done, E finishes, B finishes. Finish order D, C, A, E, B → reversed: B, E, A, C, D.
 
-> [!example]- Graph `1 → 2, 2 → 3, 3 → 1`. What does my first iterative version (above) do?
-> Runs forever: `if node in visited: pass` doesn't skip anything and nothing is ever added to `visited`, so 1, 2, 3, 1, 2, 3… keep being pushed and printed.
+> [!example]- Why does undirected cycle detection skip the parent, and directed detection need three colors?
+> Undirected: each edge appears both ways, so the edge back to the parent would look like a cycle. Directed: reaching a finished (black) node just means two paths merge; only reaching a node still on the current path (gray) is a cycle.
 
-> [!example]- How do I detect that tasks have a circular dependency?
-> DFS with white/gray/black states: reaching a gray node (still on the current path) is a back edge, so a cycle.
+> [!example]- Which traversal computes the size of every subtree, and why?
+> Post-order: a node's size is 1 + its children's sizes, which must be computed first.
 
-## Easy to get wrong
-- `pass` instead of `continue` on the visited check
-- Forgetting to add nodes to `visited` at all
-- Expecting the iterative order to match the recursive one without reversing the neighbors
-- Using a plain visited set to detect cycles in a **directed** graph (need the "on current path" state)
-- Using DFS for shortest paths
-- Deep recursion on large graphs (RecursionError)
-- Only starting from one node when the graph has several components
+> [!example]- In a network graph, how do I find links whose failure splits the network?
+> Bridges via DFS low-link values: tree edge u → v is a bridge iff low[v] > tin[u], i.e. nothing in v's subtree has a back edge reaching u or above.
 
 ## Related
-- Opposite strategy:: [[Breadth-first search]]
-- Built with:: [[Recursion]], *[[Stacks and queues]]*, [[Hash table]] (visited set)
-- Trees:: [[Binary search tree]] (in-order = sorted)
+- Counterpart:: [[Breadth-first search]]
+- Built with:: [[Recursion]], *[[Stacks and queues]]*, [[Hash table]] (visited/state maps)
+- Trees:: [[Binary search tree]]
 - Next:: *[[Topological sort]]*, *[[Backtracking]]*, *[[Graph representations]]*
 - Systems:: [[Spanning Tree]]
 - Area:: [[Data structures and algorithms]]
@@ -220,16 +264,18 @@ Note on marking visited **on push** (as in my second version) in iterative DFS: 
 ## Flashcards
 #flashcards
 
-What data structure drives DFS? :: A stack, either the call stack (recursion) or an explicit one
-DFS time complexity? :: O(V + E)
-In iterative DFS, what must the visited check do? :: continue (skip the node), not pass
-Why does iterative DFS visit neighbors in a different order than recursive DFS? :: The stack pops the last pushed neighbor first. Push them reversed to match
-Pre-order, in-order, post-order? :: Pre: node, left, right. In: left, node, right. Post: left, right, node
-Which traversal gives a BST's keys sorted? :: In-order
-Which traversal to delete a tree or compute subtree sizes? :: Post-order (children before the parent)
-Which traversal to copy or serialize a tree? :: Pre-order (parent before children)
-How to detect a cycle in a directed graph with DFS? :: Three states (white, gray, black): reaching a gray node means a back edge
-How to count connected components? :: Run DFS from each unvisited node, one run per component
-Does DFS find shortest paths? :: No, BFS does (unweighted)
-How is a topological order obtained from DFS? :: Reverse of the order in which nodes finish
-Why prefer iterative DFS for large graphs in Python? :: Recursion depth is limited to about 1000
+DFS cost? :: O(V + E) time, O(depth) recursion memory
+What do discovery and finish times record? :: When a node enters the recursion stack and when all its descendants are done
+Parenthesis property of DFS intervals? :: Two nodes' [tin, tout] intervals are nested (ancestor/descendant) or disjoint, never overlapping
+Tree, back, forward, cross edges? :: Tree: to a white node. Back: to a gray ancestor. Forward: to a black descendant. Cross: to a black node in another branch
+When does a directed graph have a cycle? :: Iff DFS finds a back edge (to a gray node)
+Why isn't a visited set enough for directed cycle detection? :: Reaching a finished node can be two paths merging, not a cycle
+Undirected cycle detection rule? :: An edge to an already-visited node other than the parent
+How does DFS give a topological order? :: Reverse of the finish order
+What is Kahn's algorithm? :: Topological sort by repeatedly removing in-degree-0 nodes; leftovers mean a cycle
+Why can't the simple iterative DFS compute finish times? :: It pops a node before its children are done; finish times need (node, neighbor iterator) frames
+Pre-order, in-order, post-order: when to use each? :: Pre: info flows down from ancestors. In: sorted order of a BST. Post: results flow up from children
+What is a bridge? :: An edge whose removal disconnects the graph: tree edge u→v with low[v] > tin[u]
+Two algorithms for strongly connected components? :: Tarjan (low-link, one DFS) and Kosaraju (DFS, then DFS on the reversed graph by decreasing finish time)
+DFS vs BFS memory? :: DFS: O(depth). BFS: O(widest level)
+In iterative DFS, what must the visited check do? :: continue, not pass

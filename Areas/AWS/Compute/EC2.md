@@ -203,6 +203,7 @@ Target groups are part of load balancing, so they now have their own section in 
 - [[VPC]]: every instance lives in a subnet of a VPC
 - [[Load balancers]]: instances are registered in target groups
 - [[Auto Scaling]]: creates/destroys instances from a launch template
+- [[Packer]]: building my own AMIs from code (golden images) instead of configuring instances by hand
 - [[IAM]]: an instance can get permissions through an **IAM role** (instance profile) instead of hardcoded keys
 - [[Bastion host]]: how to reach instances in private subnets
 - [[CloudWatch]]: built-in metrics come from the hypervisor. Memory and disk space need the [[CloudWatch agent]]. [[CloudWatch alarms]] can stop, reboot or recover an instance

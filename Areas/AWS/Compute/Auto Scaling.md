@@ -212,6 +212,7 @@ I can attach the load balancer here. It lists my existing target group, since th
 
 ## Connects to
 - [[EC2]]: launch templates, the instances themselves
+- [[Packer]]: pre-baked AMIs so new instances are healthy in seconds, rolled out with instance refresh
 - [[Load balancers]]: the target group is the meeting point
 - [[VPC]]: the ASG spreads instances over subnets in several AZs
 - [[CloudWatch]], [[CloudWatch alarms]]: metrics and alarms that drive scaling policies. [[CloudWatch agent]] for group-wide memory metrics

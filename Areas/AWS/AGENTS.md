@@ -19,6 +19,7 @@ AWS/
 │   ├── EC2.md                      instances, launch templates
 │   ├── Load balancers.md           ALB/NLB setup, target groups, health checks
 │   ├── Auto Scaling.md             scaling groups
+│   ├── Packer.md                   golden AMIs from code, bake vs fry, template, cleanup, SSM builds, sharing/KMS, pipeline, vs Image Builder
 │   ├── Lambda.md                   serverless functions
 │   ├── Lightsail.md                simple VPS
 │   └── EC2 vs Lightsail vs Lambda.md   which to pick

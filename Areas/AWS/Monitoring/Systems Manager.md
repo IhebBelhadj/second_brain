@@ -13,23 +13,23 @@ aliases: [AWS Systems Manager, SSM, SSM agent, Session Manager, Run Command, Par
 
 ## Sub-services & features
 
-| Group | Feature | What it's for |
-|---|---|---|
-| **Node tools** | **Fleet Manager** | See managed nodes, their OS, agent, files, users, from the console |
-| | **Session Manager** | Shell or port forwarding to a node, no inbound port, logged |
-| | **Run Command** | Run a document (script) on many nodes at once, with rate control |
-| | **State Manager** | Associations: keep nodes in a desired state (agent installed, config applied), re-applied on schedule and on new nodes |
-| | **Patch Manager** | Scan and install OS patches by baseline, report compliance |
-| | **Distributor** | Install packages (e.g. the CloudWatch agent) |
-| | **Inventory**, **Compliance** | What software/config each node has, and whether it complies |
-| | **Hybrid activations** | Register on-premises/other-cloud servers as managed nodes (`mi-…`) |
-| **Change management** | **Automation** | Runbooks: multi-step workflows calling AWS APIs (restart, snapshot, patch an AMI), with approvals |
-| | **Maintenance Windows** | Schedule when disruptive tasks may run |
-| | **Change Manager**, **Change Calendar** | Approvals and "no changes during Black Friday" |
-| **Application tools** | **Parameter Store** | Config values and secrets (`SecureString` via KMS), in a hierarchy |
-| | AppConfig | Feature flags and config rollout with validation and rollback |
-| **Operations** | **OpsCenter**, **Incident Manager** | Ops items and incidents (Incident Manager: on-call, escalation, response plans) |
-| | **Explorer**, **Quick Setup** | Dashboards across accounts, one-click org-wide setup |
+| Group                 | Feature                                 | What it's for                                                                                                          |
+| --------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **Node tools**        | **Fleet Manager**                       | See managed nodes, their OS, agent, files, users, from the console                                                     |
+|                       | **Session Manager**                     | Shell or port forwarding to a node, no inbound port, logged                                                            |
+|                       | **Run Command**                         | Run a document (script) on many nodes at once, with rate control                                                       |
+|                       | **State Manager**                       | Associations: keep nodes in a desired state (agent installed, config applied), re-applied on schedule and on new nodes |
+|                       | **Patch Manager**                       | Scan and install OS patches by baseline, report compliance                                                             |
+|                       | **Distributor**                         | Install packages (e.g. the CloudWatch agent)                                                                           |
+|                       | **Inventory**, **Compliance**           | What software/config each node has, and whether it complies                                                            |
+|                       | **Hybrid activations**                  | Register on-premises/other-cloud servers as managed nodes (`mi-…`)                                                     |
+| **Change management** | **Automation**                          | Runbooks: multi-step workflows calling AWS APIs (restart, snapshot, patch an AMI), with approvals                      |
+|                       | **Maintenance Windows**                 | Schedule when disruptive tasks may run                                                                                 |
+|                       | **Change Manager**, **Change Calendar** | Approvals and "no changes during Black Friday"                                                                         |
+| **Application tools** | **Parameter Store**                     | Config values and secrets (`SecureString` via KMS), in a hierarchy                                                     |
+|                       | AppConfig                               | Feature flags and config rollout with validation and rollback                                                          |
+| **Operations**        | **OpsCenter**, **Incident Manager**     | Ops items and incidents (Incident Manager: on-call, escalation, response plans)                                        |
+|                       | **Explorer**, **Quick Setup**           | Dashboards across accounts, one-click org-wide setup                                                                   |
 
 ## Common misconceptions
 
@@ -199,7 +199,7 @@ Auto Scaling replaces instances all the time. **State Manager associations** app
 - `AWS-RunPatchBaseline` with `Operation=Scan` daily (report compliance only), `Operation=Install` in a **maintenance window** (Sunday 03:00, staging first, prod a week later), with reboot if needed
 - Compliance shows up per node: "12 instances missing 3 critical patches"
 
-For immutable fleets the better pattern is patching the **AMI** (an Automation runbook or EC2 Image Builder builds a new AMI monthly) and rolling the Auto Scaling group with **instance refresh**. Patch Manager is the answer for long-lived servers.
+For immutable fleets the better pattern is patching the **AMI** (an Automation runbook, EC2 Image Builder or [[Packer]] builds a new AMI monthly) and rolling the Auto Scaling group with **instance refresh**. Patch Manager is the answer for long-lived servers.
 
 ### Stage 8: config and secrets in Parameter Store
 

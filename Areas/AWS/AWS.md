@@ -52,6 +52,7 @@ Full reading path, prerequisites and a "which note answers…" table → [[AWS n
 - [[EC2]]: virtual machines, launch templates
 - [[Load balancers]]: ALB / NLB and **target groups**
 - [[Auto Scaling]]: grows and shrinks the number of EC2 instances
+- [[Packer]]: golden AMIs from code. Bake vs fry, immutable infrastructure, how an `amazon-ebs` build works, a full template, cleaning the image (no secrets, host keys, cloud-init), building through Session Manager, encrypted AMIs shared across accounts and regions (the KMS trap), a CI pipeline with Parameter Store and instance refresh, vs EC2 Image Builder
 - [[Lambda]]: run code without a server
 - [[Lightsail]]: the "easy mode" VPS
 - [[EC2 vs Lightsail vs Lambda]]: which one should I pick?

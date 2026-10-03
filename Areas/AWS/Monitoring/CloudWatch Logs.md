@@ -31,15 +31,15 @@ aliases: [Amazon CloudWatch Logs, Log group, Log groups, CloudWatch Logs Insight
 
 ## Vocabulary
 
-| Term | Meaning | Example |
-|---|---|---|
-| **Log event** | One line (timestamp + message) | `{"level":"ERROR","msg":"card declined","orderId":"o-8812"}` |
-| **Log stream** | Events from one source, in order | `i-0a1b2c3d4e5f60718` |
-| **Log group** | A set of streams sharing retention, encryption, permissions, filters | `/shop/prod/app`, `/aws/lambda/shop-prod-invoice` |
-| **Retention** | How long events are kept: 1 day to 10 years, or never expire | 30 days |
-| **Log class** | **Standard** (all features) or **Infrequent Access** (cheaper ingestion, fewer features: no metric filters, no Live Tail) | Debug logs → Infrequent Access |
-| **Metric filter** | A pattern that turns matching events into a metric | count `"level":"ERROR"` |
-| **Subscription filter** | Streams matching events to Lambda, Kinesis, Firehose or OpenSearch in near real time | → Firehose → S3 |
+| Term                    | Meaning                                                                                                                   | Example                                                      |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| **Log event**           | One line (timestamp + message)                                                                                            | `{"level":"ERROR","msg":"card declined","orderId":"o-8812"}` |
+| **Log stream**          | Events from one source, in order                                                                                          | `i-0a1b2c3d4e5f60718`                                        |
+| **Log group**           | A set of streams sharing retention, encryption, permissions, filters                                                      | `/shop/prod/app`, `/aws/lambda/shop-prod-invoice`            |
+| **Retention**           | How long events are kept: 1 day to 10 years, or never expire                                                              | 30 days                                                      |
+| **Log class**           | **Standard** (all features) or **Infrequent Access** (cheaper ingestion, fewer features: no metric filters, no Live Tail) | Debug logs → Infrequent Access                               |
+| **Metric filter**       | A pattern that turns matching events into a metric                                                                        | count `"level":"ERROR"`                                      |
+| **Subscription filter** | Streams matching events to Lambda, Kinesis, Firehose or OpenSearch in near real time                                      | → Firehose → S3                                              |
 
 Where AWS services write: Lambda → `/aws/lambda/<function>`, ECS (awslogs driver) → the group I configure, API Gateway, VPC Flow Logs, Route 53 query logs, RDS (exported logs) → `/aws/rds/instance/<db>/postgresql`, and [[CloudTrail]] if I connect a trail.
 

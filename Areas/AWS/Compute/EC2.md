@@ -205,6 +205,7 @@ Target groups are part of load balancing, so they now have their own section in 
 - [[Auto Scaling]]: creates/destroys instances from a launch template
 - [[IAM]]: an instance can get permissions through an **IAM role** (instance profile) instead of hardcoded keys
 - [[Bastion host]]: how to reach instances in private subnets
+- [[CloudWatch]]: built-in metrics come from the hypervisor. Memory and disk space need the [[CloudWatch agent]]. [[CloudWatch alarms]] can stop, reboot or recover an instance
 - [[Route 53]]: point a domain at an Elastic IP
 - [[Certificate Manager (ACM)]]: ACM certs can't go directly on an instance. Put an ALB in front
 - [[Lightsail]]: simplified EC2. Lightsail snapshots can be exported to EC2

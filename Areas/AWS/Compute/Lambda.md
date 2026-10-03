@@ -148,7 +148,7 @@ Lambda (in VPC, private subnet) ──► NAT GW ──► internet   ✅ needs 
 - [[S3]]: a classic trigger (object uploaded → function runs)
 - [[SQS]], [[SNS]], [[EventBridge]]: the usual async triggers (queue polled by an event source mapping, topic push, event rules and schedules). Which one → [[SQS vs SNS vs EventBridge]]
 - [[Step Functions]]: orchestrates several steps (Lambdas and other services) with retries, waits and error handling, instead of one Lambda calling the others
-- [[CloudTrail]]: logs who changed/invoked functions (API calls). CloudWatch holds the function's own logs
+- [[CloudTrail]]: logs who changed/invoked functions (API calls). [[CloudWatch Logs]] holds the function's own logs, and EMF log lines become [[CloudWatch]] metrics
 - vs [[EC2]] and [[Lightsail]] → [[EC2 vs Lightsail vs Lambda]]
 - Big picture → [[How AWS services connect]]
 

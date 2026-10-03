@@ -55,9 +55,9 @@ And around all of it:
 | [[Certificate Manager (ACM)]] | ALB, CloudFront, API Gateway | Provides the certificate for HTTPS. **Can't** be installed directly on an EC2 instance |
 | [[AWS WAF]] | ALB, CloudFront, API Gateway | Filters requests before they reach the app |
 | [[Load balancers]] | Target groups → EC2, IPs, Lambda | Spreads traffic across healthy targets |
-| [[Auto Scaling]] | Launch template, target group, CloudWatch, [[SNS]] | Launches instances from the template and registers them in the target group |
+| [[Auto Scaling]] | Launch template, target group, [[CloudWatch]], [[SNS]] | Launches instances from the template and registers them in the target group |
 | [[EC2]] | VPC subnet, security group, key pair, IAM role | Every instance lives in one subnet and wears security groups |
-| [[Lambda]] | API Gateway, ALB, S3, [[SQS]], [[EventBridge]]… | Something happens → Lambda runs. Logs go to CloudWatch |
+| [[Lambda]] | API Gateway, ALB, S3, [[SQS]], [[EventBridge]]… | Something happens → Lambda runs. Logs go to [[CloudWatch Logs]] |
 | [[Lambda]] | [[VPC]] | Only needed if the function must reach private things (like a DB) |
 | [[Lightsail]] | [[EC2]] (export), VPC (peering), Route 53 | Its own mini-world, with exits to "real" AWS when I outgrow it |
 | [[RDS]] | VPC private subnets (DB subnet group), security groups, Secrets Manager, KMS | The app's database, reached through an endpoint DNS name |

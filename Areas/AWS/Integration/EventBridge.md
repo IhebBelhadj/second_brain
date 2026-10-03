@@ -207,6 +207,7 @@ The warehouse puts stock changes in an SQS queue, and a tiny Lambda's only job i
 - Targets:: [[Lambda]], [[SQS]], [[SNS]]
 - Event sources:: [[EC2]], [[S3]], [[CloudTrail]], [[Certificate rotation]], [[Auto Scaling]]
 - Cross-account:: [[AWS Organizations]], [[IAM]]
+- Monitoring and security rules:: [[CloudWatch alarms]] (alarm state change events), [[CloudTrail in production]] (rules on dangerous API calls)
 - Big picture:: [[How AWS services connect]]
 
 ## Flashcards

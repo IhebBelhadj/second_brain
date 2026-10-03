@@ -63,7 +63,7 @@ tags: [aws]
 |                         | Inspector                      | Scans workloads for known vulnerabilities                                                                                               |
 |                         | Macie                          | Finds sensitive data sitting in S3                                                                                                      |
 |                         | Security Hub                   | Aggregates findings from the other security services                                                                                    |
-| **Management**          | CloudWatch                     | Metrics, logs, alarms and dashboards                                                                                                    |
+| **Management**          | [[CloudWatch]]                 | Metrics, logs, alarms and dashboards                                                                                                    |
 |                         | [[CloudTrail]]                 | Records every API call for audit                                                                      |
 |                         | CloudFormation                 | Infrastructure as code from declarative templates                                                                                       |
 |                         | Config                         | Records resource configuration and flags non-compliance                                                                                 |

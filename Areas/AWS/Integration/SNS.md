@@ -112,7 +112,7 @@ Like SQS standard, a standard topic is **at least once**, no ordering guarantee.
 | **Data Firehose** | Archive every message to S3 or analytics | Keeping a copy of all events |
 
 ## Where SNS shows up without me building it
-- **CloudWatch alarms** → SNS topic → email or a Lambda that pages someone
+- **[[CloudWatch alarms]]** → SNS topic → email or a Lambda that pages someone
 - **[[Auto Scaling]]** notifications (launch, terminate, failure)
 - **AWS Budgets** alerts, **[[Certificate rotation|ACM expiry]]** alerts routed through [[EventBridge]] → SNS
 - **[[S3]] event notifications**: a bucket can notify only one destination per event type and prefix, so "S3 → SNS → several queues" is the classic way to send one upload to several consumers (or S3 → EventBridge)
@@ -155,6 +155,7 @@ Like SQS standard, a standard topic is **at least once**, no ordering guarantee.
 - Choosing between them:: [[SQS vs SNS vs EventBridge]]
 - Streams instead of queues:: [[Kafka]], [[Kafka vs AWS messaging services]]
 - Subscribers and sources:: [[Lambda]], [[S3]], [[Auto Scaling]], [[Certificate rotation]]
+- Alerting:: [[CloudWatch alarms]], [[CloudTrail in production]]
 - Depends on:: [[IAM]] (topic and queue policies)
 - Big picture:: [[How AWS services connect]]
 

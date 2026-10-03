@@ -2,6 +2,8 @@
 
 **Index:** `AWS.md` lists every note by domain with a one-line summary, plus open questions. Read it for *what* a note covers; use this file for *where* it is.
 
+**Sub-index:** `Networking/AWS networking.md` is the networking reading path (5 stages, the Networking notes to read first, a "which note answers…" table, planned notes). A new networking note goes in **both** `AWS.md` (same stage group) and `AWS networking.md`.
+
 **Scope:** AWS services for the current certification: console walkthroughs, how services plug together, exam traps. General concepts (how NAT, DNS, load balancing, VPNs work) belong in `Areas/Networking/`. AWS notes link to them instead of re-explaining, and "concept → AWS product" mappings live here.
 
 ## Folder map
@@ -48,6 +50,11 @@ AWS/
 │   └── Kafka vs AWS messaging services.md   Kafka vs MSK/Kinesis/SQS/SNS/EventBridge (also indexed in Messaging)
 ├── Storage/
 │   └── S3.md                       buckets, storage classes, lifecycle, versioning, replication, access, endpoints (also indexed in Storage)
+├── Monitoring/
+│   ├── CloudWatch.md               metrics, custom namespaces (PutMetricData/EMF), dimensions, retention, Metrics Insights, dashboards, Insights family
+│   ├── CloudWatch agent.md         install, IAM, config JSON, fleet rollout via SSM, on-prem, private subnets, troubleshooting
+│   ├── CloudWatch Logs.md          log groups, retention, Logs Insights queries, metric/subscription filters, archive to S3
+│   └── CloudWatch alarms.md        states, M of N, missing data, actions, symptom alerting, composite alarms, remediation
 └── Security/
     ├── IAM.md                      users, roles, policies
     ├── AWS Organizations.md        accounts, SCPs
@@ -55,7 +62,8 @@ AWS/
     ├── Certificate Manager (ACM).md   certificates
     ├── Certificate rotation.md     ACME, ACM renewal, CA rotation (also indexed in Networking)
     ├── AWS WAF.md                  L7 filtering, comparison with SGs/NACLs/Network Firewall/Shield
-    └── CloudTrail.md               audit log
+    ├── CloudTrail.md               audit log: events, event types, org trail, selectors, validation, Insights, querying
+    └── CloudTrail in production.md   alerts (EventBridge, metric filters), Athena investigations, incident playbooks, audit evidence
 ```
 
 Many notes embed console screenshots from `Attachments/` (`![[aws-console … sidebar.png]]`, `![[aws-docs … .png]]`). Keep those embeds when editing.
@@ -65,8 +73,9 @@ Many notes embed console screenshots from `Attachments/` (`![[aws-console … si
 | It's about… | Folder |
 |---|---|
 | Something that runs code (ECS, EKS, Batch) | `Compute/` |
-| Networking services (CloudFront, Direct Connect, Global Accelerator) | `Networking/` |
+| Networking services (CloudFront, PrivateLink, Network Firewall, Client VPN) | `Networking/` (also add it to `Networking/AWS networking.md`, and replace its italic planned link if there is one) |
 | Identity, encryption, audit, protection (KMS, Secrets Manager, Shield, GuardDuty) | `Security/` |
+| Monitoring and operations (CloudWatch, X-Ray, Config, Systems Manager) | `Monitoring/` |
 | Storage (EBS, EFS, AWS Backup) | `Storage/` (also add it to section 7 of `Areas/Storage/Storage.md`) |
 | Databases (DynamoDB, ElastiCache) | `Databases/` |
 | Messaging and workflows (Kinesis, MSK, Step Functions, Amazon MQ) | `Integration/` (also add it to section 5 of `Areas/Messaging/Messaging.md`) |

@@ -214,7 +214,7 @@ I can attach the load balancer here. It lists my existing target group, since th
 - [[EC2]]: launch templates, the instances themselves
 - [[Load balancers]]: the target group is the meeting point
 - [[VPC]]: the ASG spreads instances over subnets in several AZs
-- CloudWatch: metrics that drive scaling policies
+- [[CloudWatch]], [[CloudWatch alarms]]: metrics and alarms that drive scaling policies. [[CloudWatch agent]] for group-wide memory metrics
 - [[SNS]]: notifications
 - [[SQS]]: worker groups scaled on queue depth (backlog per instance)
 - [[Lightsail]]: has **no** auto scaling, one of the main reasons to move to EC2

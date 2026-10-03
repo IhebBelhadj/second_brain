@@ -66,6 +66,13 @@ Full reading path, prerequisites and a "which note answers…" table → [[AWS n
 - Not written yet: *[[Amazon MSK]]* · *[[Kinesis Data Streams]]*
 - The vendor-neutral side (Kafka, delivery guarantees…) → [[Messaging]]
 
+## Monitoring (is it working, and who changed what)
+- [[CloudWatch]]: metrics, namespaces and dimensions, retention, what EC2 doesn't show (memory, disk), custom namespaces with `PutMetricData` / EMF / StatsD, the high-cardinality trap, Metrics Insights and metric math, dashboards, and the whole "Insights" family
+- [[CloudWatch agent]]: the agent inside the OS. IAM role, config JSON (custom namespace, append/aggregation dimensions, procstat, StatsD, log files), fleet rollout with Parameter Store and SSM, on-premises servers, private subnets, why metrics don't show up
+- [[CloudWatch Logs]]: log groups and streams, retention, Logs Insights queries (errors per bin, p99, top customers, parse, Lambda REPORT), metric filters, subscription filters and cheap long-term archive, masking sensitive data
+- [[CloudWatch alarms]]: states, M out of N, missing data, actions (SNS, Lambda, EC2 recover, scaling), alarming on symptoms with metric math and anomaly detection, page vs ticket, composite alarms and suppressors, auto-remediation, heartbeat alarms
+- Audit of API calls → [[CloudTrail]] and [[CloudTrail in production]] (in Security below)
+
 ## Security, identity & governance (who can do what)
 - [[IAM]]: users, groups, roles, policies
 - [[AWS Organizations]]: many accounts, SCPs
@@ -73,7 +80,8 @@ Full reading path, prerequisites and a "which note answers…" table → [[AWS n
 - [[Certificate Manager (ACM)]]: free HTTPS certificates
 - [[Certificate rotation]]: keeping certificates renewed (ACME, ACM managed renewal, imported certs, CA rotation)
 - [[AWS WAF]]: blocks bad HTTP requests
-- [[CloudTrail]]: who did what, when
+- [[CloudTrail]]: the audit log of API calls. Event anatomy, management vs data vs network activity events, org trail in a log archive account, advanced event selectors, log file validation, Insights, Athena vs Logs Insights (Lake closed to new customers)
+- [[CloudTrail in production]]: alerting on dangerous calls (EventBridge rules, CIS metric filters), Athena investigations, playbooks: who deleted the database, assumed role → person, leaked access key, AccessDenied after a deploy, what changed before the outage, audit evidence
 - [[ARN]]: how every resource gets its unique name
 - [[AWS naming conventions]]: ID prefixes (`vpc-`, `sg-`…), naming rules, and my `project-env-resource` convention
 

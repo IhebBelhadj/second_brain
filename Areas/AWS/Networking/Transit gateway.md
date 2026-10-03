@@ -4,7 +4,7 @@ created: 2026-10-03
 topic: AWS
 confidence: 1
 tags: [aws, networking, vpn, hybrid, routing]
-aliases: [TGW, AWS Transit Gateway, Transit gateway route table, TGW Connect]
+aliases: [TGW, AWS Transit Gateway, TGW Connect]
 ---
 # Transit gateway
 
@@ -63,9 +63,24 @@ aws ec2 create-vpn-connection --type ipsec.1 \
 1. **VPC route table**: "to reach `10.0.0.0/8`, go to `tgw-0dd`". Note: VPC route tables **don't learn routes from a TGW**. I add them myself (a summary like `10.0.0.0/8 → tgw` is common)
 2. **TGW route table**: "`10.0.0.0/16` is behind the Office A VPN attachment"
 
+## What a TGW is, and what it isn't
+
+The best mental model: a **corporate core router, run by AWS, one per region**. Every network plugs into it, and its route tables say which network can reach which.
+
+It's easy to see it as a replacement for the VPN. It isn't. They answer different questions and are used **together**:
+
+| Layer | Answers | Products |
+|---|---|---|
+| **Connectivity** | "How do my packets get from my network into AWS?" | [[Site-to-Site VPN]] (encrypted, over the internet), [[Direct Connect]] (dedicated, private), TGW peering (another region) |
+| **Routing between networks** | "Once everything is connected, which network can reach which?" | The transit gateway and its route tables |
+
+So the usual picture is: the office's VPN (or DX) **ends on** the TGW as one attachment, and the TGW routes between it and every VPC.
+
+**TGW vs VPN CloudHub.** [[Site-to-Site VPN#Stage 4: the second office|CloudHub]] is one specific hub-and-spoke: several sites' VPNs on one VGW, so branches reach each other and **one** VPC. A TGW is a general hub: VPCs, VPNs, Direct Connect, other TGWs, SD-WAN appliances, with segmentation between them.
+
 ## TGW route tables: association and propagation
 
-The part that makes the TGW more than a big router.
+The part that makes the TGW more than a big router. In short:
 
 | Word | Meaning | Rule |
 |---|---|---|
@@ -75,6 +90,8 @@ The part that makes the TGW more than a big router.
 | **Blackhole route** | Drop this prefix explicitly | Useful to block `10.30.0.0/16` from somewhere |
 
 By default every attachment associates with and propagates to the **default route table**, so everything reaches everything. Fine for a lab, wrong for a company.
+
+How this works step by step (creating attachments, the defaults, a packet traced through every table, what the office learns over BGP, how to limit propagation, keeping VPC routes short) → [[Transit gateway routing]].
 
 ### Segmentation: prod and dev share the VPN, not each other
 
@@ -160,7 +177,7 @@ A Direct Connect **transit VIF** lands on a **Direct Connect gateway**, which as
 - Thinking a TGW is global: it's **regional**. Other regions need peering or Cloud WAN
 
 ## Related
-- Basics:: [[Connecting VPCs]]
+- Basics:: [[Connecting VPCs]], [[Transit gateway routing]] (association, propagation, packet trace)
 - Concepts:: [[Routing tables]], [[Policy-based routing]] (VRFs), [[AS and BGP]], [[Types of VPN]] (hub and spoke, SD-WAN), [[VPN]]
 - AWS:: [[Site-to-Site VPN]], [[Direct Connect]], [[VPC]], [[AWS Organizations]], [[Proxies, load balancing and discovery in AWS]] (GWLB)
 - Designs:: [[Hybrid connectivity architectures]], [[Nested VPNs]]
@@ -169,6 +186,8 @@ A Direct Connect **transit VIF** lands on a **Direct Connect gateway**, which as
 ## Flashcards
 #flashcards
 
+VPN vs Direct Connect vs transit gateway: which question does each answer? :: VPN and DX: how packets get from my network into AWS. TGW: once connected, which network can reach which
+TGW vs VPN CloudHub? :: CloudHub: several site VPNs on one VGW, branches ↔ each other and one VPC. TGW: general regional hub for VPCs, VPNs, DX, peering, with segmentation
 Why does a virtual private gateway stop scaling with many VPCs? :: One VGW per VPC, so one VPN per (site, VPC) pair, and VPCs can't reach each other through VGWs
 What does a TGW change for an office reaching 10 VPCs? :: One VPN connection to the TGW instead of 10
 Does a TGW add routes to VPC route tables? :: No. I add routes like 10.0.0.0/8 → tgw myself

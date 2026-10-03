@@ -151,6 +151,7 @@ A [[VPC]] route table is the same idea, attached to **subnets**:
 - Depends on:: IP prefixes / CIDR (see [[VPC]])
 - Next:: [[Policy-based routing]] → [[Overlapping address spaces]]
 - Protocols that fill routing tables automatically: [[AS and BGP|BGP]], OSPF
+- In AWS:: [[Transit gateway routing]] (a VPC table and a TGW table per hop, static vs propagated routes)
 
 ## Flashcards
 #flashcards

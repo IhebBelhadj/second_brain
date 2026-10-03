@@ -75,6 +75,8 @@ With the VPC type, I choose the VPC and the subnets (one per AZ) where the TGW g
 > [!note] One attachment per network
 > 3 VPCs connected to one transit gateway → **3 attachments**.
 
+> [!tip] Adding these `→ tgw` routes by hand isn't a beginner shortcut: it's required. The TGW's own route tables can fill themselves (propagation), but **VPC** route tables never do. Why, and how the two tables work together → [[Transit gateway routing]]
+
 Then, again, **the route tables**. The attachment makes the connection possible, but each VPC still needs routes to the others, with target = **Transit gateway**:
 
 ![[Pasted image 20260920191008.png]]
@@ -155,6 +157,7 @@ VPC B: 10.0.0.0/16   ← which 10.0.1.5 do you mean?
 - [[VPC]]: route tables, CIDRs, subnets
 - [[AS and BGP]]: the ASN on the transit gateway
 - [[IPsec and IKE]]: how the Site-to-Site VPN attachments work (two tunnels, BGP)
+- [[Transit gateway routing]]: association vs propagation, defaults, a packet traced through every route table
 - [[Transit gateway]]: the TGW in depth (route tables, segmentation, ECMP, inspection)
 - [[Site-to-Site VPN]], [[Direct Connect]], [[Hybrid connectivity architectures]]: connecting these VPCs to on-prem
 - [[VPN]]: VPN types, AWS Client VPN

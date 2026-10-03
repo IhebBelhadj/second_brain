@@ -83,6 +83,7 @@ Every concept above shows up here under a product name. The general idea is in t
 - [[Connecting VPCs]]: peering vs a central router (transit gateway), transitive routing
 - [[Site-to-Site VPN]]: section 8's site-to-site VPN as an AWS product (customer gateway, virtual private gateway, BGP, limits)
 - [[Transit gateway]]: a hub router with VRF-like route tables, for many VPCs and sites
+- [[Transit gateway routing]]: two routing tables per hop, and how routes get into them (propagation vs static)
 - [[Direct Connect]]: a private carrier link with BGP, and why it isn't encrypted
 - [[Hybrid connectivity architectures]]: hybrid problems → designs, including a client network that's already a chain of VPNs ([[Nested VPNs]] applied)
 - [[Connecting AWS to a private network]]: the managed VPN and eight workarounds, and where each one breaks (sections 4 and 8 applied)

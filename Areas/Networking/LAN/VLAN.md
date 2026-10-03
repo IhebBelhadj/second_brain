@@ -19,6 +19,53 @@ One office floor, one set of switches, three groups: **HR**, **engineering** and
 
 **The VLAN fix:** keep one set of switches, and **assign each port to a VLAN** in the config. Port 1–10: VLAN 10 (HR), 11–30: VLAN 20 (engineering), Wi-Fi guests: VLAN 30. The switch keeps a separate MAC table and flooding scope per VLAN, so a broadcast in VLAN 10 never leaves VLAN 10. Moving a person = changing one line of config.
 
+## Common misconceptions
+
+**Wrong mental model:** "To stop broadcasts from reaching the other devices, a VLAN creates **separate connections** (separate cables, a separate switch) for each group."
+
+**What's actually true:** that's the core idea, with one correction. VLANs don't necessarily create separate **physical** connections. They create separate **logical Layer 2 networks** on the **same** physical infrastructure: same switch, same cables (trunks carry several VLANs on one cable, see below). The separation is in the switch's config and its per-VLAN MAC tables and flooding, not in the wiring.
+
+**Without VLANs:** PC1, PC2 and PC3 hang off the same switch, in **one broadcast domain**. When PC1 broadcasts (an ARP request, a DHCP discover), the switch floods it to **every** other port: PC2 **and** PC3 receive it.
+
+```mermaid
+flowchart TB
+    PC1["PC1<br/>(broadcasts)"] --> SW{{"Switch<br/>one broadcast domain"}}
+    SW -- "broadcast" --> PC2["PC2 ✅ receives"]
+    SW -- "broadcast" --> PC3["PC3 ✅ receives"]
+
+    classDef src fill:#e8f1fb,stroke:#2e86c1,color:#000
+    class PC1 src
+```
+
+**With VLANs:** same switch, same cables. Ports of PC1 and PC2 are in **VLAN 10**, the port of PC3 is in **VLAN 20**. Now when PC1 broadcasts, the switch floods it **only to the other ports of VLAN 10**: PC2 receives it, PC3 never does.
+
+```mermaid
+flowchart TB
+    subgraph SW["One physical switch"]
+        subgraph V10["VLAN 10"]
+            PC1["PC1<br/>(broadcasts)"]
+            PC2["PC2 ✅ receives"]
+        end
+        subgraph V20["VLAN 20"]
+            PC3["PC3 ❌ never sees it"]
+        end
+    end
+    PC1 -- "broadcast" --> PC2
+
+    classDef src fill:#e8f1fb,stroke:#2e86c1,color:#000
+    classDef blocked fill:#fdecea,stroke:#c0392b,color:#000
+    class PC1 src
+    class PC3 blocked
+```
+
+The switch keeps the broadcast **inside VLAN 10**. For PC3 to talk to PC1 at all, the traffic must go through a **router** (see [[#Inter-VLAN routing: VLANs can't talk to each other]]).
+
+| Wrong mental model | What's actually true |
+|---|---|
+| A VLAN = a separate cable or switch per group | A VLAN = a separate **logical** L2 network. Many VLANs share one switch and one trunk cable |
+| Separating groups means re-cabling | Moving a port to another VLAN is one line of switch config |
+| VLANs stop only broadcasts | They separate **all** Layer 2 traffic: broadcasts, unknown-unicast floods, and normal frames. Crossing VLANs always needs a router |
+
 ## Access ports and trunk ports
 
 **Problem:** VLAN 10 has people on the 1st floor and the 3rd floor, on different switches. Running one inter-switch cable **per VLAN** wastes ports.
@@ -125,6 +172,7 @@ Wire speed, no hairpin. This is the normal design in a building today.
 - The one place VLANs show up: **Direct Connect**. Each **virtual interface** (private, public, transit VIF) is an **802.1Q VLAN** on the physical port, so one fiber carries several logical connections
 
 ## Easy to get wrong
+- Thinking a VLAN needs its own cables or switch: it's a logical L2 network on shared hardware
 - Thinking VLANs on the same switch can talk without a router: they can't, that's the point
 - Forgetting to allow a VLAN on the trunk: the VLAN works on each switch but not between them
 - Native VLAN mismatch: no error, just frames landing in the wrong VLAN
@@ -142,6 +190,8 @@ Wire speed, no hairpin. This is the normal design in a building today.
 #flashcards
 
 What is a VLAN? :: A virtual switch inside a physical switch: its own broadcast domain and subnet
+Do VLANs create separate physical connections? :: No. Separate logical Layer 2 networks on the same switches and cables
+PC1 and PC2 in VLAN 10, PC3 in VLAN 20 on one switch. Who gets PC1's broadcast? :: Only PC2. The switch floods it within VLAN 10 only
 Access port vs trunk port? :: Access: one VLAN, untagged, to an end device. Trunk: many VLANs, 802.1Q-tagged, between switches/routers
 Size and main field of the 802.1Q tag? :: 4 bytes. TPID 0x8100 + priority + a 12-bit VLAN ID
 Maximum number of VLANs and why? :: 4 094: 12-bit ID minus 0 and 4095

@@ -229,7 +229,8 @@ One long-lived connection carries everything, so if a NAT or firewall silently d
 - Not keeping idle HTTP/2 connections alive with PINGs behind NATs
 
 ## Related
-- Builds on:: [[HTTP]], *[[TCP and UDP]]*, [[TLS]]
+- Builds on:: [[HTTP]], *[[TCP and UDP]]*, [[TLS]], [[Sockets]]
+- Two-way channel:: [[WebSocket]] (RFC 8441 over HTTP/2)
 - Connections vs requests through NAT:: [[Outbound-initiated connections]]
 - In the middle:: [[Reverse proxy]], [[Load balancing]], [[Service mesh]]
 - AWS:: [[Load balancers]], [[Proxies, load balancing and discovery in AWS]]

@@ -200,7 +200,7 @@ One backend service subscribes to `warehouse/#` and writes readings to the datab
 ## Related
 - Same family:: [[AMQP]], [[JMS]]
 - Compared with:: [[SNS]] (pub/sub), [[Kafka]] (often fed from MQTT for history and scale)
-- Network side:: [[NAT and PAT]], [[TLS]], [[mTLS]], [[Load balancing]] (L4 for MQTT, idle timeouts)
+- Network side:: [[NAT and PAT]], [[TLS]], [[mTLS]], [[Load balancing]] (L4 for MQTT, idle timeouts), [[WebSocket]] (MQTT over WebSocket), [[Outbound-initiated connections]]
 - Area:: [[Messaging]]
 
 ## Flashcards

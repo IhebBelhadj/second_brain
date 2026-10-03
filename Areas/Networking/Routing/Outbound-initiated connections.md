@@ -169,7 +169,7 @@ Two common ways to keep the channel:
 | Technique | How | Used by |
 |---|---|---|
 | **Long polling** | Client sends a request, server holds it open until it has something (or a timeout, e.g. 20 s), client immediately asks again | SSM Run Command (older agents), CI runners, SQS `ReceiveMessage` with wait time |
-| **WebSocket** | An HTTP request upgraded to a full-duplex stream (`101 Switching Protocols`), stays open for hours | SSM Session Manager, chat apps, browser dashboards |
+| **WebSocket** | An HTTP request upgraded to a full-duplex stream (see [[WebSocket]]) (`101 Switching Protocols`), stays open for hours | SSM Session Manager, chat apps, browser dashboards |
 | **HTTP/2 or gRPC stream** | A long-lived stream on a multiplexed connection | Kubernetes konnectivity, many modern agents |
 | **MQTT** over TLS | Persistent connection to a broker, server publishes to the device's topic | IoT devices (see [[MQTT]]) |
 
@@ -237,7 +237,8 @@ No inbound rule in the [[Security groups|security group]], no public IP, no port
 
 ## Related
 - Depends on:: [[NAT and PAT]], [[Network layers]], *[[TCP and UDP]]*
-- Protocols that keep connections open:: [[HTTP]], [[HTTP2]], [[MQTT]]
+- Protocols that keep connections open:: [[HTTP]], [[HTTP2]], [[WebSocket]], [[MQTT]]
+- The 5-tuple and ports:: [[Sockets]]
 - Firewall side of the same idea:: [[ACL]], [[Security groups]]
 - Egress control:: [[Proxies]]
 - AWS:: [[Systems Manager]], [[VPC]], [[Bastion host]]

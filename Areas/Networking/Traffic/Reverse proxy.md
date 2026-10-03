@@ -116,7 +116,7 @@ A real request often crosses several: CDN → cloud load balancer → ingress co
 
 ## Related
 - The other direction:: [[Proxies]]
-- The protocol it speaks:: [[HTTP]], [[HTTP2]] (keep-alive timeouts, HTTP/2 to clients vs HTTP/1.1 to backends)
+- The protocol it speaks:: [[HTTP]], [[HTTP2]] (keep-alive timeouts, HTTP/2 to clients vs HTTP/1.1 to backends), [[WebSocket]] (Upgrade headers)
 - What it enables:: [[Load balancing]], [[Service discovery]], [[Service mesh]]
 - Security:: [[TLS]], [[mTLS]], [[Certificates and PKI]], [[AWS WAF]]
 - Applied:: [[Proxies, load balancing and discovery in AWS]], [[Load balancers]]

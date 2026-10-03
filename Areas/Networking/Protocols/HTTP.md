@@ -4,7 +4,7 @@ created: 2026-10-03
 topic: Networking
 confidence: 1
 tags: [networking, http, protocols, web]
-aliases: [HTTP 1.1, HTTP1.1, HTTP 1.0, Keep-alive, Persistent connections, Chunked transfer encoding, Long polling, WebSocket, Server-Sent Events]
+aliases: [HTTP 1.1, HTTP1.1, HTTP 1.0, Keep-alive, Persistent connections, Chunked transfer encoding, Long polling, Server-Sent Events]
 ---
 # HTTP
 
@@ -190,13 +190,14 @@ On one HTTP/1.1 connection, **requests are strictly one at a time**: request →
 - So browsers **never enabled it**. It's effectively dead
 
 What browsers did instead:
-- Open **~6 parallel connections per host**. 24 requests over 6 connections, 4 rounds
+- <span style="color:rgb(255, 192, 0)">Open <b>~6 parallel connections per host</b>. 24 requests over 6 connections, 4 rounds</span>
 - Hacks to beat the limit: **domain sharding** (`img1.shop…`, `img2.shop…` to get 6 more connections each), **sprites** (many images in one), **bundling** all JS into one file, inlining small resources
 
 Each extra connection = another handshake, another slow start, more memory on the server. That's the problem [[HTTP2|HTTP/2]] was made for: many requests in parallel on **one** connection.
 
 ### Stage 5: one IP, many sites (the Host header)
 
+<span style="color:rgb(255, 192, 0)">NOTE: Very important notice </span>
 `203.0.113.10` also hosts `blog.example.com` and `api.example.com`. The server tells them apart only by the **`Host` header** (mandatory in HTTP/1.1). A [[Reverse proxy]] routes on it. With HTTPS there's a chicken-and-egg problem (the certificate is chosen before the encrypted `Host` header is readable), solved by **SNI** in the TLS ClientHello (see [[TLS]]).
 
 ```bash
@@ -233,7 +234,7 @@ sequenceDiagram
 | **Polling** | Request every N seconds | Simple. Wasteful, and up to N seconds late |
 | **Long polling** | The server keeps the request open until it has data or a timeout, client re-asks immediately | Near real time over plain HTTP. One held request per client |
 | **Server-Sent Events** (SSE) | One response that never ends (`Content-Type: text/event-stream`), server writes events into it | Server → client only, plain HTTP, auto-reconnect. Used to stream LLM answers |
-| **WebSocket** | An HTTP/1.1 request with `Upgrade: websocket`, answered `101 Switching Protocols`. From then on the TCP connection carries WebSocket frames in **both directions** | Full duplex, long-lived. Proxies and load balancers must allow the upgrade and long idle times |
+| **WebSocket** | An HTTP/1.1 request with `Upgrade: websocket`, answered `101 Switching Protocols`. From then on the TCP connection carries WebSocket frames in **both directions** | Full duplex, long-lived. Proxies and load balancers must allow the upgrade and long idle times. Full details: [[WebSocket]] |
 
 This is exactly how management agents behind NAT receive commands (see [[Outbound-initiated connections]]).
 
@@ -299,6 +300,8 @@ Long polling, SSE and WebSockets are **long idle-looking connections**. Every pr
 ## Related
 - Runs on:: *[[TCP and UDP]]*, [[TLS]]
 - Next version:: [[HTTP2]]
+- Upgraded to:: [[WebSocket]]
+- Underneath:: [[Sockets]]
 - Connections vs requests through NAT:: [[Outbound-initiated connections]]
 - In the middle:: [[Proxies]], [[Reverse proxy]], [[Load balancing]]
 - Names:: [[DNS]]

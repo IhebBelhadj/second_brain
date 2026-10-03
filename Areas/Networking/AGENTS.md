@@ -11,12 +11,15 @@ Networking/
 ├── Networking.md                  topic index (the learning path)
 ├── ACL.md                         allow/deny rule lists, stateless vs stateful
 ├── Network interfaces.md          NICs, virtual interfaces (bridge, veth, tun/tap, VLAN, VXLAN), namespaces, Docker, ENIs
+├── Inter-process communication.md  fds, files, pipes, FIFOs, signals, Unix sockets, shared memory
+├── Sockets.md                     socket API, 5-tuple, ss, bind addresses, event loops, framing, TIME_WAIT/CLOSE_WAIT, port exhaustion
 ├── Service mesh.md                sidecar proxies + control plane, mTLS between services
 ├── Protocols/                     foundations and protocols
 │   ├── Network layers.md          OSI vs TCP/IP, Ethernet frame + IP/TCP/UDP headers, hop-by-hop walk, security per layer
 │   ├── ICMP.md                    ping, traceroute, error messages
 │   ├── HTTP.md                    messages, methods, status, 1.0 vs 1.1 persistent connections, chunked, HOL, Host, long polling/SSE/WebSocket
 │   ├── HTTP2.md                   frames, streams, multiplexing, ALPN, HPACK, TCP HOL, HTTP/3 and QUIC, LB trap
+│   ├── WebSocket.md               upgrade handshake, frames/masking, crossing NAT/proxies/LBs, scaling, close codes, security, API Gateway
 │   └── AS and BGP.md              inter-network routing, ASNs
 ├── Addressing/
 │   ├── IP addressing and subnetting.md   binary, masks, CIDR, special ranges, VLSM, summarization, practice

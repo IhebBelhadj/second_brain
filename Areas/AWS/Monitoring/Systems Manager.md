@@ -300,7 +300,7 @@ flowchart TD
 - Granting `ssm:SendCommand` broadly: it's root on every targeted instance
 
 ## Related
-- How the agent's channel works:: [[Outbound-initiated connections]], [[NAT and PAT]], [[HTTP]]
+- How the agent's channel works:: [[Outbound-initiated connections]], [[NAT and PAT]], [[HTTP]], [[WebSocket]]
 - Replaces:: [[Bastion host]]
 - Needs:: [[IAM]], [[VPC]] (endpoints or NAT), [[Security groups]]
 - Manages:: [[EC2]], [[Auto Scaling]], [[CloudWatch agent]]

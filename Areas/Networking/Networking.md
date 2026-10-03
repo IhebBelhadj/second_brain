@@ -34,10 +34,13 @@ flowchart TD
     - [[DNS in production]]: internal naming, split-horizon, hybrid forwarding, DNS load balancing and its limits, safe record changes, running servers, a troubleshooting method
 - [[HTTP]]: the request/response protocol on top of TCP. Message anatomy, methods (safe/idempotent), status codes, HTTP/1.0 vs 1.1 persistent connections, Content-Length vs chunked, head-of-line blocking and 6 connections per host, the Host header, polling/long polling/SSE/WebSocket, keep-alive 502s
     - [[HTTP2]]: same meaning, new framing. Binary frames and streams multiplexed on one connection, ALPN, HPACK, RST_STREAM/GOAWAY, TCP head-of-line blocking, HTTP/3 over QUIC, the per-connection load balancing trap
+    - [[WebSocket]]: an HTTP upgrade into a two-way message channel. The handshake (`101`, Sec-WebSocket-Accept), frames and masking, how it crosses NATs, proxies and load balancers (nginx headers, idle timeouts), scaling with a pub/sub backplane, close codes, reconnects, security (Origin, auth), API Gateway WebSocket APIs
 - Not written yet: *[[TCP and UDP]]* (handshake, states, retransmission, congestion control) · *[[DHCP]]* · *[[IPv6]]*
 
 ## 2. Where the machine meets the network
 - [[Network interfaces]]: physical NICs and virtual ones (loopback, bridge, veth, tun/tap, VLAN, VXLAN, WireGuard), network namespaces, how containers and VMs get connected
+- [[Inter-process communication]]: how processes on one machine talk: file descriptors, files (and the rename trick), pipes and FIFOs, signals (SIGTERM vs SIGKILL), Unix domain sockets (nginx → gunicorn, docker.sock), shared memory, and what's left across machines
+- [[Sockets]]: the kernel object behind every connection. The system calls (socket, bind, listen, accept, connect), the 5-tuple, `ss`, refused vs timed out, 127.0.0.1 vs 0.0.0.0, event loops and fd limits, byte streams vs messages, TIME_WAIT and CLOSE_WAIT, ephemeral port exhaustion, accept queue overflow
 
 ## 3. Local networks (Layer 2)
 - [[Hubs, switches and routers]]: what each device decides on, MAC learning, ARP, collision vs broadcast domains, why the home "router" is five devices

@@ -56,7 +56,7 @@ Lightsail has its own simplified versions of the "real" services:
 | Managed database | RDS |
 | Bucket | S3 |
 | Distribution | CloudFront |
-| Container service | ECS / App Runner |
+| Container service | [[ECS]] / App Runner |
 | Snapshot | AMI / EBS snapshot |
 
 ## Console walkthrough (screenshots from the AWS docs)

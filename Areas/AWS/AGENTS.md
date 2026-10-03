@@ -21,6 +21,9 @@ AWS/
 │   ├── Auto Scaling.md             scaling groups
 │   ├── Packer.md                   golden AMIs from code, bake vs fry, template, cleanup, SSM builds, sharing/KMS, pipeline, vs Image Builder
 │   ├── Lambda.md                   serverless functions
+│   ├── ECS.md                      containers: cluster/task def/task/service, ECR, roles, ALB, endpoints, deploys, scaling, Exec, troubleshooting
+│   ├── ECS tasks and task definitions.md   fields, Fargate sizes, sidecars, credentials, lifecycle, run-task/scheduled tasks, stop/exit codes
+│   ├── ECS on Fargate vs EC2.md    (compare) Fargate vs self-provisioned container instances: capacity providers, placement, network modes, cost
 │   ├── Lightsail.md                simple VPS
 │   └── EC2 vs Lightsail vs Lambda.md   which to pick
 ├── Networking/

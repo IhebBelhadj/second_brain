@@ -129,7 +129,7 @@ One listening socket (fd 3) and one socket **per connection** (fd 4, 5, 6), all 
 
 For a **listening** socket, `Recv-Q` = connections waiting in the accept queue and `Send-Q` = the backlog size. For an **established** one, `Recv-Q` = bytes received but not yet read by the app, `Send-Q` = bytes sent but not yet acknowledged by the peer. A `Recv-Q` that keeps growing means **the app isn't reading fast enough**.
 
-### Stage 3: "it works locally but not from outside"
+### Stage 3: it works locally but not from outside
 
 Four failures, four different symptoms:
 

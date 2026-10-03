@@ -61,7 +61,7 @@ export const handler = async (event) => {
 
 | Thing | Value |
 |---|---|
-| Max run time | **15 minutes**. Longer jobs → ECS/Fargate, EC2, Step Functions |
+| Max run time | **15 minutes**. Longer jobs → [[ECS]] / Fargate (scheduled tasks), EC2, Step Functions |
 | Memory | 128 MB → 10 GB. **CPU grows with memory** |
 | Temp disk (`/tmp`) | Up to 10 GB, gone after the environment dies |
 | Billing | Number of requests + (duration × memory) |

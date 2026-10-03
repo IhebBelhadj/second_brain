@@ -67,7 +67,7 @@ It works at **Layer 7**, so it can read the HTTP request (path, host, headers) a
        API TG      Admin TG     Images TG
 ```
 
-It's the load balancer I'll meet the most as a developer: websites, REST APIs, HTTP microservices, containers (ECS), anything needing path/host-based routing.
+It's the load balancer I'll meet the most as a developer: websites, REST APIs, HTTP microservices, containers ([[ECS]], with `ip` target groups), anything needing path/host-based routing.
 
 ### Setting up an ALB
 
@@ -154,6 +154,7 @@ Use it for:
 - [[EC2]]: the usual targets
 - [[Auto Scaling]]: registers/deregisters instances in target groups
 - [[Lambda]]: can be a target
+- [[ECS]]: services register task IPs in `ip` target groups (Fargate/awsvpc) or instance + dynamic port (bridge)
 - [[Certificate Manager (ACM)]]: certificates for HTTPS listeners
 - [[Route 53]]: Alias record → ALB
 - [[AWS WAF]]: attached to the ALB

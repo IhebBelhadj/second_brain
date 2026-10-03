@@ -54,6 +54,9 @@ Full reading path, prerequisites and a "which note answers…" table → [[AWS n
 - [[Auto Scaling]]: grows and shrinks the number of EC2 instances
 - [[Packer]]: golden AMIs from code. Bake vs fry, immutable infrastructure, how an `amazon-ebs` build works, a full template, cleaning the image (no secrets, host keys, cloud-init), building through Session Manager, encrypted AMIs shared across accounts and regions (the KMS trap), a CI pipeline with Parameter Store and instance refresh, vs EC2 Image Builder
 - [[Lambda]]: run code without a server
+- [[ECS]]: AWS's container orchestrator. Cluster, task definition, task, service, capacity providers, ECR with immutable tags, the two IAM roles, a service behind an ALB (`ip` targets), the endpoints private tasks need to pull images, rolling deploys with circuit breaker, scaling, Service Connect, ECS Exec, why tasks stop
+    - [[ECS tasks and task definitions]]: every field that matters, Fargate CPU/memory combinations, sidecars and `dependsOn`, how tasks get credentials, the task lifecycle, one-off/scheduled/orchestrated tasks (migrations, nightly jobs), stop codes and exit codes (137, 143)
+    - [[ECS on Fargate vs EC2]]: serverless tasks vs provisioning container instances myself (ECS-optimized AMI, ecs.config, Auto Scaling group + capacity provider with managed scaling and draining, placement strategies, bridge vs awsvpc, IMDS trap, daemon services, AMI refresh), cost, and when to choose which
 - [[Lightsail]]: the "easy mode" VPS
 - [[EC2 vs Lightsail vs Lambda]]: which one should I pick?
 
@@ -91,6 +94,7 @@ Full reading path, prerequisites and a "which note answers…" table → [[AWS n
 - [[Networking]]: protocols behind all this (BGP, ICMP), routing, VPNs (IPsec/IKE), TLS
 - [[Messaging]]: queues vs pub/sub vs logs, [[Kafka]], the concepts behind SQS/SNS/EventBridge
 - [[Storage]]: block vs file vs object, filesystems, backups, the concepts behind S3/EBS/EFS
+- [[Containers]]: Docker images, tags and digests, the concepts behind ECS/ECR
 
 ## Weakest first
 ```dataview

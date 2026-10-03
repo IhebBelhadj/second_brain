@@ -398,7 +398,8 @@ If people still SSH in and change running servers, the AMI no longer describes p
 - Killing a build mid-way and leaving a `packer_*` instance running
 
 ## Related
-- Produces images for:: [[EC2]], [[Auto Scaling]] (launch templates, instance refresh)
+- Produces images for:: [[EC2]], [[Auto Scaling]] (launch templates, instance refresh), [[ECS on Fargate vs EC2]] (golden AMIs for ECS container instances)
+- Containers instead of VM images:: [[ECS]], [[Docker]], [[Docker image tags]]
 - Build access without SSH:: [[Systems Manager]], [[Outbound-initiated connections]]
 - Image publishing and config:: [[Systems Manager]] (Parameter Store), [[S3]] (artifacts)
 - Permissions and accounts:: [[IAM]], [[AWS Organizations]]

@@ -304,6 +304,7 @@ flowchart TD
 - Replaces:: [[Bastion host]]
 - Needs:: [[IAM]], [[VPC]] (endpoints or NAT), [[Security groups]]
 - Manages:: [[EC2]], [[Auto Scaling]], [[CloudWatch agent]]
+- Shell into containers:: [[ECS]] (ECS Exec is Session Manager underneath)
 - Audit:: [[CloudTrail]], [[CloudTrail in production]], [[CloudWatch Logs]]
 - Triggered by:: [[EventBridge]], [[CloudWatch alarms]]
 - Hybrid:: [[Site-to-Site VPN]], [[Connecting AWS to a private network]]

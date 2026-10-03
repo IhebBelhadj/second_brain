@@ -17,10 +17,10 @@ tags: [aws]
 |                         | Batch                          | Queues and runs batch jobs across managed compute                                                                                       |
 |                         | [[Lightsail]]                  | Simplified virtual server with fixed monthly pricing (vs EC2: [[EC2 vs Lightsail vs Lambda]])                                                                                    |
 |                         | App Runner                     | Runs a container or repo as a scaled web service, zero setup                                                                            |
-| **Containers**          | ECS                            | AWS's own container orchestrator                                                                                                        |
+| **Containers**          | [[ECS]]                        | AWS's own container orchestrator                                                                                                        |
 |                         | EKS                            | Managed Kubernetes                                                                                                                      |
-|                         | Fargate                        | Serverless engine for ECS/EKS — no EC2 instances to manage                                                                              |
-|                         | ECR                            | Private registry for container images                                                                                                   |
+|                         | [[ECS on Fargate vs EC2\|Fargate]]   | Serverless engine for ECS/EKS — no EC2 instances to manage                                                                              |
+|                         | [[ECR]]                        | Private registry for container images                                                                                                   |
 | **Storage**             | [[S3]]                         | Object storage, effectively unlimited, accessed by key                                                                                  |
 |                         | EBS                            | Block volumes attached to one EC2 instance at a time                                                                                    |
 |                         | EFS                            | Shared filesystem many instances can mount at once                                                                                      |

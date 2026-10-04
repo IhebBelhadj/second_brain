@@ -60,6 +60,7 @@ Full reading path, prerequisites and a "which note answers…" table → [[AWS n
 - [[ECS]]: AWS's container orchestrator. Cluster, task definition, task, service, capacity providers, ECR with immutable tags, the two IAM roles, a service behind an ALB (`ip` targets), the endpoints private tasks need to pull images, rolling deploys with circuit breaker, scaling, Service Connect, ECS Exec, why tasks stop
     - [[ECS tasks and task definitions]]: every field that matters, Fargate CPU/memory combinations, sidecars and `dependsOn`, how tasks get credentials, the task lifecycle, one-off/scheduled/orchestrated tasks (migrations, nightly jobs), stop codes and exit codes (137, 143)
     - [[ECS on Fargate vs EC2]]: serverless tasks vs provisioning container instances myself (ECS-optimized AMI, ecs.config, Auto Scaling group + capacity provider with managed scaling and draining, placement strategies, bridge vs awsvpc, IMDS trap, daemon services, AMI refresh), cost, and when to choose which
+    - [[ECS production stack]]: the whole thing from a GitHub repo, prod ready. Terraform state and GitHub OIDC roles (no keys), 3-AZ VPC with endpoints, Route 53 zone + ACM DNS-validated cert, HTTPS ALB + WAF, ECS on an EC2 Auto Scaling group with capacity provider, Secrets Manager injection and rotation, ECR + task definition + service, GitHub Actions build-once/promote with migrations and approvals, alarms, and the Fargate alternative
 - [[Lightsail]]: the "easy mode" VPS
 - [[EC2 vs Lightsail vs Lambda]]: which one should I pick?
 
@@ -92,6 +93,7 @@ Full reading path, prerequisites and a "which note answers…" table → [[AWS n
 - [[CloudTrail in production]]: alerting on dangerous calls (EventBridge rules, CIS metric filters), Athena investigations, playbooks: who deleted the database, assumed role → person, leaked access key, AccessDenied after a deploy, what changed before the outage, audit evidence
 - [[ARN]]: how every resource gets its unique name
 - [[AWS naming conventions]]: ID prefixes (`vpc-`, `sg-`…), naming rules, and my `project-env-resource` convention
+- Not written yet: *[[Secrets Manager]]* · *[[KMS]]*
 
 ## Related areas
 - [[Networking]]: protocols behind all this (BGP, ICMP), routing, VPNs (IPsec/IKE), TLS

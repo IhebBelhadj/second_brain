@@ -1,6 +1,9 @@
-- [ ] AWS cloud watch
-- [ ] AWS cloud trail
-- [ ] AWS Site-to-site VPN
-- [ ] AWS VPC endpoint
-- [ ] AWS identity center
-- [ ] 
+- [x] AWS cloud watch
+- [x] AWS cloud trail
+- [x] AWS Site-to-site VPN
+
+
+
+- [ ] dynamodb
+- [ ] identity center
+- [ ] terraform

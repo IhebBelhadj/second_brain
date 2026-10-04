@@ -362,6 +362,7 @@ When I create a record I pick *how* Route 53 answers:
 - Alternatives:: [[Lightsail]] has its **own** DNS zones (simpler, free), but I can use Route 53 instead
 - Monitoring:: CloudWatch (health check alarms), [[CloudTrail]] (record changes)
 - Big picture:: [[How AWS services connect]]
+- In a full stack from code (zone, ACM validation, Alias to the ALB in Terraform):: [[ECS production stack]]
 
 ## Flashcards
 #flashcards

@@ -248,6 +248,7 @@ To keep a history (the API forgets stopped tasks after about an hour), an EventB
 - The orchestrator:: [[ECS]]
 - The image in `image`:: [[Docker]], [[Docker image tags]]
 - Where tasks run:: [[ECS on Fargate vs EC2]]
+- Secrets injection and deploys from CI:: [[ECS production stack]]
 - Secrets and config:: [[Systems Manager]] (Parameter Store), [[IAM]]
 - Logs and metrics:: [[CloudWatch Logs]], [[CloudWatch]], [[CloudWatch alarms]]
 - Running tasks on events and schedules:: [[EventBridge]], [[Step Functions]], [[SQS]]

@@ -312,7 +312,7 @@ More in [[ECS tasks and task definitions#Why tasks stop]].
 - No circuit breaker: failed deploys loop forever
 
 ## Related
-- Deep dives:: [[ECS tasks and task definitions]], [[ECS on Fargate vs EC2]]
+- Deep dives:: [[ECS tasks and task definitions]], [[ECS on Fargate vs EC2]], [[ECS production stack]] (everything around it, from code and CI/CD)
 - Building and tagging the images:: [[Docker]], [[Docker image tags]] (why immutable tags and digests)
 - In front of it:: [[Load balancers]], [[Proxies, load balancing and discovery in AWS]]
 - Network:: [[VPC]], [[Security groups]], [[Outbound-initiated connections]]

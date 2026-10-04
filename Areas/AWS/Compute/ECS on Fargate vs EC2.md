@@ -242,6 +242,7 @@ Rule of thumb: Fargate wins for spiky, small, or many different services. EC2 wi
 
 ## Related
 - The orchestrator:: [[ECS]], [[ECS tasks and task definitions]]
+- Both options in a full prod setup from code:: [[ECS production stack]]
 - Provisioning my own hosts:: [[EC2]], [[Auto Scaling]], [[Packer]]
 - Host management and security:: [[Systems Manager]], [[IAM]], [[Security groups]]
 - Network:: [[VPC]], [[Load balancers]], [[Network interfaces]] (ENIs), [[Outbound-initiated connections]] (agents dialing out)

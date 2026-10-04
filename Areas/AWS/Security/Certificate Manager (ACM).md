@@ -100,6 +100,7 @@ Browser ──HTTPS:443──► ALB (ACM cert here) ──HTTP:8080──► EC
 - [[Lightsail]]: doesn't use ACM directly. Lightsail load balancers / distributions have their **own** free certificates
 - [[EC2]]: **not directly**. Put an ALB in front
 - Big picture → [[How AWS services connect]]
+- DNS validation in Terraform, waiting for ISSUED before the listener → [[ECS production stack#Stage 2: DNS and the certificate]]
 
 ## Easy to get wrong
 - **Region matters.** A certificate for an ALB in `eu-west-1` must be requested in `eu-west-1`. For **CloudFront it's always `us-east-1`**. Classic exam trap

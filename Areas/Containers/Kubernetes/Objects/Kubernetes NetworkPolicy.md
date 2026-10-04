@@ -9,7 +9,7 @@ aliases: [NetworkPolicy, NetworkPolicies, Default deny policy]
 # Kubernetes NetworkPolicy
 
 > [!abstract] In one sentence
-> A NetworkPolicy is a **firewall rule for pods, written with labels**: it selects pods and lists which pods, namespaces or IP ranges may connect **to** them (ingress) and which they may connect **to** (egress). Pods no policy selects accept everything; once selected, they accept **only** what some policy allows. The rules are **enforced by the network plugin**, not by Kubernetes itself, so on a plugin without support they do nothing.
+> A NetworkPolicy is a **firewall rule for pods, written with labels**: it selects pods and lists which pods, namespaces or IP (Internet Protocol) ranges may connect **to** them (ingress) and which they may connect **to** (egress). Pods no policy selects accept everything; once selected, they accept **only** what some policy allows. The rules are **enforced by the network plugin**, not by Kubernetes itself, so on a plugin without support they do nothing.
 
 ## Build-up: locking down the shop's database
 
@@ -132,11 +132,11 @@ One dash of YAML (YAML Ain't Markup Language) indentation turns a narrow rule in
 
 ### Stage 5: what NetworkPolicies can't do
 
-- **No enforcement without the plugin**: the API accepts policies on every cluster; only a CNI (Container Network Interface) plugin that implements them (Calico, Cilium, and others) drops packets
+- **No enforcement without the plugin**: the API (application programming interface) accepts policies on every cluster; only a CNI (Container Network Interface) plugin that implements them (Calico, Cilium, and others) drops packets
 - **No explicit deny, no priorities, no logging** in the standard API
-- **Layer 3/4 only**: IPs, ports, protocols. Not "allow `GET /orders` but not `DELETE`" (that's a [[Service mesh]] or Cilium's extended policies)
+- **Layer 3/4 only**: IPs, ports, protocols, nothing from HTTP (Hypertext Transfer Protocol). Not "allow `GET /orders` but not `DELETE`" (that's a [[Service mesh]] or Cilium's extended policies)
 - **Namespace-scoped**: a cluster administrator can't set a guardrail every namespace must obey with standard NetworkPolicies alone. Plugin-specific cluster-wide policies (and newer upstream APIs under development) fill that gap
-- **Identity is labels**: anyone who can create pods with `app: backend` in `shop` gets backend's access. RBAC on who can create pods there matters ([[Kubernetes RBAC]])
+- **Identity is labels**: anyone who can create pods with `app: backend` in `shop` gets backend's access. RBAC (role-based access control) on who can create pods there matters ([[Kubernetes RBAC]])
 
 ## Advanced problems
 
@@ -165,7 +165,7 @@ Kubelet probes come from the node itself; most plugins always allow node-to-loca
 - Protects:: [[Kubernetes Pod]], [[Kubernetes Service]] (applies to pods behind it)
 - Scoped by:: [[Kubernetes Namespace]]
 - Who can create matching pods:: [[Kubernetes RBAC]]
-- Concepts:: [[ACL]] (stateless vs stateful rule lists), [[Security groups]] (the AWS equivalent for instances), [[Service mesh]] (Layer 7 policies with identity)
+- Concepts:: [[ACL]] (stateless vs stateful rule lists), [[Security groups]] (the AWS (Amazon Web Services) equivalent for instances), [[Service mesh]] (Layer 7 policies with identity)
 - Overview:: [[Kubernetes]], [[Kubernetes architecture]] (CNI), [[Kubernetes worked example]]
 - Area:: [[Containers]]
 

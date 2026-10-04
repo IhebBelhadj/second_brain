@@ -9,7 +9,7 @@ aliases: [ClusterIP, NodePort, LoadBalancer Service, ExternalName, EndpointSlice
 # Kubernetes Service
 
 > [!abstract] In one sentence
-> A Service gives a **stable virtual IP address and DNS name** to a changing set of pods selected by **labels**, and spreads connections over the ones that are **ready**. Its **type** decides who can reach it: **ClusterIP** (inside the cluster), **NodePort** (a port on every node), **LoadBalancer** (an external load balancer provisioned for it), **ExternalName** (a DNS alias), or **headless** (no virtual IP, DNS returns the pods directly).
+> A Service gives a **stable virtual IP address and DNS (Domain Name System) name** to a changing set of pods selected by **labels**, and spreads connections over the ones that are **ready**. Its **type** decides who can reach it: **ClusterIP** (inside the cluster), **NodePort** (a port on every node), **LoadBalancer** (an external load balancer provisioned for it), **ExternalName** (a DNS alias), or **headless** (no virtual IP, DNS returns the pods directly).
 
 ## Build-up: the frontend needs to call the backend
 
@@ -41,7 +41,7 @@ flowchart TB
     F["frontend pod<br/>calls http://backend"] -->|"DNS: backend.shop.svc.cluster.local<br/>→ 10.96.40.12"| VIP["Service backend<br/>ClusterIP 10.96.40.12:80"]
     VIP -->|"DNAT by kube-proxy rules<br/>on the frontend's node"| P1["Pod 10.244.1.12:8080 ✓ ready"]
     VIP --> P2["Pod 10.244.2.17:8080 ✓ ready"]
-    VIP -.-x P3["Pod 10.244.3.9:8080 ✗ not ready"]
+    VIP -.->|"skipped"| P3["Pod 10.244.3.9:8080 ✗ not ready"]
 
     classDef ok fill:#eafaf1,stroke:#239b56,color:#000
     classDef no fill:#fdedec,stroke:#c0392b,color:#000
@@ -52,7 +52,7 @@ flowchart TB
 Three mechanisms work together (detailed in [[Kubernetes architecture]] and [[Service discovery]]):
 1. **EndpointSlices**: the EndpointSlice controller keeps, for each Service, the list of matching pods' IPs and ports, marked ready or not (from their readiness probes)
 2. **kube-proxy** on every node turns "connection to `10.96.40.12:80`" into "connection to one ready pod IP" with iptables, IPVS (IP Virtual Server) or nftables rules: DNAT (destination network address translation), done in the kernel of the **calling** node, see [[NAT and PAT]]
-3. **CoreDNS** answers `backend.shop.svc.cluster.local` (or `backend` from the same namespace) with the ClusterIP. Named ports also get SRV records (`_http._tcp.backend.shop.svc.cluster.local`)
+3. **CoreDNS** answers `backend.shop.svc.cluster.local` (or `backend` from the same namespace) with the ClusterIP. Named ports also get SRV (service) records (`_http._tcp.backend.shop.svc.cluster.local`)
 
 `targetPort` can be a **name** (`http`) defined in the pod's container ports, so the container port can change without touching the Service.
 
@@ -78,7 +78,7 @@ spec:
 - `Cluster` (default): any node accepts traffic and may forward it to a pod on another node, with SNAT (source NAT): the app sees a node IP, not the client's
 - `Local`: only nodes running a ready pod receive traffic (the load balancer health-checks them), no second hop, the **client IP is preserved**. Uneven spread if pods are unevenly placed
 
-For HTTP (Hypertext Transfer Protocol), one LoadBalancer per service gets expensive: an [[Kubernetes Ingress]] (or Gateway API) puts many services behind one.
+For HTTP (Hypertext Transfer Protocol), one LoadBalancer per service gets expensive: an [[Kubernetes Ingress]] (or Gateway API (application programming interface)) puts many services behind one.
 
 ### Stage 4: headless and selector-less Services
 
@@ -95,7 +95,7 @@ Requests time out or the ingress returns 503. `kubectl -n shop get endpointslice
 Long-lived connections (HTTP/2, gRPC, database pools) are balanced **once, at connection time**: kube-proxy picks a pod per connection, not per request. New pods added by scaling receive no traffic from existing connections. Use client-side balancing over a headless Service, a service mesh, or limit connection lifetimes (see [[HTTP2]]).
 
 ### 3. Connections fail during rollouts
-A pod being deleted is removed from EndpointSlices while it receives SIGTERM. Other nodes' rules update a moment later, so a few connections still arrive at a stopping pod. A `preStop` sleep of a few seconds and graceful shutdown fix it ([[Kubernetes Pod]]).
+A pod being deleted is removed from EndpointSlices while it receives SIGTERM (the termination signal). Other nodes' rules update a moment later, so a few connections still arrive at a stopping pod. A `preStop` sleep of a few seconds and graceful shutdown fix it ([[Kubernetes Pod]]).
 
 ### 4. `sessionAffinity: ClientIP` doesn't stick
 With `externalTrafficPolicy: Cluster`, the source IP the Service sees is a node's, not the client's, so many clients share "one" IP or one client changes. Stickiness for web users belongs in the ingress controller (cookies).

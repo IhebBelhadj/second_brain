@@ -20,7 +20,17 @@ Containers/
 └── Kubernetes/                    Kubernetes itself (vendor-neutral; EKS goes in the AWS area)
     ├── Kubernetes.md              the objects: pods, Deployments, probes, Services/Ingress, config, storage/StatefulSets, autoscaling, RBAC, CRDs/operators
     ├── Kubernetes architecture.md components under the hood: etcd, API server, controllers, scheduler, kubelet/CRI/CNI/CSI, kube-proxy, CoreDNS
-    └── Kubernetes worked example.md   e-commerce shop with every common object in YAML, step by step, and the mental model
+    ├── Kubernetes worked example.md   e-commerce shop with every common object in YAML, step by step, and the mental model
+    └── Objects/                   one note per object type, all named "Kubernetes <Kind>"
+        ├── Kubernetes Pod.md, Kubernetes ReplicaSet.md, Kubernetes Deployment.md, Kubernetes StatefulSet.md,
+        │   Kubernetes DaemonSet.md, Kubernetes Job.md, Kubernetes CronJob.md                     workloads
+        ├── Kubernetes Service.md, Kubernetes Ingress.md (+ Gateway API), Kubernetes NetworkPolicy.md   networking
+        ├── Kubernetes ConfigMap.md, Kubernetes Secret.md                                          configuration
+        ├── Kubernetes PersistentVolumeClaim.md (+ PV), Kubernetes StorageClass.md                 storage
+        ├── Kubernetes ServiceAccount.md, Kubernetes RBAC.md (Role, ClusterRole, bindings)         identity and access
+        ├── Kubernetes Namespace.md, Kubernetes Node.md, Kubernetes ResourceQuota and LimitRange.md   cluster and tenancy
+        ├── Kubernetes HorizontalPodAutoscaler.md, Kubernetes PodDisruptionBudget.md              scaling and availability
+        └── Kubernetes CustomResourceDefinition.md                                                 extending (operators)
 ```
 
 `ECS.md`, `ECS tasks and task definitions.md` and `ECS on Fargate vs EC2.md` are listed in this area's index (section 2) but live in `Areas/AWS/Compute/` with `topic: AWS`.
@@ -32,7 +42,7 @@ Containers/
 | Images, Dockerfiles, registries, running containers (section 1) | Area root |
 | Internals: namespaces, cgroups, runtimes | Area root |
 | Orchestration concepts, Swarm, comparisons (section 2) | `Orchestration/` |
-| Kubernetes, vendor-neutral (section 2, "Kubernetes") | `Kubernetes/` |
+| Kubernetes, vendor-neutral (section 2, "Kubernetes") | `Kubernetes/`; a note about one object type goes in `Kubernetes/Objects/`, named `Kubernetes <Kind>` |
 | An AWS container service (ECS, EKS, App Runner, ECR) | `Areas/AWS/Compute/`, `topic: AWS`, listed in section 2 of `Containers.md` |
 
 The planned notes (roadmap) are the italic `*[[…]]*` links in `Containers.md`: when writing one, use that exact name so existing links resolve.

@@ -96,7 +96,7 @@ Roughly: pods not yet scheduled or not ready first, then pods on nodes running m
 ## Easy to get wrong
 - Creating ReplicaSets directly: use a Deployment
 - Expecting a template change to update running pods
-- A selector that doesn't match the template's labels (rejected by the API) or that matches other pods (adopted)
+- A selector that doesn't match the template's labels (rejected by the API (application programming interface)) or that matches other pods (adopted)
 - Deleting old ReplicaSets of a Deployment by hand: it removes the rollback history
 
 ## Related

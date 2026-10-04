@@ -300,6 +300,7 @@ Every major cloud sells managed Kubernetes: EKS on AWS, GKE on Google Cloud, AKS
 - Concepts:: [[Container orchestration]], [[Deployment strategies]] (rolling, blue/green via Service selectors, canary with Argo Rollouts/Flagger)
 - Under the hood:: [[Kubernetes architecture]]
 - All of it on one app:: [[Kubernetes worked example]]
+- Objects, one note each:: [[Kubernetes Pod]], [[Kubernetes ReplicaSet]], [[Kubernetes Deployment]], [[Kubernetes StatefulSet]], [[Kubernetes DaemonSet]], [[Kubernetes Job]], [[Kubernetes CronJob]], [[Kubernetes Service]], [[Kubernetes Ingress]], [[Kubernetes NetworkPolicy]], [[Kubernetes ConfigMap]], [[Kubernetes Secret]], [[Kubernetes PersistentVolumeClaim]], [[Kubernetes StorageClass]], [[Kubernetes ServiceAccount]], [[Kubernetes RBAC]], [[Kubernetes Namespace]], [[Kubernetes Node]], [[Kubernetes ResourceQuota and LimitRange]], [[Kubernetes HorizontalPodAutoscaler]], [[Kubernetes PodDisruptionBudget]], [[Kubernetes CustomResourceDefinition]]
 - Compared:: [[Compose vs Swarm vs Kubernetes]], [[Docker Swarm]], [[Docker Compose]]
 - Networking:: [[Service discovery]], [[Reverse proxy]], [[Load balancing]], [[Network interfaces]], [[DNS]] (the `ndots:5` trap)
 - Identity:: [[Workload identity (SPIFFE)]], [[OpenID Connect]] (service account tokens), [[Service mesh]]

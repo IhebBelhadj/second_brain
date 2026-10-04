@@ -108,7 +108,7 @@ A failing rollout **stops**: new pods crash or never become ready, so the contro
 
 ### Stage 5: Deployments and the HPA
 
-A [[Kubernetes HorizontalPodAutoscaler]] changes `spec.replicas` of the Deployment. If the manifest also sets `replicas: 3`, every apply resets the count. Leave `replicas` out of the manifest when an HPA owns it. During a rollout, the HPA and the Deployment cooperate: `maxSurge` applies on top of whatever count the HPA set.
+A [[Kubernetes HorizontalPodAutoscaler]] changes `spec.replicas` of the Deployment. If the manifest also sets `replicas: 3`, every apply resets the count. Leave `replicas` out of the manifest when an HPA (HorizontalPodAutoscaler) owns it. During a rollout, the HPA and the Deployment cooperate: `maxSurge` applies on top of whatever count the HPA set.
 
 ## When not to use a Deployment
 

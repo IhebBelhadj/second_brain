@@ -134,7 +134,7 @@ The pod's `restartPolicy` decides what the kubelet does when a container exits: 
 | **Burstable** | At least one request or limit set, not Guaranteed | In between |
 | **BestEffort** | No requests or limits at all | First |
 
-- **Shutdown**: when a pod is deleted, it's removed from Service endpoints, the `preStop` hook runs, the containers get **SIGTERM** (the termination signal), and after `terminationGracePeriodSeconds` (30 s by default) whatever is left gets **SIGKILL** (see [[Inter-process communication]])
+- **Shutdown**: when a pod is deleted, it's removed from Service endpoints, the `preStop` hook runs, the containers get **SIGTERM** (the termination signal), and after `terminationGracePeriodSeconds` (30 s by default) whatever is left gets **SIGKILL (the kill signal, which can't be caught)** (see [[Inter-process communication]])
 
 ### Stage 6: why pods are never created by hand
 
@@ -164,7 +164,7 @@ The container keeps exiting. `logs --previous` shows why; `describe` shows the e
 The scheduler can't place it: requests too big for any node, a taint without toleration, a node selector or affinity that matches nothing, an unbound volume claim. The events at the bottom of `describe` say which (see [[Kubernetes Node]]).
 
 ### 3. OOM kills with plenty of free memory on the node
-The **container's** limit is what counts, not the node's free memory. A JVM (Java Virtual Machine) or Node.js process sized for the machine instead of the container exceeds its limit. Set runtime heap sizes from the limit.
+An OOM (out of memory) kill follows the **container's** limit, not the node's free memory. A JVM (Java Virtual Machine) or Node.js process sized for the machine instead of the container exceeds its limit. Set runtime heap sizes from the limit.
 
 ### 4. CPU throttling with low average CPU
 A CPU limit is enforced per 100 ms period: a burst that uses the whole quota early waits for the rest of the period, adding latency even though the average is low. Many teams set CPU **requests** but no CPU **limits** for latency-sensitive services.

@@ -100,7 +100,7 @@ For a schedule, a [[Kubernetes CronJob]] creates Jobs.
 A service mesh proxy or log shipper added as a regular container keeps running after the main container exits, so the pod never finishes. Native sidecars (init containers with `restartPolicy: Always`) are stopped automatically when the main containers finish (see [[Kubernetes Pod]]).
 
 ### 2. Thousands of finished pods
-Jobs created often (by CronJobs or pipelines) without `ttlSecondsAfterFinished` leave every pod behind, slowing `kubectl get pods` and loading the API server. Set a TTL.
+Jobs created often (by CronJobs or pipelines) without `ttlSecondsAfterFinished` leave every pod behind, slowing `kubectl get pods` and loading the API (application programming interface) server. Set a TTL (time to live).
 
 ### 3. The Job is retried on a deterministic failure
 A bug fails every attempt, wasting `backoffLimit` retries with growing delays. Use `podFailurePolicy` with `FailJob` on the exit codes that mean "won't work next time".

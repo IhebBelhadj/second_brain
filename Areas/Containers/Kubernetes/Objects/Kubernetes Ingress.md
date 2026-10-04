@@ -15,7 +15,7 @@ aliases: [Ingress, Ingress controller, IngressClass, Gateway API, HTTPRoute]
 
 ### Stage 1: one load balancer per service
 
-The shop has a frontend, a backend API (application programming interface) and an admin app. Making each a `type: LoadBalancer` Service gives three external load balancers, three IP addresses, three places to install TLS (Transport Layer Security) certificates, and no way to route `shop.example.com/api` to one service and `/` to another: a Layer 4 load balancer doesn't read HTTP (Hypertext Transfer Protocol).
+The shop has a frontend, a backend API (application programming interface) and an admin app. Making each a `type: LoadBalancer` Service gives three external load balancers, three IP (Internet Protocol) addresses, three places to install TLS (Transport Layer Security) certificates, and no way to route `shop.example.com/api` to one service and `/` to another: a Layer 4 load balancer doesn't read HTTP (Hypertext Transfer Protocol).
 
 What's needed is **one** Layer 7 entry point that reads the host and path and forwards to the right Service: a [[Reverse proxy]].
 
@@ -143,7 +143,7 @@ The controller is a proxy: the real client is in `X-Forwarded-For`. The app must
 ## Easy to get wrong
 - Creating an Ingress in a cluster with no controller installed
 - Forgetting `ingressClassName` when several controllers exist
-- Expecting Ingress to route TCP/UDP: HTTP and HTTPS only
+- Expecting Ingress to route TCP/UDP: HTTP and HTTPS (HTTP over TLS) only
 - Annotations copied from another controller's docs: silently ignored
 - The TLS Secret in a different namespace than the Ingress
 - Treating "Ingress" (the object) and NetworkPolicy "ingress" (incoming traffic rules) as related

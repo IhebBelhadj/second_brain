@@ -81,7 +81,7 @@ On a 200-node cluster with `maxUnavailable: 1`, a rollout touches 200 pods one a
 |---|---|
 | **CNI plugin** (Calico, Cilium) | Sets up pod networking on each node (see [[Kubernetes architecture]]) |
 | **kube-proxy** | Programs each node's Service rules |
-| **CSI** (Container Storage Interface) node plugin | Attaches and mounts volumes on each node |
+| **CSI (Container Storage Interface)** (Container Storage Interface) node plugin | Attaches and mounts volumes on each node |
 | Log shippers (Fluent Bit, Vector) | Read each node's log files |
 | Metrics exporters (node-exporter) | Report each node's hardware stats |
 | Security agents | Watch each kernel's activity |

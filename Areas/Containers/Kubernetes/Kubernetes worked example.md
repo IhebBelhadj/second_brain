@@ -866,15 +866,15 @@ Don't memorise the YAML first. Think of Kubernetes as a collection of controller
 
 | Question | Objects |
 |---|---|
-| What should be running? | Deployment, StatefulSet, DaemonSet, Job, CronJob |
-| How do I find it? | Service |
-| How does traffic enter? | Ingress, Gateway |
-| What configuration does it need? | ConfigMap, Secret |
-| Where does its data live? | PVC, PV, StorageClass |
-| Should it scale? | HPA |
-| Can it be disrupted? | PDB |
-| Who is it, and what may it do? | ServiceAccount, Role/RoleBinding (RBAC) |
-| Who can talk to whom? | NetworkPolicy |
+| What should be running? | [[Kubernetes Deployment\|Deployment]], [[Kubernetes StatefulSet\|StatefulSet]], [[Kubernetes DaemonSet\|DaemonSet]], [[Kubernetes Job\|Job]], [[Kubernetes CronJob\|CronJob]] |
+| How do I find it? | [[Kubernetes Service\|Service]] |
+| How does traffic enter? | [[Kubernetes Ingress\|Ingress, Gateway]] |
+| What configuration does it need? | [[Kubernetes ConfigMap\|ConfigMap]], [[Kubernetes Secret\|Secret]] |
+| Where does its data live? | [[Kubernetes PersistentVolumeClaim\|PVC, PV]], [[Kubernetes StorageClass\|StorageClass]] |
+| Should it scale? | [[Kubernetes HorizontalPodAutoscaler\|HPA]] |
+| Can it be disrupted? | [[Kubernetes PodDisruptionBudget\|PDB]] |
+| Who is it, and what may it do? | [[Kubernetes ServiceAccount\|ServiceAccount]], [[Kubernetes RBAC\|Role/RoleBinding (RBAC)]] |
+| Who can talk to whom? | [[Kubernetes NetworkPolicy\|NetworkPolicy]] |
 
 ```mermaid
 flowchart LR
@@ -946,6 +946,7 @@ That's why Kubernetes has so many YAML objects: each one describes a **different
 
 ## Related
 - The objects explained:: [[Kubernetes]]
+- Objects, one note each:: [[Kubernetes Pod]], [[Kubernetes ReplicaSet]], [[Kubernetes Deployment]], [[Kubernetes StatefulSet]], [[Kubernetes DaemonSet]], [[Kubernetes Job]], [[Kubernetes CronJob]], [[Kubernetes Service]], [[Kubernetes Ingress]], [[Kubernetes NetworkPolicy]], [[Kubernetes ConfigMap]], [[Kubernetes Secret]], [[Kubernetes PersistentVolumeClaim]], [[Kubernetes StorageClass]], [[Kubernetes ServiceAccount]], [[Kubernetes RBAC]], [[Kubernetes Namespace]], [[Kubernetes Node]], [[Kubernetes ResourceQuota and LimitRange]], [[Kubernetes HorizontalPodAutoscaler]], [[Kubernetes PodDisruptionBudget]], [[Kubernetes CustomResourceDefinition]]
 - How they're processed:: [[Kubernetes architecture]]
 - Releasing new versions:: [[Deployment strategies]]
 - Images:: [[Docker]], [[Docker image tags]] (pin digests rather than `1.4.0`)

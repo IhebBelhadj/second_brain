@@ -120,7 +120,7 @@ A cleanup fails every night and nobody notices: the CronJob keeps scheduling. Al
 ## Related
 - Creates:: [[Kubernetes Job]] → [[Kubernetes Pod]]
 - Overview:: [[Kubernetes]], [[Kubernetes worked example]]
-- In AWS:: [[EventBridge]] (scheduled rules as the AWS equivalent)
+- In AWS (Amazon Web Services):: [[EventBridge]] (scheduled rules as the AWS equivalent)
 - Area:: [[Containers]]
 
 ## Flashcards

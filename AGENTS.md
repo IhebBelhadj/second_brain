@@ -22,7 +22,7 @@ An **Obsidian vault** of study notes. The owner is working toward **systems engi
 |---|---|---|
 | `Home.md` | Dashboard: Dataview queries (weakest notes, inbox, projects, topics). Don't hand-edit the queries | |
 | `How this works.md` | The owner's own manual for the system: folders, templates, properties. Read it before restructuring anything | |
-| `Areas/` | Subjects built up over time, **one folder per subject** with a topic index | **Where almost everything is**: `Networking/`, `AWS/`, `Storage/`, `Messaging/`, `Containers/`, `Data structures and algorithms/` |
+| `Areas/` | Subjects built up over time, **one folder per subject** with a topic index | **Where almost everything is**: `Networking/`, `AWS/`, `Storage/`, `Messaging/`, `Containers/`, `Identity and access/`, `Data structures and algorithms/` |
 | `Inbox/` | Undecided captures | Nearly empty |
 | `Journal/` | Daily/weekly notes | Empty |
 | `Notes/` | The owner's own ideas | Empty |
@@ -43,6 +43,7 @@ An **Obsidian vault** of study notes. The owner is working toward **systems engi
 | Storage | `Areas/Storage/AGENTS.md` | `Areas/Storage/Storage.md` | **Vendor-neutral** storage: block/file/object, filesystems, RAID, network storage, backups, distributed storage. Ordered as a learning path. Mostly a roadmap so far |
 | Messaging | `Areas/Messaging/AGENTS.md` | `Areas/Messaging/Messaging.md` | **Vendor-neutral** messaging: queues, pub/sub, event streaming (Kafka), delivery guarantees, event-driven patterns. Ordered as a learning path. Mostly a roadmap so far |
 | Containers | `Areas/Containers/AGENTS.md` | `Areas/Containers/Containers.md` | **Vendor-neutral** containers: building, tagging and shipping images, running containers, internals, orchestration. AWS container services (ECS, Fargate, ECR) stay in the AWS area and are linked from the index |
+| Identity and access | `Areas/Identity and access/AGENTS.md` | `Areas/Identity and access/Identity and access.md` | **Vendor-neutral** identity: authentication methods (Basic/Digest, sessions, API keys, JWT, access/refresh tokens, HMAC signing, MFA/passkeys), OAuth 2.0, OIDC, SSO/SAML, choosing between them. TLS/mTLS/PKI stay in Networking, AWS identity services in the AWS area |
 | Data structures and algorithms | `Areas/Data structures and algorithms/AGENTS.md` | `Areas/Data structures and algorithms/Data structures and algorithms.md` | Data structures, algorithms, techniques and practice problems, with Python code. Ordered as a learning path |
 
 A new subject gets its own `Areas/<Subject>/` folder with an index note `<Subject>.md` (type `topic`, from `Templates/Topic.md`), its own `AGENTS.md` and `CLAUDE.md`, and a row in the table above.

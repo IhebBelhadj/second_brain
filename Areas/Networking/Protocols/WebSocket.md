@@ -337,6 +337,7 @@ A lot of `1006` in client telemetry = something on the path **cuts idle connecti
 - Fan-out between servers:: [[Messaging]], [[SNS]]
 - Used by:: [[Systems Manager]] (Session Manager), [[MQTT]] (MQTT over WebSocket)
 - AWS:: [[Load balancers]], [[Lambda]]
+- Authenticating the connection:: [[Session authentication]] (cookies, CSRF-like cross-site risks), [[JWT and bearer tokens]]
 
 ## Flashcards
 #flashcards

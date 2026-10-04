@@ -149,6 +149,7 @@ Source IP: ...
 - [[EC2]], [[Lambda]]: get permissions through roles
 - [[S3]]: bucket policies are the resource-based policy I'll write most, and cross-account access needs both sides
 - Big picture → [[How AWS services connect]]
+- How API calls are authenticated (SigV4) → [[HMAC request signing]]; the general authN vs authZ picture → [[Authentication and authorization]]; MFA → [[Multi-factor authentication and passkeys]]
 
 ## Flashcards
 #flashcards

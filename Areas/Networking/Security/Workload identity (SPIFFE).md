@@ -117,6 +117,7 @@ flowchart LR
 
 ## Related
 - Used for:: [[mTLS]], [[Service mesh]]
+- Same idea with JWTs (CI jobs, pods → cloud credentials):: [[OpenID Connect#Stage 8: OIDC for machines]]
 - Built on:: [[Certificates and PKI]], [[Encryption basics]]
 - Lifecycle:: [[Certificate rotation]] (SVIDs rotate every hour or so)
 - AWS:: [[IAM]], [[EC2]]

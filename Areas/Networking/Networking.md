@@ -69,6 +69,7 @@ flowchart TD
 - [[Certificate rotation]]: renewing certificates automatically (ACME, CA rotation)
 - [[Workload identity (SPIFFE)]]: identities for services without stored secrets
 - [[Service mesh]]: proxies + a control plane doing mTLS, authorization, retries and traffic splitting for every service
+- Application-level authentication (sessions, API keys, JWT, OAuth, OIDC, SSO, MFA) → its own area: [[Identity and access]]
 
 ## 7. Delivering traffic to services
 - [[Proxies]]: forward proxies, proxy vs NAT vs VPN, CONNECT, `HTTP_PROXY`/`NO_PROXY`, PAC/WPAD, transparent proxies, SOCKS, TLS inspection and what it breaks

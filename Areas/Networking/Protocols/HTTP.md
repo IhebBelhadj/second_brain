@@ -305,6 +305,7 @@ Long polling, SSE and WebSockets are **long idle-looking connections**. Every pr
 - Connections vs requests through NAT:: [[Outbound-initiated connections]]
 - In the middle:: [[Proxies]], [[Reverse proxy]], [[Load balancing]]
 - Names:: [[DNS]]
+- Who's calling (stateless requests carrying credentials):: [[Authentication and authorization]], [[Session authentication]], [[JWT and bearer tokens]]
 - AWS:: [[Load balancers]], [[Proxies, load balancing and discovery in AWS]]
 
 ## Flashcards

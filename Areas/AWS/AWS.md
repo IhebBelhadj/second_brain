@@ -100,6 +100,7 @@ Full reading path, prerequisites and a "which note answers…" table → [[AWS n
 - [[Messaging]]: queues vs pub/sub vs logs, [[Kafka]], the concepts behind SQS/SNS/EventBridge
 - [[Storage]]: block vs file vs object, filesystems, backups, the concepts behind S3/EBS/EFS
 - [[Containers]]: Docker images, tags and digests, the concepts behind ECS/ECR
+- [[Identity and access]]: authentication methods, OAuth 2.0, OIDC, SSO, the concepts behind IAM, Identity Center and Cognito
 
 ## Weakest first
 ```dataview

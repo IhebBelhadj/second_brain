@@ -58,6 +58,7 @@ Alice ──login──► AWS access portal
 - [[AWS Organizations]]: works across the org's accounts
 - [[IAM]]: permission sets become IAM roles in each account
 - [[CloudTrail]]: logins and role assumptions are logged
+- [[Single sign-on]]: the general idea (IdP, SAML/OIDC, SCIM, break-glass); `aws sso login` is OAuth's device code flow → [[OAuth 2.0#Stage 7: devices without a browser (device code)]]
 
 ## Flashcards
 #flashcards

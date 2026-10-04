@@ -201,6 +201,7 @@ server {
 ## Related
 - Depends on:: [[TLS]], [[Certificates and PKI]], [[Encryption basics]]
 - Automated by:: [[Service mesh]], [[Workload identity (SPIFFE)]]
+- Other ways to authenticate clients:: [[Choosing an authentication method]], [[Access and refresh tokens]] (mTLS-bound tokens)
 - Lifecycle:: [[Certificate rotation]]
 - AWS:: [[Load balancers]], [[Certificate Manager (ACM)]]
 

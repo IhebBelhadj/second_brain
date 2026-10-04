@@ -76,7 +76,7 @@ sequenceDiagram
     participant J as Journal area (on disk)
     participant H as Home locations (on disk)
     Note over FS: ①–④ ⑥ modified in the page cache, grouped into transaction T42
-    FS->>J: descriptor block: "T42 contains blocks #1200, #5321, #88004, #12"
+    FS->>J: descriptor block: "T42 contains blocks 1200, 5321, 88004, 12"
     FS->>J: copies of those 4 metadata blocks
     FS->>J: FLUSH (wait until really on stable storage)
     FS->>J: commit block "T42 complete" + FLUSH

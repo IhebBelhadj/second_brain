@@ -62,7 +62,7 @@ sequenceDiagram
     A-->>B: 200 Alice's orders
     B->>A: POST /logout + Cookie
     A->>S: DEL 8f2c…
-    A-->>B: Set-Cookie: __Host-session=; Max-Age=0
+    A-->>B: Set-Cookie: __Host-session= (empty, Max-Age=0)
 ```
 
 The ID **means nothing by itself**: it's a reference into the store. Guessing one is hopeless (2¹²⁸ possibilities), and the user's data never leaves the server.
@@ -78,15 +78,15 @@ curl -b jar.txt https://shop.example.com/account/orders
 
 The session ID is now as good as the password for the session's lifetime. The cookie attributes decide who can read and send it:
 
-| Attribute | Effect | Why |
-|---|---|---|
-| `Secure` | Only sent over HTTPS (Hypertext Transfer Protocol Secure) | Never leaks on a plain HTTP (Hypertext Transfer Protocol) request |
-| `HttpOnly` | Invisible to JavaScript (`document.cookie`) | An XSS (cross-site scripting) bug can't **read** and exfiltrate it |
-| `SameSite=Lax` | Not sent on cross-site sub-requests (images, forms POSTed from other sites, fetch), sent on top-level navigation (clicking a link) | Blocks most CSRF (Stage 4). `Strict`: never cross-site, even links. `None`: always (requires `Secure`), for legitimate cross-site use |
-| `Max-Age` / `Expires` | When the browser drops it | Without it: a "session cookie" deleted when the browser closes (browsers that restore sessions keep it anyway) |
-| `Domain` | Which hosts receive it | **Omit it**: then only the exact host gets it. `Domain=example.com` would send it to every subdomain, including a compromised `blog.example.com` |
-| `Path` | URL (Uniform Resource Locator) prefix | Not a security boundary |
-| `__Host-` prefix | The browser only accepts the cookie if `Secure`, `Path=/` and **no** `Domain` | Stops subdomains from planting or overwriting it |
+| Attribute             | Effect                                                                                                                             | Why                                                                                                                                              |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Secure`              | Only sent over HTTPS (Hypertext Transfer Protocol Secure)                                                                          | Never leaks on a plain HTTP (Hypertext Transfer Protocol) request                                                                                |
+| `HttpOnly`            | Invisible to JavaScript (`document.cookie`)                                                                                        | An XSS (cross-site scripting) bug can't **read** and exfiltrate it                                                                               |
+| `SameSite=Lax`        | Not sent on cross-site sub-requests (images, forms POSTed from other sites, fetch), sent on top-level navigation (clicking a link) | Blocks most CSRF (Stage 4). `Strict`: never cross-site, even links. `None`: always (requires `Secure`), for legitimate cross-site use            |
+| `Max-Age` / `Expires` | When the browser drops it                                                                                                          | Without it: a "session cookie" deleted when the browser closes (browsers that restore sessions keep it anyway)                                   |
+| `Domain`              | Which hosts receive it                                                                                                             | **Omit it**: then only the exact host gets it. `Domain=example.com` would send it to every subdomain, including a compromised `blog.example.com` |
+| `Path`                | URL (Uniform Resource Locator) prefix                                                                                              | Not a security boundary                                                                                                                          |
+| `__Host-` prefix      | The browser only accepts the cookie if `Secure`, `Path=/` and **no** `Domain`                                                      | Stops subdomains from planting or overwriting it                                                                                                 |
 
 ```mermaid
 flowchart LR
@@ -166,14 +166,14 @@ CSRF is specific to **automatically attached** credentials (cookies, Basic auth 
 
 ### Stage 5: session lifecycle
 
-| Event | What to do | Why |
-|---|---|---|
-| Login succeeds | **Issue a new session ID** (never reuse one that existed before login) | **Session fixation**: an attacker who planted a known ID in the victim's browser before login would otherwise share the logged-in session |
-| Privilege change (MFA done, role change, password change) | Rotate the ID again; on password change, **delete all other sessions** | Old stolen IDs stop working |
-| Idle | **Idle timeout** (e.g. 30 min for admin, days for a shop) | Abandoned sessions die |
-| Always | **Absolute timeout** (e.g. 8 h, 30 days with "remember me") | Even an active stolen session ends |
-| Logout | **Delete the session server-side**, then clear the cookie | Clearing only the cookie leaves the ID valid if it was copied |
-| Sensitive action | **Step-up**: ask for the password/MFA again | A borrowed laptop can't change the email |
+| Event                                                     | What to do                                                             | Why                                                                                                                                       |
+| --------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Login succeeds                                            | **Issue a new session ID** (never reuse one that existed before login) | **Session fixation**: an attacker who planted a known ID in the victim's browser before login would otherwise share the logged-in session |
+| Privilege change (MFA done, role change, password change) | Rotate the ID again; on password change, **delete all other sessions** | Old stolen IDs stop working                                                                                                               |
+| Idle                                                      | **Idle timeout** (e.g. 30 min for admin, days for a shop)              | Abandoned sessions die                                                                                                                    |
+| Always                                                    | **Absolute timeout** (e.g. 8 h, 30 days with "remember me")            | Even an active stolen session ends                                                                                                        |
+| Logout                                                    | **Delete the session server-side**, then clear the cookie              | Clearing only the cookie leaves the ID valid if it was copied                                                                             |
+| Sensitive action                                          | **Step-up**: ask for the password/MFA again                            | A borrowed laptop can't change the email                                                                                                  |
 
 The superpower of stateful sessions: a list of active sessions ("Logged in on Firefox, Lyon, 2 hours ago") with a **revoke** button that works **instantly**. Stateless tokens can't do that easily (see [[JWT and bearer tokens#Stage 6: the price of statelessness (revocation)]]).
 

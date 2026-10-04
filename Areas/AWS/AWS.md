@@ -83,7 +83,9 @@ Full reading path, prerequisites and a "which note answers…" table → [[AWS n
 - Audit of API calls → [[CloudTrail]] and [[CloudTrail in production]] (in Security below)
 
 ## Security, identity & governance (who can do what)
-- [[IAM]]: users, groups, roles, policies
+- [[IAM]]: users, groups, roles, policies. Console screens for creating policies, roles (trusted entity types), users and access keys
+- [[STS]]: temporary credentials for roles. Why a role beats a user with the permissions, the two checks (identity policy + trust policy), what "trust this account" really means, external ID and confused deputy, GitHub OIDC with no stored keys, trusted entity types, what AssumeRole returns, debugging AccessDenied
+    - [[Assuming a role step by step]]: the hands-on chain Lambda → invoke policy → role → assume-role policy → user with only that → access key → C#/Python/CLI client
 - [[AWS Organizations]]: many accounts, SCPs
 - [[AWS Identity Center]]: one login for many accounts
 - [[Certificate Manager (ACM)]]: free HTTPS certificates

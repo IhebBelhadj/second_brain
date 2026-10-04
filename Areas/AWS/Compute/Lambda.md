@@ -16,29 +16,29 @@ tags: [aws, compute, serverless]
 
 ![[aws-console lambda sidebar.png|250]]
 
-| Menu / tab | Sub-feature | What it's for |
-|---|---|---|
-| **Console menu** | Dashboard | Account-wide metrics and concurrency |
-| | Functions | My functions |
-| | Applications | Groups of functions + resources deployed together (SAM/CloudFormation) |
-| | Layers | Shared code/libraries reused by many functions |
-| | Event source mappings | The pollers that read SQS, Kinesis, DynamoDB Streams, Kafka and invoke functions |
-| | Code signing configurations | Only allow code signed by trusted publishers |
-| **Inside a function: Code** | Code editor / deploy | Edit + **Deploy** (see walkthrough) |
-| | Runtime settings | Runtime (Node, Python…), handler name, architecture (x86 / arm64) |
-| **Test** | Test events | Fake events to run the function by hand |
-| **Monitor** | Metrics, logs, traces | CloudWatch metrics + Logs, X-Ray traces |
-| **Configuration** | General | Memory, timeout (max 15 min), ephemeral storage |
-| | Triggers | What invokes it (S3, API Gateway, ALB, EventBridge…) |
-| | Permissions | **Execution role** + **resource-based policy** |
-| | Destinations | Where to send the result of async invocations (success/failure → SQS, SNS, EventBridge, another Lambda) |
-| | Function URL | A built-in HTTPS endpoint, no API Gateway needed |
-| | Environment variables | Config, encrypted with KMS |
-| | VPC | Attach to private subnets (see below) |
-| | Concurrency | **Reserved** (cap/guarantee) and **provisioned** (pre-warmed, no cold start) |
-| | SnapStart | Snapshot-based fast start (Java, Python, .NET) |
-| | File systems | Mount [[EFS]] (through an access point) |
-| **Aliases / Versions** | | Immutable **versions** + **aliases** (`prod` → v7) for safe releases and traffic shifting |
+| Menu / tab                  | Sub-feature                 | What it's for                                                                                           |
+| --------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------- |
+| **Console menu**            | Dashboard                   | Account-wide metrics and concurrency                                                                    |
+|                             | Functions                   | My functions                                                                                            |
+|                             | Applications                | Groups of functions + resources deployed together (SAM/CloudFormation)                                  |
+|                             | Layers                      | Shared code/libraries reused by many functions                                                          |
+|                             | Event source mappings       | The pollers that read SQS, Kinesis, DynamoDB Streams, Kafka and invoke functions                        |
+|                             | Code signing configurations | Only allow code signed by trusted publishers                                                            |
+| **Inside a function: Code** | Code editor / deploy        | Edit + **Deploy** (see walkthrough)                                                                     |
+|                             | Runtime settings            | Runtime (Node, Python…), handler name, architecture (x86 / arm64)                                       |
+| **Test**                    | Test events                 | Fake events to run the function by hand                                                                 |
+| **Monitor**                 | Metrics, logs, traces       | CloudWatch metrics + Logs, X-Ray traces                                                                 |
+| **Configuration**           | General                     | Memory, timeout (max 15 min), ephemeral storage                                                         |
+|                             | Triggers                    | What invokes it (S3, API Gateway, ALB, EventBridge…)                                                    |
+|                             | Permissions                 | **Execution role** + **resource-based policy**                                                          |
+|                             | Destinations                | Where to send the result of async invocations (success/failure → SQS, SNS, EventBridge, another Lambda) |
+|                             | Function URL                | A built-in HTTPS endpoint, no API Gateway needed                                                        |
+|                             | Environment variables       | Config, encrypted with KMS                                                                              |
+|                             | VPC                         | Attach to private subnets (see below)                                                                   |
+|                             | Concurrency                 | **Reserved** (cap/guarantee) and **provisioned** (pre-warmed, no cold start)                            |
+|                             | SnapStart                   | Snapshot-based fast start (Java, Python, .NET)                                                          |
+|                             | File systems                | Mount [[EFS]] (through an access point)                                                                 |
+| **Aliases / Versions**      |                             | Immutable **versions** + **aliases** (`prod` → v7) for safe releases and traffic shifting               |
 
 Related: **Lambda@Edge** (run at CloudFront locations), **Step Functions** (chain Lambdas into workflows), **API Gateway** (the usual HTTP front door).
 
@@ -81,11 +81,20 @@ export const handler = async (event) => {
 - **Execution role**: an [[IAM]] role that the function *assumes*. By default it can only write logs to CloudWatch. If my function reads S3, I add that permission here
 - **Resource-based policy**: who is allowed to *invoke* the function. The console adds it for me when I add a trigger
 
+A third way to call a function: a **caller with an IAM identity** whose policy allows `lambda:InvokeFunction` on the function's ARN. A program outside AWS can get that by assuming a role through [[STS]]: [[Assuming a role step by step]].
+
 ## Console walkthrough (screenshots from the AWS docs)
 
 1. **Lambda → Create function → Author from scratch**
    - Name, **Runtime** (Node.js, Python…), Architecture (arm64 is cheaper)
    - Permissions: **Create a new role with basic Lambda permissions** (= logs only)
+
+![[Pasted image 20261004100043.png]]
+
+   The function page after creation. **Copy ARN** gives the function's ARN, which policies that allow invoking it point at:
+
+![[Pasted image 20261004100114.png]]
+
 2. The code editor opens:
 
 ![[aws-docs lambda code editor.png]]
@@ -141,6 +150,7 @@ Lambda (in VPC, private subnet) ──► NAT GW ──► internet   ✅ needs 
 
 ## Connects to
 - [[IAM]]: execution role + resource policy
+- [[STS]]: letting an outside program invoke the function through an assumed role ([[Assuming a role step by step]])
 - [[Load balancers]]: Lambda can be a target group target
 - [[VPC]]: only when it needs private resources, and then NAT for internet
 - [[Route 53]] + [[Certificate Manager (ACM)]]: a custom domain on API Gateway in front of Lambda

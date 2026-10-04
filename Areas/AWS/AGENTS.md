@@ -66,6 +66,8 @@ AWS/
 │   └── Systems Manager.md          agent dial-out model, endpoints, Session Manager, Run Command, State/Patch Manager, Parameter Store, Automation
 └── Security/
     ├── IAM.md                      users, roles, policies
+    ├── STS.md                      temporary credentials, AssumeRole, trust policies, external ID, GitHub OIDC, why roles over users
+    ├── Assuming a role step by step.md   (procedure) console + code: outside app invokes a Lambda via a user that can only assume a role
     ├── AWS Organizations.md        accounts, SCPs
     ├── AWS Identity Center.md      SSO across accounts
     ├── Certificate Manager (ACM).md   certificates

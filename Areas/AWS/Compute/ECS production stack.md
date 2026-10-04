@@ -1128,7 +1128,7 @@ resource "aws_ecs_service" "api" {
 - The pieces in detail:: [[VPC]], [[Security groups]], [[VPC IP address planning]], [[Route 53]], [[Certificate Manager (ACM)]], [[Certificate rotation]], [[Load balancers]], [[AWS WAF]], [[RDS]]
 - ECS itself:: [[ECS]], [[ECS tasks and task definitions]], [[ECS on Fargate vs EC2]], [[Auto Scaling]], [[EC2]]
 - Identity and secrets:: [[IAM]], [[AWS Organizations]], [[AWS Identity Center]], [[Systems Manager]] (Parameter Store, Session Manager), *[[Secrets Manager]]*, *[[KMS]]*
-- How GitHub OIDC works:: [[OpenID Connect#Stage 8: OIDC for machines]], [[JWT and bearer tokens]]
+- How GitHub OIDC works:: [[OpenID Connect#Stage 8: OIDC for machines]], [[JWT and bearer tokens]], [[STS]] (trust policies, AssumeRoleWithWebIdentity)
 - Infrastructure as code:: *[[Terraform]]*, [[Packer]] (when hosts need a custom AMI)
 - Operations:: [[CloudWatch]], [[CloudWatch Logs]], [[CloudWatch alarms]], [[CloudTrail]]
 - Images:: [[Docker]], [[Docker image tags]]

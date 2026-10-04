@@ -279,7 +279,7 @@ Auto-linking a new OIDC login to an existing local account by matching `email`, 
 - What it enables:: [[Single sign-on]]
 - After login:: [[Session authentication]]
 - Machines:: [[Workload identity (SPIFFE)]], [[ECS production stack]]
-- In AWS:: [[IAM]], [[AWS Identity Center]]
+- In AWS:: [[IAM]], [[AWS Identity Center]], [[STS]] (AssumeRoleWithWebIdentity: GitHub token → AWS role)
 - Area:: [[Identity and access]]
 
 ## Flashcards

@@ -347,7 +347,7 @@ The questions and where the evidence is:
 ## Related
 - Builds on:: [[CloudTrail]]
 - Alerting through:: [[EventBridge]], [[CloudWatch Logs]], [[CloudWatch alarms]], [[SNS]]
-- Identities in the events:: [[IAM]], [[AWS Identity Center]], [[ARN]]
+- Identities in the events:: [[IAM]], [[STS]] (assumed-role sessions), [[AWS Identity Center]], [[ARN]]
 - Org-wide controls:: [[AWS Organizations]]
 - Archive and queries:: [[S3]]
 - Remediation code:: [[Lambda]]

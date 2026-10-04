@@ -20,7 +20,7 @@ The shop runs with [[Docker Compose]] on one server, `app-1` (`10.0.1.11`). Traf
 Two more servers, `app-2` and `app-3`. A deploy script SSHes (Secure Shell) into each one and runs `docker compose pull && docker compose up -d`. A load balancer in front sends traffic to all three.
 
 **The problems** appear quickly:
-- **Placement**: the worker needs 2 GB of RAM (random-access memory) and the API 512 MB. Which server has room? Someone decides, in a spreadsheet
+- **Placement**: the worker needs 2 GB of RAM (random-access memory) and the API (application programming interface) 512 MB. Which server has room? Someone decides, in a spreadsheet
 - **Failure**: `app-2` dies at 3 a.m. Its containers are gone until someone starts them on another server, *and* edits the load balancer pool
 - **Drift**: someone ran a hotfix by hand on `app-3`. Now the three servers run different versions and nobody knows
 - **Deploys**: the script updates all three at once (downtime) or one by one (slow, and if the new version fails on `app-1`, the script still carries on)
@@ -77,7 +77,7 @@ Turning the model into a working system means solving the same list of problems,
 | **Scheduling** (placement) | Which machine has the CPU/memory, the right labels, and isn't already running a copy? | Placement, spreading replicas across machines and zones |
 | **Desired state store** | Where is "what should run" kept, safely, so it survives a manager dying? | Drift: one source of truth |
 | **Self-healing** | Restart failed containers, reschedule the ones from a dead machine, replace unhealthy ones | Failure at 3 a.m. |
-| **Service discovery and load balancing** | How does the worker find "the cache" when its IP changes? | Discovery (a stable name or virtual IP in front of moving containers, see [[Service discovery]]) |
+| **Service discovery and load balancing** | How does the worker find "the cache" when its IP (Internet Protocol) address changes? | Discovery (a stable name or virtual IP in front of moving containers, see [[Service discovery]]) |
 | **Networking across hosts** | How does a container on `app-1` reach one on `app-3` by its own address? | Containers spread over many machines |
 | **Rolling updates and rollback** | Replace replicas gradually, stop if the new ones are unhealthy, go back | Deploys |
 | **Scaling** | Change the replica count, by hand or from metrics | Black Friday |
@@ -119,6 +119,7 @@ flowchart TB
     class AG1,AG2,AG3,RT1,RT2,RT3 wk
 ```
 
+- Deploys come from me or from the CI (continuous integration) pipeline, which only ever talk to the control plane
 - The **control plane** holds the desired state and makes decisions. It runs on several machines because losing it means nothing can be changed or healed
 - The **state store** is replicated with a **consensus** protocol (usually **Raft**): a write is accepted only once a **majority** (a quorum) of control plane nodes has it. That's why control planes have an **odd number** of members: 3 tolerate 1 failure, 5 tolerate 2. With 4, a majority is still 3, so a 4th member adds no tolerance
 - **Workers** run an **agent** that receives "run these containers", drives the local container runtime, and reports back what's actually running
@@ -180,7 +181,9 @@ A health check that's too strict (1-second timeout on an endpoint that queries t
 - Before this:: [[Docker]], [[Docker Compose]]
 - Products:: [[Docker Swarm]], [[Kubernetes]], [[ECS]]
 - Compared:: [[Compose vs Swarm vs Kubernetes]]
+- Deploying new versions:: [[Deployment strategies]]
 - Depends on:: [[Service discovery]], [[Load balancing]], [[Network interfaces]] (overlay networks)
+- Who reaches the cluster:: [[High availability networking]] (replicating managers and gateways, and where that recursion stops)
 - Area:: [[Containers]]
 
 ## Flashcards

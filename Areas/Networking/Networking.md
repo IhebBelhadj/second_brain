@@ -55,6 +55,7 @@ flowchart TD
     - [[Outbound-initiated connections]]: responses vs new connections through NAT, why an HTTP response doesn't end the TCP connection, why a NAT mapping isn't an open door, agents that dial out and keep the line open (SSM, CI runners, tunnels), keepalives, the egress-control lesson
 - [[Overlapping address spaces]]: two networks using the same IPs, and the ways out (separate routing domains, NAT, exposing services, renumbering)
 - [[AS and BGP]]: how independent networks route between each other, the protocol the internet runs on
+- [[High availability networking]]: where "replicate it" stops (the gateway for the gateways). One address, one machine; multiple A records and their limits; one address served by several machines: floating IP (VRRP) on a LAN, ECMP in a site, anycast across networks; DNS vs BGP jobs; hierarchy vs distributed graph; redundancy at every level (DNS root included); black holes, split brain, ECMP rehash, shared fate, slow failover
 - Not written yet: *[[OSPF]]* (routing inside one organization) · *[[First-hop redundancy (VRRP)]]* (two gateways, one IP)
 
 ## 5. Filtering
@@ -106,7 +107,6 @@ Every concept above shows up here under a product name. The general idea is in t
 
 ## Not written yet: the rest of the systems engineer path
 - *[[Network troubleshooting]]*: a method + the tools (`ip`, `ss`, `tcpdump`, `mtr`, `dig`, `curl -v`, `openssl s_client`)
-- *[[High availability networking]]*: VRRP/keepalived, anycast, link aggregation, ECMP
 - *[[Network monitoring]]*: SNMP, flow logs (NetFlow/sFlow), metrics that matter
 - *[[Wireless networking]]*: Wi-Fi standards, WPA2/WPA3, roaming
 - *[[Network automation]]*: config as code, Ansible, NETCONF/RESTCONF

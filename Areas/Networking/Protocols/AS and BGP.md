@@ -50,6 +50,7 @@ But **inside** an AS, shortest path is exactly what you want, so ASes still use 
 
 ## Connects to
 - [[Connecting VPCs]], [[BGP in AWS hybrid networking]], [[Site-to-Site VPN]], [[Transit gateway]], [[Direct Connect]], [[Nested VPNs]]
+- [[High availability networking]] (anycast: one address announced from several networks, the internet as a graph with no root)
 - [[Networking]]
 
 ## Flashcards

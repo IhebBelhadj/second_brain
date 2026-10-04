@@ -9,7 +9,7 @@ aliases: [Compose, docker compose, compose.yaml, docker-compose.yml]
 # Docker Compose
 
 > [!abstract] In one sentence
-> Docker Compose describes a **whole application made of several containers** (the API, its database, a cache, a worker) in one YAML file, `compose.yaml`, and starts, connects and stops them together with `docker compose up` / `down`. It runs everything on **one Docker host**: it's the right tool for development, CI and small single-server deployments, and it's not an orchestrator.
+> Docker Compose describes a **whole application made of several containers** (the API (application programming interface), its database, a cache, a worker) in one YAML (YAML Ain't Markup Language) file, `compose.yaml`, and starts, connects and stops them together with `docker compose up` / `down`. It runs everything on **one Docker host**: it's the right tool for development, CI (continuous integration) and small single-server deployments, and it's not an orchestrator.
 
 ## Build-up: the shop API stops being one container
 
@@ -29,7 +29,7 @@ docker run -d --name worker --network shop \
   -e DATABASE_URL=postgresql://postgres:dev@db:5432/shop shop-api:dev python -m src.worker
 ```
 
-It works, and it already shows the basic ideas: a user-defined **network** (`shop`) on which containers find each other **by name** through Docker's embedded DNS (`db` resolves to the database container's IP), and a named **volume** so the database survives the container.
+It works, and it already shows the basic ideas: a user-defined **network** (`shop`) on which containers find each other **by name** through Docker's embedded DNS (Domain Name System): `db` resolves to the database container's IP (Internet Protocol) address, and a named **volume** so the database survives the container.
 
 **The problems:**
 - The setup lives in a wiki page or a shell script nobody keeps in sync. A new developer spends an afternoon getting it right
@@ -159,7 +159,7 @@ API_TAG=3f9c2a1 docker compose up -d
 docker compose -f compose.yaml -f compose.ci.yaml up -d --wait   # --wait: return when everything is healthy
 ```
 
-**Profiles**: services that only start when asked for, like an admin UI or a mail catcher:
+**Profiles**: services that only start when asked for, like an admin UI (user interface) or a mail catcher:
 ```yaml
   mailpit:
     image: axllent/mailpit
@@ -241,7 +241,7 @@ Passwords written in `environment:` end up in Git. For local development, dummy 
 
 ## In AWS
 
-Nothing in AWS runs a `compose.yaml` file as is. On a single EC2 (Elastic Compute Cloud) instance, Compose works as on any Linux VM. At scale, the services move to [[ECS]] task definitions (one task definition per service, the sidecars as extra containers in the same task) or to Kubernetes. Compose stays useful in the CI (continuous integration) pipeline to run integration tests against real PostgreSQL and Redis containers.
+Nothing in AWS (Amazon Web Services) runs a `compose.yaml` file as is. On a single EC2 (Elastic Compute Cloud) instance, Compose works as on any Linux VM. At scale, the services move to [[ECS]] (Elastic Container Service) task definitions (one task definition per service, the sidecars as extra containers in the same task) or to Kubernetes. Compose stays useful in the CI pipeline to run integration tests against real PostgreSQL and Redis containers.
 
 ## Practice
 

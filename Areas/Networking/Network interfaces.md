@@ -212,7 +212,7 @@ What an ENI carries:
 - Physical counterparts:: [[Hubs, switches and routers]] (bridge = switch), [[VLAN]], [[NAT and PAT]] (Docker's MASQUERADE/DNAT)
 - Used by:: [[Routing tables]] (routes point at interfaces), [[Policy-based routing]] (VRFs, namespaces, `iif`/`oif`), [[VPN]] (tun, wg0, xfrm)
 - In AWS:: [[EC2]], [[Security groups]], [[VPC]]
-- Containers using these:: [[Docker]]
+- Containers using these:: [[Docker]], [[Docker Compose]], [[Docker Swarm]] (VXLAN overlays), [[Kubernetes architecture]] (CNI plugins, pause container)
 - What apps bind to an interface's address:: [[Sockets]], [[Inter-process communication]] (loopback vs Unix sockets)
 - Differs from:: a network namespace (contains interfaces) and a VRF (groups interfaces under one routing table)
 - Cloud equivalent of an interface on a central router:: [[Transit gateway attachments]]

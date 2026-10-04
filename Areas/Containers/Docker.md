@@ -306,7 +306,8 @@ Exit code **137** = SIGKILL: either the cgroup memory limit (OOM) or a stop time
 
 ## Related
 - Tags, digests and their traps:: [[Docker image tags]]
-- Running containers at scale:: [[ECS]], [[ECS tasks and task definitions]], [[ECS on Fargate vs EC2]]
+- Several containers on one host:: [[Docker Compose]]
+- Running containers at scale:: [[Container orchestration]], [[Docker Swarm]], [[Kubernetes]], [[ECS]], [[ECS tasks and task definitions]], [[ECS on Fargate vs EC2]]
 - Whole-machine images instead:: [[Packer]]
 - Under the hood:: [[Mounting]] (overlay root, bind mounts, mount namespaces), [[Network interfaces]] (namespaces, veth, bridges), [[NAT and PAT]] (published ports are DNAT), [[Inter-process communication]] (signals, PID 1), [[Sockets]] (bind addresses)
 - Area:: [[Containers]]

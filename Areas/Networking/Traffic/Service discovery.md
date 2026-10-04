@@ -107,6 +107,7 @@ The **service mesh** is the best of both: a sidecar proxy next to each client do
 - Based on:: [[DNS]], [[DNS in production]]
 - Identity:: [[Workload identity (SPIFFE)]], [[mTLS]]
 - Applied:: [[Proxies, load balancing and discovery in AWS]]
+- In orchestrators:: [[Kubernetes architecture]] (EndpointSlices, kube-proxy, CoreDNS), [[Docker Swarm]] (VIPs on overlay networks)
 
 ## Flashcards
 #flashcards

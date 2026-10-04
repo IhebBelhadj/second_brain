@@ -198,6 +198,7 @@ spec:
 
 ## Related
 - Built from:: [[Reverse proxy]], [[Load balancing]], [[Service discovery]]
+- Canary releases, applied:: [[Deployment strategies]]
 - Depends on:: [[mTLS]], [[Certificates and PKI]], [[Network interfaces]] (namespaces, iptables redirection)
 - Identity:: [[Workload identity (SPIFFE)]]
 - Certificates:: [[Certificate rotation]]

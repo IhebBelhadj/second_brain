@@ -183,7 +183,7 @@ Symptoms and first suspects:
 ## Related
 - Foundation:: [[DNS]], [[DNS security]]
 - Where it connects:: [[VPN]] (split DNS), [[Connecting AWS to a private network]] (hybrid DNS), [[NAT and PAT]] (hairpin NAT vs split-horizon)
-- Next:: *[[Load balancing]]*, [[AS and BGP]] (anycast)
+- Next:: *[[Load balancing]]*, [[AS and BGP]] (anycast), [[High availability networking]] (why DNS alone doesn't make a service available)
 - Applied:: [[Route 53]]
 
 ## Flashcards

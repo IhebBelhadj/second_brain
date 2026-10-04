@@ -14,11 +14,20 @@ Read top to bottom. Links in *italics* are notes not written yet (the roadmap).
 ## 1. Images and containers
 - [[Docker]]: from "it works on my machine" to an image. Layers and the build cache, instruction order, secrets that stay in layers, multi-stage builds, BuildKit cache and secret mounts, PID 1 and signals, ports and bind addresses, volumes, the build-once deployment flow, multi-arch builds, and the production traps (published ports bypassing the firewall, Docker Hub limits behind NAT, full disks, exit 137)
 - [[Docker image tags]]: learning tags hands-on (untagged images, `-t`, several tags on one image, rebuilding moves a tag, full names with the registry, pushing, digests vs tags, pulling on other machines), choosing a tagging scheme (commit, release, floating, environment tags), build once and promote, deploying by digest, and what goes wrong (`latest`, races, moving base images, fake rollbacks, multi-arch, retention)
-- Not written yet: *[[Container internals]]* (namespaces, cgroups, overlay filesystems, OCI runtimes) · *[[Docker networking]]* (bridge, host, overlay networks, DNS between containers) · *[[Docker Compose]]*
+- [[Docker Compose]]: from four `docker run` commands to one `compose.yaml`. Project names, the project network and service-name DNS, `depends_on` vs readiness (health checks), variables, override files and profiles, the `.env` trap, `compose watch`, running it on a server, and why it isn't an orchestrator (port conflicts when scaling, "lost" volumes, external networks, secrets)
+- Not written yet: *[[Container internals]]* (namespaces, cgroups, overlay filesystems, OCI runtimes) · *[[Docker networking]]* (bridge, host, overlay networks, DNS between containers)
 
 ## 2. Orchestration
-- AWS: [[ECS]], [[ECS tasks and task definitions]], [[ECS on Fargate vs EC2]] (in the AWS area)
-- Not written yet: *[[Kubernetes]]*
+- [[Container orchestration]]: why a fleet of servers needs one. Declared desired state and the reconciliation loop (level-triggered), the jobs every orchestrator does, control plane vs workers, Raft quorum and odd manager counts, the products (Swarm, Kubernetes, Nomad, ECS), and quorum loss, manual fixes reverted, cascading reschedules, flapping health checks
+- [[Docker Swarm]]: the orchestrator built into Docker Engine. `swarm init`/`join`, managers and Raft, services and tasks (replicated, global), the routing mesh, overlay networks and VIP discovery, stacks from Compose files (rolling updates, rollback, secrets, configs, placement), what it ignores and what it lacks, and its traps (quorum, VXLAN ports and MTU, address pool, pending tasks)
+- [[Compose vs Swarm vs Kubernetes]]: one host vs a simple cluster vs an extensible platform, side by side, and when to pick each
+- [[Deployment strategies]]: how traffic moves from v1 to v2. Deploy vs release, recreate, rolling (maxSurge/maxUnavailable, readiness), blue/green (the switch, cold green, draining, shared database), canary (traffic splitting, per-version metrics, low traffic), A/B testing vs canary, shadow traffic, feature flags, expand/contract migrations, a side-by-side table, and the traps (rollbacks that can't, no automatic rollback in Kubernetes, canaries that pass at 10%)
+
+### Kubernetes
+- [[Kubernetes]]: what it adds over Swarm, object by object. Pods, Deployments and ReplicaSets, probes, requests and limits, Services and Ingress, ConfigMaps and Secrets, PVCs and StatefulSets, DaemonSets/Jobs/CronJobs, autoscaling, namespaces/RBAC/NetworkPolicies, CRDs and operators, Helm/Kustomize/GitOps, what it costs, and the classic failures (Pending, CrashLoopBackOff, liveness killing healthy apps, dropped requests on deploy, ImagePullBackOff)
+- [[Kubernetes architecture]]: how it works under the hood, following one `kubectl apply`. etcd, the API server (authn, RBAC, admission, watch, optimistic concurrency), the controller manager, the scheduler, the kubelet with CRI/CNI/CSI and the pause container, EndpointSlices/kube-proxy/CoreDNS, the network model, every component's failure impact, and etcd latency, expired certificates, NotReady nodes, fighting controllers, webhooks
+- Not written yet: *[[Kubernetes networking]]* (CNI plugins, pod and Service ranges, Ingress and Gateway API in depth) · *[[Kubernetes storage]]* · *[[Helm]]*
+- AWS: [[ECS]], [[ECS tasks and task definitions]], [[ECS on Fargate vs EC2]] (in the AWS area) · *[[EKS]]* (planned)
 
 ## Related areas
 - [[Networking]]: namespaces and veth pairs ([[Network interfaces]]), published ports as DNAT ([[NAT and PAT]]), [[Sockets]], [[Inter-process communication]]

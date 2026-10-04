@@ -320,7 +320,9 @@ More in [[ECS tasks and task definitions#Why tasks stop]].
 - Observability:: [[CloudWatch]], [[CloudWatch Logs]], [[CloudWatch alarms]]
 - Other compute:: [[EC2]], [[Lambda]], [[Lightsail]], [[EC2 vs Lightsail vs Lambda]]
 - Workers and jobs:: [[SQS]], [[EventBridge]], [[Step Functions]]
-- Concepts:: [[Service discovery]], [[Load balancing]], [[Inter-process communication]] (signals)
+- Concepts:: [[Service discovery]], [[Load balancing]], [[Inter-process communication]] (signals), [[Container orchestration]]
+- Strategies, vendor-neutral:: [[Deployment strategies]]
+- Other orchestrators:: [[Kubernetes]], [[Docker Swarm]], [[Compose vs Swarm vs Kubernetes]]
 
 ## Flashcards
 #flashcards

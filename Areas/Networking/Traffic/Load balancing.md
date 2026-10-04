@@ -143,7 +143,7 @@ backend app
 - Finding backends:: [[Service discovery]]
 - Protocol details:: [[HTTP]] (idempotent retries, keep-alive 502s), [[HTTP2]] (per-connection vs per-request balancing)
 - Hashing behind it:: [[Hash table]] (why `hash % servers` moves keys)
-- Global:: [[DNS in production]], [[AS and BGP]] (anycast, ECMP)
+- Global:: [[DNS in production]], [[AS and BGP]] (anycast, ECMP), [[High availability networking]] (where the redundancy bottoms out)
 - Service-to-service:: [[Service mesh]]
 - Applied:: [[Proxies, load balancing and discovery in AWS]], [[Load balancers]]
 

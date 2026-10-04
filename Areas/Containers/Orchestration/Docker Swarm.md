@@ -38,7 +38,7 @@ p3…         app-3     Ready   Active
 
 That's the whole installation: Swarm mode is part of the Docker Engine already on the servers. `init` also creates a **certificate authority** for the cluster: every node gets a certificate, and all traffic between nodes uses mutual TLS (Transport Layer Security, see [[mTLS]]), with certificates rotated automatically.
 
-The firewall between nodes needs: **TCP (Transmission Control Protocol) 2377** (cluster management, to managers), **TCP and UDP (User Datagram Protocol) 7946** (node-to-node gossip), and **UDP 4789** (overlay network traffic, VXLAN).
+The firewall between nodes needs: **TCP (Transmission Control Protocol) 2377** (cluster management, to managers), **TCP and UDP (User Datagram Protocol) 7946** (node-to-node gossip), and **UDP 4789** (overlay network traffic, VXLAN, Virtual Extensible LAN (local area network)).
 
 **The problem:** with only `app-1` as a manager, the cluster's brain is a single machine. Workers keep running their containers if it dies, but nothing can be deployed or healed.
 
@@ -86,7 +86,7 @@ Now unplug `app-3`. The managers stop getting its heartbeats, mark it `Down`, an
 
 The service was published on port 8080. Which machine do I send traffic to?
 
-**Any of them.** Swarm publishes a service's port on **every node** in the cluster, even those not running a task of that service. A connection to `app-3:8080` is load-balanced (by IPVS, IP Virtual Server, in the kernel) to one of the service's tasks, possibly on another node, over the **ingress** overlay network.
+**Any of them.** Swarm publishes a service's port on **every node** in the cluster, even those not running a task of that service. A connection to `app-3:8080` is load-balanced (by IPVS, IP (Internet Protocol) Virtual Server, in the kernel) to one of the service's tasks, possibly on another node, over the **ingress** overlay network.
 
 ```mermaid
 flowchart TB
@@ -118,20 +118,20 @@ flowchart TB
     class M1,M2,M3 mesh
 ```
 
-So the external load balancer only needs the list of nodes, never the list of containers. The trade-off: an extra hop between nodes, and the application sees the routing mesh's address as the client, not the real client IP (Internet Protocol) address. When the real client IP matters, publish in **host mode** (`mode: host`), which binds the port only on the nodes running a task, like a plain `docker run -p`, combined with a global service so every node has one.
+So the external load balancer only needs the list of nodes, never the list of containers. The trade-off: an extra hop between nodes, and the application sees the routing mesh's address as the client, not the real client IP address. When the real client IP matters, publish in **host mode** (`mode: host`), which binds the port only on the nodes running a task, like a plain `docker run -p`, combined with a global service so every node has one.
 
 ### Stage 5: overlay networks between services
 
-Inside the cluster, the API must reach the cache whatever node each lands on. An **overlay network** spans all nodes: each container gets an address on it, and traffic between nodes is wrapped in **VXLAN** (Virtual Extensible LAN, local area network) packets on UDP 4789 (see [[Network interfaces]]).
+Inside the cluster, the API (the shop's application programming interface) must reach the cache whatever node each lands on. An **overlay network** spans all nodes: each container gets an address on it, and traffic between nodes is wrapped in **VXLAN** packets on UDP 4789 (see [[Network interfaces]]).
 
 ```bash
 docker network create --driver overlay --attachable shop
 ```
 
-On an overlay network, a **service name** resolves (through Swarm's DNS) to a **virtual IP** (VIP), and connections to that VIP are spread across the service's healthy tasks. The worker connects to `cache:6379` and never learns where the cache runs. That's server-side [[Service discovery]], built in.
+On an overlay network, a **service name** resolves (through Swarm's DNS, Domain Name System) to a **virtual IP** (VIP), and connections to that VIP are spread across the service's healthy tasks. The worker connects to `cache:6379` and never learns where the cache runs. That's server-side [[Service discovery]], built in.
 
 > [!warning] Overlay traffic is not encrypted by default
-> The control traffic between nodes is mutual TLS, but application traffic on an overlay network is plain VXLAN unless the network is created with `--opt encrypted` (IPsec between nodes, with a CPU cost). Across untrusted networks, turn it on.
+> The control traffic between nodes is mutual TLS, but application traffic on an overlay network is plain VXLAN unless the network is created with `--opt encrypted` (IPsec, IP security, between nodes, with a CPU (central processing unit) cost). Across untrusted networks, turn it on.
 
 ### Stage 6: deploying the Compose file as a stack
 
@@ -256,9 +256,10 @@ Swarm's default address pool is `10.0.0.0/8`, carved into `/24` networks. If the
 - Putting secrets in environment variables when Swarm secrets exist
 
 ## Related
-- Concepts:: [[Container orchestration]]
+- Concepts:: [[Container orchestration]], [[Deployment strategies]] (rolling updates and beyond)
 - File format from:: [[Docker Compose]]
 - Compared:: [[Compose vs Swarm vs Kubernetes]], [[Kubernetes]]
+- In front of the cluster:: [[High availability networking]] (keeping the external load balancer's address alive)
 - Under the hood:: [[Network interfaces]] (VXLAN, bridges), [[Service discovery]], [[Load balancing]], [[mTLS]]
 - Area:: [[Containers]]
 

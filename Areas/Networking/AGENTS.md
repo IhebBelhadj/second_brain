@@ -38,7 +38,8 @@ Networking/
 │   ├── Policy-based routing.md    ip rule, marks, VRFs, namespaces
 │   ├── NAT and PAT.md             NAT types, PAT tables, SNAT/DNAT, hole punching, CGNAT, NAT ≠ firewall, AWS gateways
 │   ├── Outbound-initiated connections.md   responses vs new connections through NAT, agents that dial out (SSM), keepalives
-│   └── Overlapping address spaces.md   same IPs on both sides and the ways out
+│   ├── Overlapping address spaces.md   same IPs on both sides and the ways out
+│   └── High availability networking.md   no gateway for the gateways: multi-A, VRRP floating IP, ECMP, anycast, DNS vs BGP, graph vs hierarchy
 ├── Security/
 │   ├── Encryption basics.md       symmetric/asymmetric, DH, forward secrecy
 │   ├── Certificates and PKI.md    certificates, chains, trust stores, CAs

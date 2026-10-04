@@ -9,11 +9,11 @@ aliases: [SSO, Identity provider, IdP, Service provider, Federation, Identity fe
 # Single sign-on
 
 > [!abstract] In one sentence
-> **Single sign-on** moves authentication out of every individual app into one **identity provider (IdP)**: the user logs in once at the IdP (with MFA), the IdP keeps its own session, and each app (**service provider** / relying party) redirects unauthenticated users there and receives a signed statement of who they are, via **OIDC** (JWT ID token) or **SAML** (XML assertion); one place to enforce MFA, disable a leaver, and audit logins, at the cost of making the IdP the most critical system in the company.
+> **Single sign-on** moves authentication out of every individual app into one **identity provider (IdP)**: the user logs in once at the IdP (with MFA), the IdP keeps its own session, and each app (**service provider** / relying party) redirects unauthenticated users there and receives a signed statement of who they are, via **OIDC** (JWT (JSON Web Token) ID (identifier) token) or **SAML (Security Assertion Markup Language)** (XML (Extensible Markup Language) assertion); one place to enforce MFA, disable a leaver, and audit logins, at the cost of making the IdP the most critical system in the company.
 
 ## Build-up: the shop's staff and their tools
 
-Forty employees use: the admin back-office, Grafana, the ticketing system, the wiki, GitHub, the AWS console, and a payroll SaaS.
+Forty employees use: the admin back-office, Grafana, the ticketing system, the wiki, GitHub, the AWS (Amazon Web Services) console, and a payroll SaaS (software as a service).
 
 ### Stage 1: one password per app
 
@@ -21,7 +21,7 @@ Forty employees use: the admin back-office, Grafana, the ticketing system, the w
 |---|---|
 | 7 passwords per person | Reused or written down; weakest app leaks the shared password |
 | MFA | Enabled in some apps, not others; 7 different authenticator entries |
-| Someone leaves | IT must remember to disable 7 accounts. The forgotten one stays open for months |
+| Someone leaves | IT (information technology) must remember to disable 7 accounts. The forgotten one stays open for months |
 | Audit | "Who logged into what last week?" needs 7 log sources |
 | Every app stores passwords | 7 password databases to breach |
 
@@ -85,9 +85,9 @@ sequenceDiagram
 
 ### Stage 4: the two main protocols
 
-**OIDC** is covered in [[OpenID Connect]]: authorization code flow, JWT ID token. Preferred for anything new, and the only sane option for mobile apps and APIs.
+**OIDC** is covered in [[OpenID Connect]]: authorization code flow, JWT ID token. Preferred for anything new, and the only sane option for mobile apps and APIs (application programming interfaces).
 
-**SAML 2.0** is older (2005), XML-based, and still everywhere in enterprise SaaS. The common SP-initiated flow with the HTTP-POST binding:
+**SAML 2.0** is older (2005), XML-based, and still everywhere in enterprise SaaS. The common SP-initiated flow with the HTTP-POST (HTTP: Hypertext Transfer Protocol) binding:
 
 ```mermaid
 sequenceDiagram
@@ -130,16 +130,16 @@ The same ideas as an ID token, in XML: issuer, subject, audience, validity windo
 
 | | SAML 2.0 | OIDC |
 |---|---|---|
-| Format | XML assertion, XML Signature | JSON, JWT |
-| Transport | Browser redirect + **auto-POST form** to the ACS URL | Redirect with a code + back-channel token request |
+| Format | XML assertion, XML Signature | JSON (JavaScript Object Notation), JWT |
+| Transport | Browser redirect + **auto-POST form** to the ACS URL (Uniform Resource Locator) | Redirect with a code + back-channel token request |
 | Setup | Exchange **metadata XML** (entity ID, ACS URL, certificate) | Client ID/secret + issuer URL (discovery) |
 | Mobile apps / APIs | Poor | Native |
-| Typical | Enterprise SaaS, AWS IAM Identity Center, older apps | Modern apps, Kubernetes, CI, consumer "log in with" |
+| Typical | Enterprise SaaS, AWS IAM (Identity and Access Management) Identity Center, older apps | Modern apps, Kubernetes, CI (continuous integration), consumer "log in with" |
 | Security pitfalls | XML signature wrapping, comment injection, certificate rollover | Weak validation (aud, nonce), see [[OpenID Connect]] |
 
 **IdP-initiated** SAML (the user clicks a tile in the IdP portal, the IdP POSTs an unsolicited assertion) has no `InResponseTo` to bind against, so it's more exposed to replay and injection; SP-initiated is preferred.
 
-Other SSO mechanisms worth recognising: **Kerberos** (Windows domains: log into the PC once, tickets open file shares and intranet sites, "integrated Windows authentication"), and legacy CAS or header-based SSO behind a proxy.
+Other SSO mechanisms worth recognising: **Kerberos** (Windows domains: log into the PC (personal computer) once, tickets open file shares and intranet sites, "integrated Windows authentication"), and legacy CAS (Central Authentication Service) or header-based SSO behind a proxy.
 
 ### Stage 5: getting accounts into apps (provisioning)
 
@@ -148,7 +148,7 @@ Authentication answers "who is this?". Apps also need an **account** with the ri
 | Approach | How | Leaver handling |
 |---|---|---|
 | **JIT** (just-in-time) provisioning | Account created at first SSO login from assertion attributes; roles from `groups` claims | Can't log in anymore (no IdP session), but the account and its API tokens may linger |
-| **SCIM** | The IdP pushes users and groups to the app over a REST API (`POST /scim/v2/Users`, `PATCH … active:false`) | **Deprovisioned immediately**: account disabled, sessions and tokens revoked by the app |
+| **SCIM (System for Cross-domain Identity Management)** | The IdP pushes users and groups to the app over a REST (Representational State Transfer) API (`POST /scim/v2/Users`, `PATCH … active:false`) | **Deprovisioned immediately**: account disabled, sessions and tokens revoked by the app |
 | Manual | Admin creates accounts | Forgotten |
 
 ```mermaid
@@ -167,7 +167,7 @@ The "SSO tax": many SaaS vendors put SSO and SCIM in their enterprise tier.
 
 | Risk | Mitigation |
 |---|---|
-| **IdP down = nobody works** | A highly available IdP (SaaS SLAs, or a clustered Keycloak), long-enough app sessions to ride out short outages |
+| **IdP down = nobody works** | A highly available IdP (SaaS SLAs (service-level agreements), or a clustered Keycloak), long-enough app sessions to ride out short outages |
 | **IdP compromised = everything compromised** | Phishing-resistant MFA for everyone ([[Multi-factor authentication and passkeys]]), strict admin controls, monitoring of IdP admin changes |
 | **Locked out of the IdP** | **Break-glass accounts**: a couple of local admin accounts per critical system (AWS root, the IdP itself), with hardware keys, stored offline, alarmed when used |
 | Session lifetimes | Long IdP sessions = fewer prompts but a stolen cookie lasts longer; require re-authentication for admin apps |
@@ -177,10 +177,10 @@ The "SSO tax": many SaaS vendors put SSO and SCIM in their enterprise tier.
 
 | Thing | Difference |
 |---|---|
-| Same password everywhere ("synchronised passwords", LDAP bind in every app) | Each app still receives and checks the password; one weak app leaks it. SSO apps **never see** the password |
+| Same password everywhere ("synchronised passwords", LDAP (Lightweight Directory Access Protocol) bind in every app) | Each app still receives and checks the password; one weak app leaks it. SSO apps **never see** the password |
 | Password manager | Still N passwords, just remembered for you |
 | Social login | SSO with a consumer IdP (Google, Apple) for customers: same protocols (OIDC), different trust and account linking problems |
-| Federation between companies | Company A's IdP trusted by company B's apps (B2B SaaS, partner portals); same protocols, more paperwork |
+| Federation between companies | Company A's IdP trusted by company B's apps (B2B (business-to-business) SaaS, partner portals); same protocols, more paperwork |
 
 ## Advanced problems
 
@@ -190,7 +190,7 @@ The IdP rotated its signing certificate; the SP still has the old one pinned fro
 
 ### 2. "Assertion expired" or "not yet valid"
 
-Clock skew between IdP and SP (assertions often valid for only 5 minutes). NTP on both sides; most SPs allow a small leeway.
+Clock skew between IdP and SP (assertions often valid for only 5 minutes). NTP (Network Time Protocol) on both sides; most SPs allow a small leeway.
 
 ### 3. Users loop between app and IdP
 

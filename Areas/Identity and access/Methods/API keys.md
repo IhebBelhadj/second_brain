@@ -9,11 +9,11 @@ aliases: [API key, API key authentication, X-API-Key, Personal access token, Per
 # API keys
 
 > [!abstract] In one sentence
-> An **API key** is a long random secret the server issues to a **client application** (a partner's server, a script, a CI job), sent with every request in a header, which the server hashes and looks up to know **which client** is calling, apply its permissions and rate limits, and revoke it independently of any other client; simple and good for server-to-server use, but it's a long-lived bearer secret that identifies an application rather than a user, so it must be scoped, stored hashed, never shipped in a browser or mobile app, and rotatable.
+> An **API (application programming interface) key** is a long random secret the server issues to a **client application** (a partner's server, a script, a CI (continuous integration) job), sent with every request in a header, which the server hashes and looks up to know **which client** is calling, apply its permissions and rate limits, and revoke it independently of any other client; simple and good for server-to-server use, but it's a long-lived bearer secret that identifies an application rather than a user, so it must be scoped, stored hashed, never shipped in a browser or mobile app, and rotatable.
 
 ## Build-up: partners pulling orders
 
-Three partners (a warehouse, an accounting tool, a marketplace) need to read new orders from `api.shop.example.com` every few minutes from **their servers**. No human is involved, so login forms, popups and MFA are out.
+Three partners (a warehouse, an accounting tool, a marketplace) need to read new orders from `api.shop.example.com` every few minutes from **their servers**. No human is involved, so login forms, popups and MFA (multi-factor authentication) are out.
 
 ### Stage 1: a shared password for everyone
 
@@ -42,13 +42,13 @@ Host: api.shop.example.com
 Authorization: Bearer shop_live_q8Zr3vX1nKp0bWm7YcT2fGh5JdL9sAe4RuV6xNi-OoQ
 ```
 
-(`X-API-Key: …` is also common. Both are fine; the **query string is not**: URLs end up in access logs, proxies and monitoring tools.)
+(`X-API-Key: …` is also common. Both are fine; the **query string is not**: URLs (Uniform Resource Locators) end up in access logs, proxies and monitoring tools.)
 
 ### Stage 3: storing keys like passwords (but faster)
 
 If the API's database leaks, plain keys would let the attacker call the API as every partner. So the server keeps only a **hash**, and shows the key **once** at creation ("copy it now, you won't see it again").
 
-Because keys are long random strings (not human passwords), a fast hash like **SHA-256** is enough: brute-forcing 256 random bits is impossible no matter how fast the hash. (Slow hashes like bcrypt would add ~100 ms to **every** API call for no gain.)
+Because keys are long random strings (not human passwords), a fast hash like **SHA-256 (SHA: Secure Hash Algorithm)** is enough: brute-forcing 256 random bits is impossible no matter how fast the hash. (Slow hashes like bcrypt would add ~100 ms to **every** API call for no gain.)
 
 Finding the key's record without scanning every row: store a short non-secret **key ID** alongside, or look up by the hash itself.
 
@@ -117,14 +117,14 @@ Keys get an **expiry** (e.g. one year) and reminders before it, so rotation happ
 
 | Situation | Why a key is wrong | Better |
 |---|---|---|
-| Mobile app / SPA calling my API | The key is extractable and identifies no user | User login with [[OpenID Connect]] → [[Access and refresh tokens]] |
+| Mobile app / SPA (single-page application) calling my API | The key is extractable and identifies no user | User login with [[OpenID Connect]] → [[Access and refresh tokens]] |
 | A third-party app acting **for a user** | A key gives the app full access, no user consent, no per-user limit | [[OAuth 2.0]] authorization code |
-| My own services calling each other | Long-lived shared secrets to distribute and rotate | [[mTLS]], [[Workload identity (SPIFFE)]], OAuth client credentials, cloud IAM roles |
+| My own services calling each other | Long-lived shared secrets to distribute and rotate | [[mTLS]], [[Workload identity (SPIFFE)]], OAuth (Open Authorization) client credentials, cloud IAM (Identity and Access Management) roles |
 | Requests that must not be tampered with or replayed | A bearer key proves nothing about the body; a captured request can be replayed | [[HMAC request signing]] |
 
-"Public" keys exist on purpose (a maps API key in a web page): they're **restricted** by HTTP referrer, app bundle ID or IP, and only allow cheap, non-sensitive calls. They're identifiers for billing and quotas, not real authentication.
+"Public" keys exist on purpose (a maps API key in a web page): they're **restricted** by HTTP (Hypertext Transfer Protocol) referrer, app bundle ID or IP (Internet Protocol), and only allow cheap, non-sensitive calls. They're identifiers for billing and quotas, not real authentication.
 
-**Personal access tokens (PATs)** are API keys issued to a **user** (GitHub, GitLab, Docker Hub): same mechanics, scoped and expiring, used where OAuth would be overkill (a CLI, a script).
+**Personal access tokens (PATs)** are API keys issued to a **user** (GitHub, GitLab, Docker Hub): same mechanics, scoped and expiring, used where OAuth would be overkill (a CLI (command-line interface), a script).
 
 ### Stage 7: API key vs OAuth client credentials
 
@@ -134,9 +134,9 @@ For server-to-server, the main alternative is OAuth's **client credentials** gra
 |---|---|---|
 | What travels on every call | The long-lived key | A token valid ~1 hour |
 | Leak of one request's headers | Key works until revoked | Token works until it expires |
-| Server checks | Lookup per request (or cache) | Signature (JWT) or introspection |
+| Server checks | Lookup per request (or cache) | Signature (JWT (JSON Web Token; JSON: JavaScript Object Notation)) or introspection |
 | Moving parts | One header | A token endpoint, token caching, refresh |
-| Standard tooling | None needed | OAuth libraries, gateways, IdPs |
+| Standard tooling | None needed | OAuth libraries, gateways, IdPs (identity providers) |
 | Good for | Simple partner APIs, internal scripts | Larger ecosystems, existing IdP, many APIs |
 
 ## Advanced problems
@@ -147,7 +147,7 @@ Bots scan GitHub within minutes of a push. Steps: **revoke first** (don't wait t
 
 ### 2. Keys in logs
 
-The API's own access logs or an APM tool record the `Authorization` header, or the partner put the key in the URL. Scrub the header in logging config, reject keys in query strings outright so integrations can't rely on them.
+The API's own access logs or an APM (application performance monitoring) tool record the `Authorization` header, or the partner put the key in the URL. Scrub the header in logging config, reject keys in query strings outright so integrations can't rely on them.
 
 ### 3. One key shared by a whole team, nobody knows who uses it
 
@@ -155,12 +155,12 @@ The API's own access logs or an APM tool record the `Authorization` header, or t
 
 ### 4. Rate limiting by IP instead of by key
 
-Partners behind the same NAT or cloud egress share IPs; one noisy client throttles another. Limit per key ID first, per IP only for unauthenticated traffic.
+Partners behind the same NAT (network address translation) or cloud egress share IPs; one noisy client throttles another. Limit per key ID first, per IP only for unauthenticated traffic.
 
 ## In AWS
-- **API Gateway API keys are not an authentication mechanism**: they exist for **usage plans** (throttling and quotas per customer). AWS's own docs say not to rely on them for authorization; pair them with IAM, a Lambda authorizer, or a JWT authorizer
+- **API Gateway API keys are not an authentication mechanism**: they exist for **usage plans** (throttling and quotas per customer). AWS (Amazon Web Services)'s own docs say not to rely on them for authorization; pair them with IAM, a Lambda authorizer, or a JWT authorizer
 - Secrets for calling **other** APIs belong in Secrets Manager (see [[ECS production stack#Stage 5: secrets and the database]]), not in code or images
-- AWS access keys (`AKIA…`) are long-lived key pairs too, but they **sign** requests (SigV4, see [[HMAC request signing]]) instead of being sent; the recommended path is roles with temporary credentials instead of access keys
+- AWS access keys (`AKIA…`) are long-lived key pairs too, but they **sign** requests (SigV4 (Signature Version 4), see [[HMAC request signing]]) instead of being sent; the recommended path is roles with temporary credentials instead of access keys
 
 ## Practice
 

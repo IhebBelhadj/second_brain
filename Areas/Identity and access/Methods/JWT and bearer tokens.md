@@ -9,7 +9,7 @@ aliases: [JWT, JSON Web Token, Bearer token, Bearer tokens, Bearer authenticatio
 # JWT and bearer tokens
 
 > [!abstract] In one sentence
-> A **bearer token** is a credential that works for **whoever holds it** (like cash), sent as `Authorization: Bearer <token>`; a **JWT** is one popular format for such a token: three base64url parts, `header.payload.signature`, where the payload carries **claims** about the caller (who, issued by whom, for which API, until when) and the signature lets any server **verify it without a database lookup**, which is why JWTs scale so well and why they're so hard to revoke before they expire.
+> A **bearer token** is a credential that works for **whoever holds it** (like cash), sent as `Authorization: Bearer <token>`; a **JWT** is one popular format for such a token: three base64url parts, `header.payload.signature`, where the payload carries **claims** about the caller (who, issued by whom, for which API (application programming interface), until when) and the signature lets any server **verify it without a database lookup**, which is why JWTs scale so well and why they're so hard to revoke before they expire.
 
 ## Build-up: the shop splits into services
 
@@ -25,19 +25,19 @@ Host: api.shop.example.com
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3Mi…
 ```
 
-"Bearer" (RFC 6750) means: **possession is proof**. No password, no key ownership to demonstrate, the token itself is enough. Consequences:
-- Anyone who copies it (logs, XSS, a compromised proxy) **is** the user until it expires
-- So: TLS always, short lifetimes, never in URLs, careful storage
+"Bearer" (RFC (Request for Comments, an internet standards document) 6750) means: **possession is proof**. No password, no key ownership to demonstrate, the token itself is enough. Consequences:
+- Anyone who copies it (logs, XSS (cross-site scripting), a compromised proxy) **is** the user until it expires
+- So: TLS (Transport Layer Security) always, short lifetimes, never in URLs (Uniform Resource Locators), careful storage
 
 Two kinds of bearer tokens:
 
 | | **Opaque** token | **Self-contained** token (JWT) |
 |---|---|---|
-| Looks like | `8f2c6a91d4e07b35…` (random) | `eyJhbGci…` (encoded JSON + signature) |
+| Looks like | `8f2c6a91d4e07b35…` (random) | `eyJhbGci…` (encoded JSON (JavaScript Object Notation) + signature) |
 | Means | Nothing by itself: a reference | Carries the identity and permissions |
 | Service checks it by | Asking the issuer (**introspection**) or a shared store | Verifying the **signature** locally |
 | Revoke now | Yes (delete it) | Not without extra machinery |
-| Like | A session ID in a header | A signed letter of introduction |
+| Like | A session ID (identifier) in a header | A signed letter of introduction |
 
 ### Stage 2: anatomy of a JWT
 
@@ -78,7 +78,7 @@ echo "$P" | tr '_-' '/+' | base64 -d 2>/dev/null; echo     # base64url → base6
 ```
 
 > [!warning] Signed, not encrypted
-> A JWT (technically a **JWS**, a signed JWT) is **readable by anyone** who has it: the browser, a log file, a proxy. Never put secrets or personal data you wouldn't show the user in it. The signature only guarantees it **wasn't changed** and **who issued it**. Encrypted JWTs exist (**JWE**, five parts) but are rare.
+> A JWT (technically a **JWS (JSON Web Signature)**, a signed JWT) is **readable by anyone** who has it: the browser, a log file, a proxy. Never put secrets or personal data you wouldn't show the user in it. The signature only guarantees it **wasn't changed** and **who issued it**. Encrypted JWTs exist (**JWE (JSON Web Encryption)**, five parts) but are rare.
 
 The standard (registered) claims:
 
@@ -87,12 +87,12 @@ The standard (registered) claims:
 | `iss` | Issuer: who created and signed it | `https://auth.shop.example.com` |
 | `sub` | Subject: who it's about (stable user/client ID) | `user-4821` |
 | `aud` | Audience: which API it's meant for | `api.shop.example.com` |
-| `exp` | Expiry (Unix seconds) | `1791101700` = 08:15 UTC |
+| `exp` | Expiry (Unix seconds) | `1791101700` = 08:15 UTC (Coordinated Universal Time) |
 | `nbf` | Not valid before | |
 | `iat` | Issued at | `1791100800` = 08:00 UTC |
 | `jti` | Unique token ID (for denylists, replay detection) | `a1b2c3` |
 
-Plus custom ones: `scope`, `roles`, `tenant`, `email`… The payload is sent on **every request**, so keep it small (headers over ~8 KB get rejected by proxies and load balancers).
+Plus custom ones: `scope`, `roles`, `tenant`, `email`… The payload is sent on **every request**, so keep it small (headers over ~8 KB (kilobytes) get rejected by proxies and load balancers).
 
 ### Stage 3: verifying without a database
 
@@ -132,9 +132,9 @@ claims = jwt.decode(token, key, algorithms=["RS256"],
 
 ### Stage 4: whose key? (HS256 vs RS256 and JWKS)
 
-With **HS256** (HMAC), the **same secret** signs and verifies. Every service that verifies tokens could also **mint** them: a leak from the least protected service lets an attacker forge tokens for all of them.
+With **HS256 (HMAC with Secure Hash Algorithm 256)** (HMAC (hash-based message authentication code)), the **same secret** signs and verifies. Every service that verifies tokens could also **mint** them: a leak from the least protected service lets an attacker forge tokens for all of them.
 
-With **asymmetric** algorithms (**RS256** RSA, **ES256** ECDSA, EdDSA), the auth server signs with a **private key** it never shares; services verify with the **public key**, which can be published openly:
+With **asymmetric** algorithms (**RS256 (Rivest–Shamir–Adleman signature with Secure Hash Algorithm 256)** RSA (Rivest–Shamir–Adleman), **ES256 (Elliptic Curve Digital Signature Algorithm with Secure Hash Algorithm 256)** ECDSA (Elliptic Curve Digital Signature Algorithm), EdDSA (Edwards-curve Digital Signature Algorithm)), the auth server signs with a **private key** it never shares; services verify with the **public key**, which can be published openly:
 
 | | HS256 | RS256 / ES256 |
 |---|---|---|
@@ -198,8 +198,8 @@ Short-lived access tokens + revocable refresh tokens is the standard answer.
 | Good fit | Poor fit |
 |---|---|
 | Many services or third parties verifying identity without a central lookup | A single web app with server-side sessions already working |
-| OAuth access tokens, [[OpenID Connect]] ID tokens | Long-lived "remember me" credentials (can't revoke) |
-| Short-lived, signed assertions between systems (e.g. GitHub Actions → AWS) | Storing session state that changes (cart, preferences) |
+| OAuth (Open Authorization) access tokens, [[OpenID Connect]] ID tokens | Long-lived "remember me" credentials (can't revoke) |
+| Short-lived, signed assertions between systems (e.g. GitHub Actions → AWS (Amazon Web Services)) | Storing session state that changes (cart, preferences) |
 | Edge or gateway verification | Anything needing instant logout without extra infrastructure |
 
 A common mistake is replacing a perfectly good session cookie with a JWT in `localStorage` "because it's stateless": JavaScript-readable storage turns any XSS into token theft, and logout stops working.
@@ -208,23 +208,23 @@ A common mistake is replacing a perfectly good session cookie with a JWT in `loc
 
 ### 1. Valid tokens rejected right after issuance (clock skew)
 
-The issuing server's clock is ahead: `iat`/`nbf` are "in the future" for the verifier. Keep NTP everywhere, allow a small leeway (30–60 s) in verifiers.
+The issuing server's clock is ahead: `iat`/`nbf` are "in the future" for the verifier. Keep NTP (Network Time Protocol) everywhere, allow a small leeway (30–60 s) in verifiers.
 
 ### 2. 431 / 400 "Request header too large"
 
-Tokens stuffed with roles, groups and permissions grow past proxy limits (nginx's default `large_client_header_buffers` 8 KB, ALB limits). Keep tokens lean: put group membership behind an API, or use opaque tokens with introspection.
+Tokens stuffed with roles, groups and permissions grow past proxy limits (nginx's default `large_client_header_buffers` 8 KB, ALB (Application Load Balancer) limits). Keep tokens lean: put group membership behind an API, or use opaque tokens with introspection.
 
 ### 3. Signature fails after the IdP rotated keys
 
-The verifier cached the JWKS forever or pinned a single key. Cache with a TTL and refetch on unknown `kid`.
+The verifier cached the JWKS forever or pinned a single key. Cache with a TTL (time to live) and refetch on unknown `kid`.
 
 ### 4. A token for one app works on another
 
 Two apps registered on the same identity provider, neither checking `aud`. Tokens from app A (maybe a harmless public app) are replayed against app B. Always validate audience.
 
 ## In AWS
-- **API Gateway HTTP APIs** have a native **JWT authorizer** (issuer + audience + JWKS), ALB can authenticate with OIDC, and **Cognito** issues JWT access and ID tokens
-- AWS STS itself uses opaque, signed session tokens; but `AssumeRoleWithWebIdentity` **accepts** JWTs from OIDC providers (GitHub Actions, EKS service accounts), verifying them against the provider's JWKS (see [[ECS production stack#Stage 0: the pipeline needs state and a way to log in]])
+- **API Gateway HTTP (Hypertext Transfer Protocol) APIs** have a native **JWT authorizer** (issuer + audience + JWKS), ALB can authenticate with OIDC, and **Cognito** issues JWT access and ID tokens
+- AWS STS (Security Token Service) itself uses opaque, signed session tokens; but `AssumeRoleWithWebIdentity` **accepts** JWTs from OIDC providers (GitHub Actions, EKS (Elastic Kubernetes Service) service accounts), verifying them against the provider's JWKS (see [[ECS production stack#Stage 0: the pipeline needs state and a way to log in]])
 
 ## Practice
 

@@ -9,7 +9,7 @@ aliases: [Basic authentication, Basic auth, HTTP Basic, Digest authentication, D
 # Basic and Digest authentication
 
 > [!abstract] In one sentence
-> **Basic** authentication is HTTP's built-in scheme where the client sends `username:password`, **base64-encoded (not encrypted)**, in the `Authorization` header of **every** request, so it's only acceptable over TLS; **Digest** was the attempt to avoid sending the password by sending an MD5 hash of it mixed with a server nonce instead, but it forces the server to store password-equivalent hashes, relies on MD5, and became pointless once TLS was everywhere.
+> **Basic** authentication is HTTP (Hypertext Transfer Protocol)'s built-in scheme where the client sends `username:password`, **base64-encoded (not encrypted)**, in the `Authorization` header of **every** request, so it's only acceptable over TLS (Transport Layer Security); **Digest** was the attempt to avoid sending the password by sending an MD5 (Message Digest 5) hash of it mixed with a server nonce instead, but it forces the server to store password-equivalent hashes, relies on MD5, and became pointless once TLS was everywhere.
 
 ## Build-up: protecting the shop's admin page
 
@@ -27,7 +27,7 @@ HTTP/1.1 401 Unauthorized
 WWW-Authenticate: Basic realm="shop-admin", charset="UTF-8"
 ```
 
-The browser sees `WWW-Authenticate: Basic` and shows its **built-in login popup** (no HTML form, no JavaScript). The **realm** is a label for the protected area, shown in the popup and used to decide which saved credentials to reuse.
+The browser sees `WWW-Authenticate: Basic` and shows its **built-in login popup** (no HTML (HyperText Markup Language) form, no JavaScript). The **realm** is a label for the protected area, shown in the popup and used to decide which saved credentials to reuse.
 
 ### Stage 2: the answer, base64 of `user:password`
 
@@ -65,7 +65,7 @@ sequenceDiagram
 > echo 'YWxpY2U6UzNjcmV0IXBhc3M=' | base64 -d
 > # alice:S3cret!pass
 > ```
-> Base64 only makes arbitrary bytes safe to put in a header. Without HTTPS, every request broadcasts the password.
+> Base64 only makes arbitrary bytes safe to put in a header. Without HTTPS (Hypertext Transfer Protocol Secure), every request broadcasts the password.
 
 With curl:
 
@@ -100,17 +100,17 @@ The app behind sees requests only after nginx verified the password (nginx passe
 | Problem | Why |
 |---|---|
 | **The password travels on every request** | Every request is a chance to leak it: a TLS-terminating proxy that logs headers, a debug dump, a misconfigured HTTP listener |
-| **The password is checked on every request** | With a proper slow hash (bcrypt ~50–100 ms), a page with 30 requests costs seconds of CPU. Servers cache verifications or use weak hashes, both bad |
+| **The password is checked on every request** | With a proper slow hash (bcrypt ~50–100 ms), a page with 30 requests costs seconds of CPU (central processing unit). Servers cache verifications or use weak hashes, both bad |
 | **No logout** | The browser keeps sending the cached credentials until it's closed. The usual trick is to force a `401` with wrong credentials |
-| **No MFA, no lockout UI, no "forgot password"** | The browser popup can't show anything else |
+| **No MFA (multi-factor authentication), no lockout UI (user interface), no "forgot password"** | The browser popup can't show anything else |
 | **Ugly, unbrandable popup** | And phishing pages can imitate it |
 | **The real password is the credential** | Leaking it compromises everything that password opens, not just this app |
 
-The fix for most of these is to log in **once** and get a temporary credential: [[Session authentication]] for browsers, tokens for APIs.
+The fix for most of these is to log in **once** and get a temporary credential: [[Session authentication]] for browsers, tokens for APIs (application programming interfaces).
 
 ### Stage 5: Digest, an attempt to stop sending the password
 
-Before HTTPS was common, **Digest** (RFC 2617, then 7616) tried to prove knowledge of the password **without sending it**: the server sends a random **nonce**, the client answers with a hash of the password mixed with that nonce.
+Before HTTPS was common, **Digest** (RFC (Request for Comments, an internet standards document) 2617, then 7616) tried to prove knowledge of the password **without sending it**: the server sends a random **nonce**, the client answers with a hash of the password mixed with that nonce.
 
 ```http
 HTTP/1.1 401 Unauthorized
@@ -162,13 +162,13 @@ sequenceDiagram
 
 | Problem | Explanation |
 |---|---|
-| **The server must store HA1** | To recompute the response it needs `MD5(user:realm:password)`. That value is **password-equivalent**: whoever steals it can authenticate without ever knowing the password. It can't be bcrypt or argon2, because the protocol fixes the hash |
-| **MD5** | Fast and broken; a leaked HA1 database is cracked quickly. RFC 7616 added SHA-256, but browsers barely implemented it |
+| **The server must store HA1 (hash 1: MD5 of username:realm:password)** | To recompute the response it needs `MD5(user:realm:password)`. That value is **password-equivalent**: whoever steals it can authenticate without ever knowing the password. It can't be bcrypt or argon2, because the protocol fixes the hash |
+| **MD5** | Fast and broken; a leaked HA1 database is cracked quickly. RFC 7616 added SHA-256 (SHA: Secure Hash Algorithm), but browsers barely implemented it |
 | **Only partial protection** | Headers and body aren't protected (`qop=auth-int` covered the body, almost never supported). A man in the middle can still read and change everything else |
 | **TLS made it pointless** | Once the connection is encrypted, sending the password (Basic) is protected, and the server can store a proper slow hash |
-| **Same UX problems as Basic** | Popup, no logout, no MFA |
+| **Same UX (user experience) problems as Basic** | Popup, no logout, no MFA |
 
-Today Digest survives mostly in **embedded devices** (IP cameras, printers, SIP phones, some routers) and old enterprise gear. New systems: Basic over TLS for the simplest cases, otherwise sessions or tokens.
+Today Digest survives mostly in **embedded devices** (IP (Internet Protocol) cameras, printers, SIP (Session Initiation Protocol) phones, some routers) and old enterprise gear. New systems: Basic over TLS for the simplest cases, otherwise sessions or tokens.
 
 ## Basic vs Digest side by side
 
@@ -183,7 +183,7 @@ Today Digest survives mostly in **embedded devices** (IP cameras, printers, SIP 
 
 ## Where Basic is still fine (with HTTPS)
 
-- Internal tools behind a VPN or SSO proxy as a second gate
+- Internal tools behind a VPN (virtual private network) or SSO (single sign-on) proxy as a second gate
 - Machine-to-machine endpoints where the "password" is a long random token: Git over HTTPS uses Basic with a **personal access token** as the password, many registries and Prometheus scrape targets accept it too
 - Quick protection for a staging site against crawlers
 
@@ -191,7 +191,7 @@ Today Digest survives mostly in **embedded devices** (IP cameras, printers, SIP 
 
 ### 1. Credentials leaking through the URL or logs
 
-`https://user:pass@host/` ends up in shell history, CI logs and proxy logs. Some tools log full request headers at debug level. Use `curl -u` with a variable or a `.netrc` file (`chmod 600`), and scrub `Authorization` in logging.
+`https://user:pass@host/` ends up in shell history, CI (continuous integration) logs and proxy logs. Some tools log full request headers at debug level. Use `curl -u` with a variable or a `.netrc` file (`chmod 600`), and scrub `Authorization` in logging.
 
 ### 2. The browser keeps logging in after "logout"
 
@@ -206,7 +206,7 @@ A browser app calling a Basic-protected API from another origin triggers a **pre
 Verifying bcrypt on every request of a busy API costs real CPU. Either cache the result briefly (in memory, keyed by a fast hash of the header) or, better, switch to a token or session issued after one verification.
 
 ## In AWS
-- ALB doesn't do Basic auth natively; teams use CloudFront Functions or Lambda@Edge to check a Basic header in front of a staging site, or put the site behind ALB's OIDC authentication instead
+- ALB (Application Load Balancer) doesn't do Basic auth natively; teams use CloudFront Functions or Lambda@Edge to check a Basic header in front of a staging site, or put the site behind ALB's OIDC (OpenID Connect) authentication instead
 - [[Systems Manager]] Parameter Store or Secrets Manager hold the htpasswd content or the credentials for machine clients
 
 ## Practice
@@ -229,11 +229,11 @@ Verifying bcrypt on every request of a busy API costs real CPU. Either cache the
 ## Easy to get wrong
 - Calling base64 "encryption"
 - Basic auth over plain HTTP, even "just internally"
-- Credentials in URLs
+- Credentials in URLs (Uniform Resource Locators)
 - Thinking Digest makes TLS unnecessary
 - Storing Digest HA1 values as if they weren't secrets
 - Expecting a working logout with Basic
-- Requiring auth on CORS preflight requests
+- Requiring auth on CORS (Cross-Origin Resource Sharing) preflight requests
 
 ## Related
 - Concepts first:: [[Authentication and authorization]]
@@ -247,13 +247,13 @@ Verifying bcrypt on every request of a busy API costs real CPU. Either cache the
 
 What does a Basic auth header contain? :: Authorization: Basic base64(username:password)
 Is Basic auth encrypted? :: No, base64 is reversible encoding; it requires TLS
-How does a server ask for Basic auth? :: 401 with WWW-Authenticate: Basic realm="…"
+How does a server ask for Basic auth? :: 401 with WWW-Authenticate (WWW: World Wide Web): Basic realm="…"
 What is the realm? :: A label for a protected area, shown in the prompt and used to reuse cached credentials
 Why is Basic auth expensive with bcrypt? :: The password is verified on every request
 Why is logout hard with Basic auth? :: The browser caches and resends credentials until it closes
 How do you set up Basic auth in nginx? :: auth_basic "realm"; auth_basic_user_file with an htpasswd file (bcrypt via htpasswd -B)
 Digest HA1? :: MD5(username:realm:password)
-Digest HA2? :: MD5(method:uri)
+Digest HA2 (hash 2: MD5 of method:uri)? :: MD5(method:uri)
 Digest response? :: MD5(HA1:nonce:nc:cnonce:qop:HA2)
 Why did Digest fail? :: Server stores password-equivalent MD5 hashes, MD5 is weak, little protection beyond the password, TLS made it pointless
 Where is Digest still found? :: Embedded devices: cameras, printers, SIP phones

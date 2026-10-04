@@ -9,11 +9,11 @@ aliases: [MFA, 2FA, Two-factor authentication, Multi-factor authentication, TOTP
 # Multi-factor authentication and passkeys
 
 > [!abstract] In one sentence
-> **MFA** requires proofs from two different factors (usually a password plus something you have), so a stolen password alone isn't enough; the common second factors range from **SMS codes** (weak), **TOTP** apps (a 6-digit HMAC of the current time, good but phishable) and **push** approvals (vulnerable to fatigue), to **WebAuthn/FIDO2** security keys and **passkeys**, which sign a server challenge with a private key bound to the **real website's origin**, making them **phishing-resistant** and good enough to replace the password entirely.
+> **MFA** requires proofs from two different factors (usually a password plus something you have), so a stolen password alone isn't enough; the common second factors range from **SMS (Short Message Service) codes** (weak), **TOTP** apps (a 6-digit HMAC (hash-based message authentication code) of the current time, good but phishable) and **push** approvals (vulnerable to fatigue), to **WebAuthn/FIDO2** security keys and **passkeys**, which sign a server challenge with a private key bound to the **real website's origin**, making them **phishing-resistant** and good enough to replace the password entirely.
 
 ## Build-up: staff accounts keep getting taken over
 
-The shop's admin back-office and its identity provider ([[Single sign-on]]) protect everything. Passwords keep leaking: reused from breached sites, typed into a fake "IT portal" page.
+The shop's admin back-office and its identity provider ([[Single sign-on]]) protect everything. Passwords keep leaking: reused from breached sites, typed into a fake "IT (information technology) portal" page.
 
 ### Stage 1: add a second factor
 
@@ -35,14 +35,14 @@ flowchart LR
 
 | Factor | How it fails |
 |---|---|
-| **SMS / voice** | **SIM swap** (attacker convinces the carrier to move the number), SS7 interception, malware reading SMS, phishable |
+| **SMS / voice** | **SIM (Subscriber Identity Module) swap** (attacker convinces the carrier to move the number), SS7 (Signaling System No. 7) interception, malware reading SMS, phishable |
 | **TOTP** app | **Phishable**: a fake page asks for the code and relays it within 30 s; secret can be copied at enrollment |
 | **Push** ("Approve sign-in?") | **MFA fatigue**: attacker with the password spams prompts until the user taps Approve. Number matching (type the number shown on screen) mostly fixes it |
-| **WebAuthn / passkey** | Bound to the domain: a phishing site can't get a usable signature. Lost device → needs recovery |
+| **WebAuthn (Web Authentication) / passkey** | Bound to the domain: a phishing site can't get a usable signature. Lost device → needs recovery |
 
 ### Stage 2: how TOTP works
 
-**TOTP** (time-based one-time password, RFC 6238) needs no network at all on the phone. At enrollment, the server generates a random secret and shows it as a QR code:
+**TOTP** (time-based one-time password, RFC (Request for Comments, an internet standards document) 6238) needs no network at all on the phone. At enrollment, the server generates a random secret and shows it as a QR (Quick Response) code:
 
 ```text
 otpauth://totp/Shop%20Admin:alice@shop.example.com?secret=JBSWY3DPEHPK3PXP&issuer=Shop%20Admin&digits=6&period=30
@@ -55,7 +55,7 @@ The phone app and the server both compute, every 30 seconds:
 3. **Dynamic truncation**: take the low 4 bits of the last byte as an offset, read 4 bytes there, clear the top bit
 4. `code = that number mod 10⁶`, padded to 6 digits
 
-Worked example, secret `JBSWY3DPEHPK3PXP` at 2026-10-04 08:00:00 UTC (Unix time 1791100800):
+Worked example, secret `JBSWY3DPEHPK3PXP` at 2026-10-04 08:00:00 UTC (Coordinated Universal Time) (Unix time 1791100800):
 
 ```text
 T       = 1791100800 / 30 = 59703360
@@ -82,12 +82,12 @@ flowchart LR
 Properties:
 - Codes expire after 30 s; servers accept ±1 step for clock drift and must **reject reuse** of a code already accepted
 - The server stores the **secret** (it must recompute codes), so a server breach exposes every user's TOTP seed: encrypt them at rest
-- **HOTP** (RFC 4226) is the counter-based ancestor: `T` is a counter incremented on each use instead of time
+- **HOTP (HMAC-based one-time password)** (RFC 4226) is the counter-based ancestor: `T` is a counter incremented on each use instead of time
 - TOTP stops password-only attacks, but **not a real-time phishing proxy** (tools like Evilginx sit between the user and the real site, relay the password and the code, and keep the session cookie)
 
 ### Stage 3: phishing-resistant: WebAuthn and passkeys
 
-The flaw shared by passwords, SMS and TOTP: the user **types something** that works on any site. If the site is fake, the secret goes to the attacker. **WebAuthn** (the browser API, part of FIDO2) replaces typed secrets with a **key pair per website**:
+The flaw shared by passwords, SMS and TOTP: the user **types something** that works on any site. If the site is fake, the secret goes to the attacker. **WebAuthn** (the browser API (application programming interface), part of FIDO2 (Fast IDentity Online 2)) replaces typed secrets with a **key pair per website**:
 
 **Registration** (once per site):
 
@@ -134,7 +134,7 @@ Why it defeats phishing:
 | Assurance | Highest (key provably never left the hardware, attestation) | High, depends on the sync account's security |
 | Typical | Admins, break-glass accounts | Everyone |
 
-With **user verification** (the device checks a PIN or biometric), one passkey is already **two factors** (possession of the device + knowledge/biometric), so it can **replace the password** entirely, not just add to it.
+With **user verification** (the device checks a PIN (personal identification number) or biometric), one passkey is already **two factors** (possession of the device + knowledge/biometric), so it can **replace the password** entirely, not just add to it.
 
 ### Stage 4: rolling MFA out
 
@@ -160,7 +160,7 @@ flowchart LR
     class T,X bad
 ```
 
-MFA protects the **login**. Whatever the login produces (session cookie, refresh token) is a bearer credential afterwards: infostealer malware and adversary-in-the-middle proxies steal **sessions**, not passwords. Countermeasures: phishing-resistant MFA (stops the proxy), short sessions for sensitive apps, step-up for sensitive actions, binding sessions/tokens to the device (DPoP, device-bound session credentials), and detecting sessions suddenly used from another country.
+MFA protects the **login**. Whatever the login produces (session cookie, refresh token) is a bearer credential afterwards: infostealer malware and adversary-in-the-middle proxies steal **sessions**, not passwords. Countermeasures: phishing-resistant MFA (stops the proxy), short sessions for sensitive apps, step-up for sensitive actions, binding sessions/tokens to the device (DPoP (Demonstrating Proof of Possession), device-bound session credentials), and detecting sessions suddenly used from another country.
 
 ## Advanced problems
 
@@ -178,10 +178,10 @@ A user lost the phone with the only authenticator. If the recovery path is "emai
 
 ### 4. Passkey works on one domain, not another
 
-The passkey's **RP ID** is `shop.example.com`; it works on that domain and its subdomains, not on `shop-example.com` or a different TLD. Choose the RP ID carefully (usually the registrable domain) before rolling out.
+The passkey's **RP (relying party) ID (identifier)** is `shop.example.com`; it works on that domain and its subdomains, not on `shop-example.com` or a different TLD (top-level domain). Choose the RP ID carefully (usually the registrable domain) before rolling out.
 
 ## In AWS
-- IAM users and the root user support **MFA**: virtual TOTP apps, FIDO2 security keys/passkeys, hardware TOTP tokens. The **root user** should have phishing-resistant MFA and be a break-glass account only
+- IAM (Identity and Access Management) users and the root user support **MFA**: virtual TOTP apps, FIDO2 security keys/passkeys, hardware TOTP tokens. The **root user** should have phishing-resistant MFA and be a break-glass account only
 - IAM policies can require MFA with the condition `aws:MultiFactorAuthPresent`; temporary credentials from `sts get-session-token --serial-number … --token-code …` carry the MFA flag
 - [[AWS Identity Center]] and Cognito support TOTP and WebAuthn; with an external IdP, MFA is enforced there
 
@@ -218,7 +218,7 @@ The passkey's **RP ID** is `shop.example.com`; it works on that domain and its s
 - What it produces afterwards:: [[Session authentication]], [[Access and refresh tokens]]
 - Same HMAC building block:: [[HMAC request signing]]
 - Public-key cryptography:: [[Encryption basics]]
-- In AWS:: [[IAM]], [[AWS Identity Center]]
+- In AWS (Amazon Web Services):: [[IAM]], [[AWS Identity Center]]
 - Area:: [[Identity and access]]
 
 ## Flashcards
@@ -226,9 +226,9 @@ The passkey's **RP ID** is `shop.example.com`; it works on that domain and its s
 
 What is MFA? :: Authentication requiring proofs from at least two different factors
 Why is SMS a weak second factor? :: SIM swap, SS7 interception, malware, and it's phishable
-How is a TOTP code computed? :: HMAC-SHA1(secret, floor(time/30)), dynamic truncation, mod 10^6
+How is a TOTP code computed? :: HMAC-SHA1(secret (SHA1: Secure Hash Algorithm 1), floor(time/30)), dynamic truncation, mod 10^6
 TOTP vs HOTP? :: TOTP uses a time step; HOTP uses an incrementing counter
-What does the TOTP QR code contain? :: An otpauth:// URI with the shared secret, issuer, account, digits and period
+What does the TOTP QR code contain? :: An otpauth:// URI (Uniform Resource Identifier) with the shared secret, issuer, account, digits and period
 Is TOTP phishing-resistant? :: No, a real-time proxy can relay the code
 What is MFA fatigue? :: Spamming push approvals until the user accepts; fixed by number matching or FIDO2
 What is WebAuthn? :: A browser API where an authenticator signs server challenges with a per-site private key

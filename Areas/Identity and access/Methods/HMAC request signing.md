@@ -9,7 +9,7 @@ aliases: [HMAC, HMAC authentication, Request signing, Signed requests, Webhook s
 # HMAC request signing
 
 > [!abstract] In one sentence
-> Instead of sending a secret with each request (where anyone who captures it can reuse it), the client and server share a secret and the client sends a **signature**: an HMAC of the request's important parts (method, path, body hash, timestamp) computed with that secret; the server recomputes it, so the signature proves **who** sent the request **and** that it wasn't modified, the secret never travels, and a timestamp limits replay; this is how webhooks are verified and how every AWS API call is authenticated (SigV4).
+> Instead of sending a secret with each request (where anyone who captures it can reuse it), the client and server share a secret and the client sends a **signature**: an HMAC of the request's important parts (method, path, body hash, timestamp) computed with that secret; the server recomputes it, so the signature proves **who** sent the request **and** that it wasn't modified, the secret never travels, and a timestamp limits replay; this is how webhooks are verified and how every AWS (Amazon Web Services) API (application programming interface) call is authenticated (SigV4).
 
 ## Build-up: the payment provider tells the shop an order is paid
 
@@ -22,7 +22,7 @@ Content-Type: application/json
 {"event":"order.paid","order":"o-8812"}
 ```
 
-The shop then ships the order. Anyone on the internet can POST that same JSON to that URL.
+The shop then ships the order. Anyone on the internet can POST that same JSON (JavaScript Object Notation) to that URL (Uniform Resource Locator).
 
 ### Stage 1: why a bearer secret isn't enough
 
@@ -91,13 +91,13 @@ signed payload = "1791100800" + "." + body
 header:  X-Signature: t=1791100800,v1=<HMAC-SHA256(secret, signed payload)>
 ```
 
-The server rejects requests whose `t` is more than ~5 minutes from its clock, and verifies the signature over `t.body` (so the timestamp can't be altered). Within the window, an event ID or **nonce** remembered for 5 minutes catches exact duplicates. Stripe's `Stripe-Signature: t=…,v1=…` is this scheme.
+The server rejects requests whose `t` is more than ~5 minutes from its clock, and verifies the signature over `t.body` (so the timestamp can't be altered). Within the window, an event ID (identifier) or **nonce** remembered for 5 minutes catches exact duplicates. Stripe's `Stripe-Signature: t=…,v1=…` is this scheme.
 
 Webhook handlers must be **idempotent** anyway: providers retry deliveries, so the same event can legitimately arrive twice (dedupe on the event ID).
 
 ### Stage 4: signing full API requests (AWS SigV4)
 
-For webhooks, signing the body is enough. A general API must also sign **which** endpoint and parameters: otherwise a signed `GET /orders/o-8812` could be redirected to `DELETE /orders/o-8812`. AWS's **Signature Version 4** is the reference design, used by every AWS API call, every SDK and the CLI.
+For webhooks, signing the body is enough. A general API must also sign **which** endpoint and parameters: otherwise a signed `GET /orders/o-8812` could be redirected to `DELETE /orders/o-8812`. AWS's **Signature Version 4** is the reference design, used by every AWS API call, every SDK (software development kit) and the CLI (command-line interface).
 
 ```mermaid
 flowchart TB
@@ -132,16 +132,16 @@ aws sqs list-queues --debug 2>&1 | grep -E 'CanonicalRequest|StringToSign|Signat
 
 ### Stage 5: HMAC vs the alternatives
 
-| | Bearer secret (API key) | HMAC signing | mTLS | Asymmetric signatures |
+| | Bearer secret (API key) | HMAC signing | mTLS (mutual TLS) | Asymmetric signatures |
 |---|---|---|---|---|
 | Secret on the wire | Yes, every request | No | No (private key stays local) | No |
-| Body integrity | No (only TLS) | Yes | Per connection (TLS) | Yes |
+| Body integrity | No (only TLS (Transport Layer Security)) | Yes | Per connection (TLS) | Yes |
 | Replay protection | No | With timestamp/nonce | TLS session | With timestamp/nonce |
-| Server holds | Hash of the key | **The same secret** (must be stored readable) | CA certificate | Public key only |
+| Server holds | Hash of the key | **The same secret** (must be stored readable) | CA (certificate authority) certificate | Public key only |
 | Complexity | Trivial | Canonicalization is fiddly | Certificates, CA | Key distribution |
-| Examples | Most partner APIs | AWS SigV4, webhooks | Service meshes, banking | HTTP Message Signatures, JWT client assertions, Git commit signing |
+| Examples | Most partner APIs | AWS SigV4, webhooks | Service meshes, banking | HTTP (Hypertext Transfer Protocol) Message Signatures, JWT (JSON Web Token) client assertions, Git commit signing |
 
-The drawback of HMAC: the server must keep the **actual secret** (not a hash) to recompute signatures, so a server-side leak exposes it. Asymmetric schemes (Ed25519 signatures, as in the newer IETF **HTTP Message Signatures** standard, or private_key_jwt in [[OAuth 2.0]]) let the server store only a public key.
+The drawback of HMAC: the server must keep the **actual secret** (not a hash) to recompute signatures, so a server-side leak exposes it. Asymmetric schemes (Ed25519 signatures, as in the newer IETF (Internet Engineering Task Force) **HTTP Message Signatures** standard, or private_key_jwt in [[OAuth 2.0]]) let the server store only a public key.
 
 ## Advanced problems
 
@@ -155,16 +155,16 @@ The server computed the HMAC over a **re-serialized** body (a framework parsed t
 
 ### 3. `RequestTimeTooSkewed` / expired signatures
 
-A server or container with a drifting clock. AWS rejects requests signed more than 15 minutes off. Run NTP (chrony; on EC2 the Amazon Time Sync Service at `169.254.169.123`).
+A server or container with a drifting clock. AWS rejects requests signed more than 15 minutes off. Run NTP (Network Time Protocol) (chrony; on EC2 (Elastic Compute Cloud) the Amazon Time Sync Service at `169.254.169.123`).
 
 ### 4. Rotating a webhook secret
 
 Rotating breaks delivery if both sides don't switch at once. Providers support **two active secrets** during rotation (several `v1=` signatures in the header, or the receiver accepting either secret for a while), the same two-key pattern as [[API keys#Stage 5: rotation without downtime]].
 
 ## In AWS
-- **Every AWS API request** is SigV4-signed by the SDK/CLI with credentials from the environment, a profile, or a role (instance profile, ECS task role, IRSA). An `InvalidSignatureException` / `SignatureDoesNotMatch` is an authentication failure, `AccessDenied` an authorization one (see [[IAM]])
-- API Gateway can require **IAM authorization**: callers SigV4-sign requests with their AWS credentials, the cleanest way for AWS workloads to call private APIs
-- SNS signs messages it delivers to HTTPS endpoints (with certificates, not HMAC) so subscribers can verify them ([[SNS]]); EventBridge API destinations and many SaaS webhooks into AWS use HMAC headers
+- **Every AWS API request** is SigV4-signed by the SDK/CLI with credentials from the environment, a profile, or a role (instance profile, ECS (Elastic Container Service) task role, IRSA (IAM Roles for Service Accounts)). An `InvalidSignatureException` / `SignatureDoesNotMatch` is an authentication failure, `AccessDenied` an authorization one (see [[IAM]])
+- API Gateway can require **IAM (Identity and Access Management) authorization**: callers SigV4-sign requests with their AWS credentials, the cleanest way for AWS workloads to call private APIs
+- SNS (Simple Notification Service) signs messages it delivers to HTTPS (Hypertext Transfer Protocol Secure) endpoints (with certificates, not HMAC) so subscribers can verify them ([[SNS]]); EventBridge API destinations and many SaaS (software as a service) webhooks into AWS use HMAC headers
 
 ## Practice
 
@@ -195,7 +195,7 @@ Rotating breaks delivery if both sides don't switch at once. Providers support *
 ## Related
 - Concepts first:: [[Authentication and authorization]]
 - What it improves on:: [[API keys]], [[Basic and Digest authentication]]
-- Cryptography:: [[Encryption basics]], [[JWT and bearer tokens]] (HS256 is an HMAC too)
+- Cryptography:: [[Encryption basics]], [[JWT and bearer tokens]] (HS256 (HMAC with Secure Hash Algorithm 256) is an HMAC too)
 - In AWS:: [[IAM]], [[S3]] (presigned URLs), [[SNS]]
 - Area:: [[Identity and access]]
 
@@ -204,13 +204,13 @@ Rotating breaks delivery if both sides don't switch at once. Providers support *
 
 What is an HMAC? :: A keyed hash: HMAC(key, message), computable only with the key, changes completely if the message changes
 What does HMAC request signing prove? :: The sender holds the secret and the signed parts weren't modified; the secret never travels
-How is a webhook signature verified? :: Recompute HMAC-SHA256(secret, raw body) and compare in constant time with the header
+How is a webhook signature verified? :: Recompute HMAC-SHA256(secret (SHA256: Secure Hash Algorithm, 256-bit), raw body) and compare in constant time with the header
 How do signed timestamps prevent replay? :: Messages outside a short window are rejected; the timestamp is covered by the signature
 Why must webhook handlers be idempotent? :: Providers retry, so the same event can arrive more than once
 What does AWS SigV4 sign? :: A canonical request: method, path, query, selected headers, body hash, plus date and credential scope
 What is the SigV4 credential scope? :: date/region/service/aws4_request, used to derive the signing key
 How long is a SigV4 signature valid? :: About 15 minutes (clock skew causes RequestTimeTooSkewed)
-What is an S3 presigned URL? :: A SigV4 signature in the query string allowing one operation on one object until expiry
+What is an S3 (Simple Storage Service) presigned URL? :: A SigV4 signature in the query string allowing one operation on one object until expiry
 Why compare signatures in constant time? :: Early-exit comparison leaks matching bytes through timing
 Main drawback of HMAC vs asymmetric signatures? :: The server must store the actual shared secret
 Most common reason a webhook signature fails? :: Verifying a re-serialized body instead of the raw bytes

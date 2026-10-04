@@ -9,7 +9,7 @@ aliases: [OIDC, OpenID, ID token, ID tokens, UserInfo endpoint, OIDC discovery, 
 # OpenID Connect
 
 > [!abstract] In one sentence
-> OpenID Connect (OIDC) is a thin **authentication layer on top of OAuth 2.0**: the app runs the authorization code flow with the `openid` scope and receives, besides the access token, an **ID token**, a signed JWT issued **to the app itself** that says *who* the user is (`sub`), *who* vouches for it (`iss`), *for which app* (`aud`), *when* they authenticated and *how*, plus standard discovery (`/.well-known/openid-configuration`) and keys (JWKS), so any app can "log in with" any compliant provider the same way, and so can machines like CI pipelines.
+> OpenID Connect (OIDC) is a thin **authentication layer on top of OAuth (Open Authorization) 2.0**: the app runs the authorization code flow with the `openid` scope and receives, besides the access token, an **ID token**, a signed JWT (JSON Web Token) issued **to the app itself** that says *who* the user is (`sub`), *who* vouches for it (`iss`), *for which app* (`aud`), *when* they authenticated and *how*, plus standard discovery (`/.well-known/openid-configuration`) and keys (JWKS (JSON Web Key Set)), so any app can "log in with" any compliant provider the same way, and so can machines like CI (continuous integration) pipelines.
 
 ## Build-up: "Log in with…" for the shop
 
@@ -19,10 +19,10 @@ The shop wants customers to log in with their Google account instead of yet anot
 
 | Need for login | OAuth 2.0 alone | OIDC |
 |---|---|---|
-| Who is the user? | Call some provider-specific `/me` API | **ID token** with a standard `sub` |
+| Who is the user? | Call some provider-specific `/me` API (application programming interface) | **ID token** with a standard `sub` |
 | Was this token issued **for my app**? | Access tokens have the **API** as audience; may come from another app | ID token `aud` = **my `client_id`** |
 | Is this response fresh, for **this** login attempt? | No standard | **`nonce`** echoed in the ID token |
-| When and how did they authenticate (MFA?) | No | `auth_time`, `amr`, `acr` |
+| When and how did they authenticate (MFA (multi-factor authentication)?) | No | `auth_time`, `amr`, `acr` |
 | Standard profile fields | Every provider different | `email`, `name`, `picture`… standard claims |
 | Where are the endpoints and keys? | Read each provider's docs | **Discovery document** + JWKS |
 
@@ -114,7 +114,7 @@ Then: find or create the local account by **`iss` + `sub`** (the stable, unique 
 
 ### Stage 4: discovery, so apps configure themselves
 
-Every OIDC provider publishes its configuration at a fixed path under the issuer URL:
+Every OIDC provider publishes its configuration at a fixed path under the issuer URL (Uniform Resource Locator):
 
 ```bash
 curl -s https://accounts.google.com/.well-known/openid-configuration | jq '{issuer, authorization_endpoint, token_endpoint, userinfo_endpoint, jwks_uri, scopes_supported, id_token_signing_alg_values_supported}'
@@ -203,8 +203,8 @@ The same signed-ID-token idea lets a **platform vouch for a workload**, removing
 
 | Workload | Issuer | Trusted by |
 |---|---|---|
-| GitHub Actions job | `https://token.actions.githubusercontent.com`, `sub = repo:acme/shop:environment:production` | AWS IAM role trust policy ([[ECS production stack#Stage 0: the pipeline needs state and a way to log in]]), GCP, Azure, Vault |
-| Kubernetes pod (service account) | The cluster's OIDC issuer | AWS IRSA / EKS Pod Identity, GCP Workload Identity |
+| GitHub Actions job | `https://token.actions.githubusercontent.com`, `sub = repo:acme/shop:environment:production` | AWS (Amazon Web Services) IAM (Identity and Access Management) role trust policy ([[ECS production stack#Stage 0: the pipeline needs state and a way to log in]]), GCP (Google Cloud Platform), Azure, Vault |
+| Kubernetes pod (service account) | The cluster's OIDC issuer | AWS IRSA (IAM Roles for Service Accounts) / EKS (Elastic Kubernetes Service) Pod Identity, GCP Workload Identity |
 | GitLab CI job | GitLab's issuer | Clouds, Vault |
 
 The pattern: the platform mints a short-lived JWT describing the workload, the cloud validates it against the platform's JWKS and its trust conditions, then exchanges it for temporary credentials. Same as [[Workload identity (SPIFFE)]] in spirit.
@@ -213,11 +213,11 @@ The pattern: the platform mints a short-lived JWT describing the workload, the c
 
 Both do enterprise SSO (details in [[Single sign-on]]):
 
-| | OIDC | SAML 2.0 |
+| | OIDC | SAML (Security Assertion Markup Language) 2.0 |
 |---|---|---|
-| Built on | OAuth 2.0, JSON, JWT | XML, XML Signature |
+| Built on | OAuth 2.0, JSON (JavaScript Object Notation), JWT | XML (Extensible Markup Language), XML Signature |
 | Token | ID token (JWT) | Assertion (XML) |
-| Good for | Web, mobile, SPAs, APIs, machines | Browser-based enterprise web apps |
+| Good for | Web, mobile, SPAs (single-page applications), APIs, machines | Browser-based enterprise web apps |
 | Discovery | `.well-known/openid-configuration` | Metadata XML exchanged by hand/URL |
 | Age | 2014 | 2005 |
 
@@ -233,16 +233,16 @@ The app validates a token issued to another client ID (a mobile app's ID token s
 
 ### 3. Clock skew and expired keys
 
-`iat` in the future or signature failures right after the provider rotated keys: NTP, small leeway, JWKS cached with refresh on unknown `kid`.
+`iat` in the future or signature failures right after the provider rotated keys: NTP (Network Time Protocol), small leeway, JWKS cached with refresh on unknown `kid`.
 
 ### 4. Account takeover through email linking
 
 Auto-linking a new OIDC login to an existing local account by matching `email`, with a provider that doesn't verify emails. Link by `iss` + `sub`, require `email_verified`, or ask the user to prove control of the existing account first.
 
 ## In AWS
-- **Cognito** user pools are an OIDC provider (and can federate to Google, Apple, SAML or other OIDC IdPs); ALB listeners can run the OIDC flow in front of any target and pass claims in `x-amzn-oidc-*` headers
+- **Cognito** user pools are an OIDC provider (and can federate to Google, Apple, SAML or other OIDC IdPs); ALB (Application Load Balancer) listeners can run the OIDC flow in front of any target and pass claims in `x-amzn-oidc-*` headers
 - IAM **OIDC identity providers** let AWS trust external issuers (GitHub, EKS, GitLab) for `AssumeRoleWithWebIdentity`
-- [[AWS Identity Center]] can use an external IdP (Entra ID, Okta, Google Workspace) for workforce SSO, via SAML and SCIM
+- [[AWS Identity Center]] can use an external IdP (Entra ID, Okta, Google Workspace) for workforce SSO, via SAML and SCIM (System for Cross-domain Identity Management)
 
 ## Practice
 

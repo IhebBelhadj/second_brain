@@ -9,7 +9,7 @@ aliases: [Session, Session cookie, Cookie-based authentication, Server-side sess
 # Session authentication
 
 > [!abstract] In one sentence
-> The user logs in **once** with a password (and MFA), the server creates a **session** (a record "session 8f2c… = user-4821, expires 18:00") in a store, and hands the browser only a long **random session ID** in a cookie that the browser sends back automatically on every request; the server looks the ID up to know who's calling, can kill it instantly, but must protect the cookie (`HttpOnly`, `Secure`, `SameSite`) and defend against CSRF because the browser attaches it to requests no matter which site triggered them.
+> The user logs in **once** with a password (and MFA (multi-factor authentication)), the server creates a **session** (a record "session 8f2c… = user-4821, expires 18:00") in a store, and hands the browser only a long **random session ID (identifier)** in a cookie that the browser sends back automatically on every request; the server looks the ID up to know who's calling, can kill it instantly, but must protect the cookie (`HttpOnly`, `Secure`, `SameSite`) and defend against CSRF because the browser attaches it to requests no matter which site triggered them.
 
 ## Build-up: logging customers into the shop website
 
@@ -17,7 +17,7 @@ Customers log in on `https://shop.example.com` to see their orders. [[Basic and 
 
 ### Stage 1: log in once, remember the result
 
-The login is an ordinary HTML form:
+The login is an ordinary HTML (HyperText Markup Language) form:
 
 ```http
 POST /login HTTP/1.1
@@ -80,12 +80,12 @@ The session ID is now as good as the password for the session's lifetime. The co
 
 | Attribute | Effect | Why |
 |---|---|---|
-| `Secure` | Only sent over HTTPS | Never leaks on a plain HTTP request |
-| `HttpOnly` | Invisible to JavaScript (`document.cookie`) | An XSS bug can't **read** and exfiltrate it |
+| `Secure` | Only sent over HTTPS (Hypertext Transfer Protocol Secure) | Never leaks on a plain HTTP (Hypertext Transfer Protocol) request |
+| `HttpOnly` | Invisible to JavaScript (`document.cookie`) | An XSS (cross-site scripting) bug can't **read** and exfiltrate it |
 | `SameSite=Lax` | Not sent on cross-site sub-requests (images, forms POSTed from other sites, fetch), sent on top-level navigation (clicking a link) | Blocks most CSRF (Stage 4). `Strict`: never cross-site, even links. `None`: always (requires `Secure`), for legitimate cross-site use |
 | `Max-Age` / `Expires` | When the browser drops it | Without it: a "session cookie" deleted when the browser closes (browsers that restore sessions keep it anyway) |
 | `Domain` | Which hosts receive it | **Omit it**: then only the exact host gets it. `Domain=example.com` would send it to every subdomain, including a compromised `blog.example.com` |
-| `Path` | URL prefix | Not a security boundary |
+| `Path` | URL (Uniform Resource Locator) prefix | Not a security boundary |
 | `__Host-` prefix | The browser only accepts the cookie if `Secure`, `Path=/` and **no** `Domain` | Stops subdomains from planting or overwriting it |
 
 ```mermaid
@@ -112,7 +112,7 @@ Traffic grows; a [[Load balancing|load balancer]] spreads requests over `web-01`
 |---|---|---|
 | Sticky sessions | The LB sends each client to the same server (cookie-based stickiness) | A server restart or scale-in logs its users out; uneven load |
 | **Shared session store** | Redis/Memcached/database reachable by all servers | One more component to run and keep available; a lookup per request (~1 ms on Redis) |
-| Client-side signed sessions | The whole session data in the cookie, **signed** (HMAC) so it can't be tampered with (Flask, Rails default) | No server-side revocation; cookie size limits (~4 KB); data visible unless encrypted |
+| Client-side signed sessions | The whole session data in the cookie, **signed** (HMAC (hash-based message authentication code)) so it can't be tampered with (Flask, Rails default) | No server-side revocation; cookie size limits (~4 KB (kilobytes)); data visible unless encrypted |
 
 ```mermaid
 flowchart LR
@@ -123,7 +123,7 @@ flowchart LR
     W2 --> R
 ```
 
-A shared store with a **TTL** per key is the usual answer: the session expires by itself, and logout is a `DEL`.
+A shared store with a **TTL (time to live)** per key is the usual answer: the session expires by itself, and logout is a `DEL`.
 
 ```bash
 redis-cli GET session:8f2c6a91d4e07b35c1a9e2f04d7b6c18
@@ -162,7 +162,7 @@ Defenses, layered:
 3. **Check `Origin` / `Sec-Fetch-Site`** headers on state-changing requests
 4. Never change state on `GET`
 
-CSRF is specific to **automatically attached** credentials (cookies, Basic auth cached by the browser, client certificates). A token the app adds to an `Authorization` header by code isn't sent by a forged form, which is one reason APIs use headers.
+CSRF is specific to **automatically attached** credentials (cookies, Basic auth cached by the browser, client certificates). A token the app adds to an `Authorization` header by code isn't sent by a forged form, which is one reason APIs (application programming interfaces) use headers.
 
 ### Stage 5: session lifecycle
 
@@ -183,10 +183,10 @@ The superpower of stateful sessions: a list of active sessions ("Logged in on Fi
 |---|---|
 | Mobile app | No browser cookie handling by default; tokens in secure storage are simpler |
 | API used by partners or scripts | Cookies + CSRF tokens are clumsy outside browsers |
-| SPA on `app.example.com` calling `api.example.com` | Cross-origin cookies need `SameSite=None`, `credentials: 'include'` and precise CORS headers; third-party cookie blocking can break it |
+| SPA (single-page application) on `app.example.com` calling `api.example.com` | Cross-origin cookies need `SameSite=None`, `credentials: 'include'` and precise CORS (Cross-Origin Resource Sharing) headers; third-party cookie blocking can break it |
 | Many services behind one login | Each service needs the session store, or a token it can verify alone |
 
-The common modern pattern for browser apps is the **BFF** (backend for frontend): the browser keeps a plain session cookie with a server-side component on the same site, and that component holds the OAuth/OIDC tokens and calls the APIs. Tokens never reach JavaScript ([[Access and refresh tokens#Stage 4: where to keep the tokens]]).
+The common modern pattern for browser apps is the **BFF** (backend for frontend): the browser keeps a plain session cookie with a server-side component on the same site, and that component holds the OAuth/OIDC (OIDC: OpenID Connect) tokens and calls the APIs. Tokens never reach JavaScript ([[Access and refresh tokens#Stage 4: where to keep the tokens]]).
 
 ## Advanced problems
 
@@ -196,7 +196,7 @@ Sessions in local memory behind a load balancer, or the session store evicting k
 
 ### 2. Cookie not sent at all
 
-`Secure` cookie on an HTTP URL (often a proxy forwarding HTTP to the app, which then builds `http://` redirects), `SameSite=Strict` on an OAuth redirect back from another site, `Domain` mismatch, or the app on a different site than the cookie. Check the browser's devtools (Application → Cookies, and the "blocked" reason on the request).
+`Secure` cookie on an HTTP URL (often a proxy forwarding HTTP to the app, which then builds `http://` redirects), `SameSite=Strict` on an OAuth (Open Authorization) redirect back from another site, `Domain` mismatch, or the app on a different site than the cookie. Check the browser's devtools (Application → Cookies, and the "blocked" reason on the request).
 
 ### 3. Session hijacking through XSS despite HttpOnly
 
@@ -204,11 +204,11 @@ Sessions in local memory behind a load balancer, or the session store evicting k
 
 ### 4. Login loop after deploying behind a proxy
 
-The app thinks it's on HTTP (TLS terminated at the proxy), sets cookies without `Secure` or redirects to `http://`, the browser drops or refuses them. Trust `X-Forwarded-Proto` from the proxy (see [[Reverse proxy]]).
+The app thinks it's on HTTP (TLS (Transport Layer Security) terminated at the proxy), sets cookies without `Secure` or redirects to `http://`, the browser drops or refuses them. Trust `X-Forwarded-Proto` from the proxy (see [[Reverse proxy]]).
 
 ## In AWS
 - **ElastiCache** (Redis/Valkey) or DynamoDB with TTL are the usual shared session stores
-- ALB has **sticky sessions** (duration-based or application cookie) for apps that keep sessions in memory, with the downsides above
+- ALB (Application Load Balancer) has **sticky sessions** (duration-based or application cookie) for apps that keep sessions in memory, with the downsides above
 - ALB's built-in **OIDC/Cognito authentication** is session-based: after login, ALB keeps an encrypted session cookie (`AWSELBAuthSessionCookie`) and passes the user's claims to targets in headers
 
 ## Practice
@@ -263,7 +263,7 @@ What is CSRF? :: Another site makes the browser send a state-changing request th
 CSRF defenses? :: SameSite cookies, CSRF tokens, Origin/Sec-Fetch-Site checks, no state changes on GET
 What is session fixation? :: An attacker plants a known session ID before login and shares the session after; fix by issuing a new ID at login
 Idle vs absolute session timeout? :: Idle: ends after inactivity. Absolute: ends after a fixed time regardless of activity
-Main advantage of server-side sessions over JWTs? :: Instant revocation (delete from the store)
+Main advantage of server-side sessions over JWTs (JSON Web Tokens; JSON: JavaScript Object Notation)? :: Instant revocation (delete from the store)
 How do several web servers share sessions? :: A shared store (Redis) with TTLs, or sticky sessions as a stopgap
 What is a signed cookie session? :: Session data stored in the cookie itself with an HMAC; no store, but no server-side revocation
 What is the BFF pattern? :: A same-site backend keeps tokens and gives the browser only a session cookie

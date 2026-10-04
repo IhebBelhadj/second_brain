@@ -87,6 +87,7 @@ Older notes still open with "Common misconceptions": leave them unless the owner
 **Style:**
 - Plain and human. First person is fine for the scenario and advice ("I add a queue", "what I'd do"), but don't invent what the owner thought, felt or did in the past. Explain *why*, not just *what*
 - **Mermaid** for anything with branches, sequences or several boxes (flowcharts, sequence diagrams). No ASCII art for complex diagrams. Colours only through `classDef` with explicit text colours, so the diagram stays readable in light and dark themes
+- **Every acronym is spelled out at least once in each note** where it appears, at or near its first use in the prose: `CSRF (Cross-Site Request Forgery)`, `PKCE (Proof Key for Code Exchange)`. Each note stands alone, so "it's defined in another note" doesn't count. This includes common ones (API, HTTP, URL, AWS, ID), mixed-case ones (OAuth, IdP, mTLS, WebAuthn) and acronyms inside expansions (the expansion of JWT brings in JSON). Don't put expansions in headings (it changes section-link targets); do it in the first prose sentence instead
 - Tables for comparisons. Callouts: `[!abstract]`, `[!tip]`, `[!warning]`, `[!info]`, `[!note]`, `[!example]-`, `[!question]`
 - Keep Networking notes vendor-neutral. Put AWS specifics in the AWS area and link across
 

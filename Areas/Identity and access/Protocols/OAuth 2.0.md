@@ -9,11 +9,11 @@ aliases: [OAuth, OAuth2, OAuth 2, Authorization code flow, PKCE, Client credenti
 # OAuth 2.0
 
 > [!abstract] In one sentence
-> OAuth 2.0 is a framework for **delegated authorization**: instead of giving a third-party app their password, a user is redirected to the **authorization server** they trust, logs in there, approves a limited set of **scopes**, and the app receives an **access token** (plus maybe a refresh token) that lets it call the **resource server** on the user's behalf, for exactly those scopes, revocable at any time; the main flows are **authorization code + PKCE** (apps with a user), **client credentials** (machines), and **device code** (TVs and CLIs).
+> OAuth (Open Authorization) 2.0 is a framework for **delegated authorization**: instead of giving a third-party app their password, a user is redirected to the **authorization server** they trust, logs in there, approves a limited set of **scopes**, and the app receives an **access token** (plus maybe a refresh token) that lets it call the **resource server** on the user's behalf, for exactly those scopes, revocable at any time; the main flows are **authorization code + PKCE** (apps with a user), **client credentials** (machines), and **device code** (TVs (televisions) and CLIs (command-line interfaces)).
 
 ## Build-up: a third-party app wants Alice's orders
 
-"InvoiceBox", a separate company's app, prints nice invoices and tracks expenses. Alice wants it to read her orders from the shop. The shop runs an authorization server at `auth.shop.example.com` and its API at `api.shop.example.com`.
+"InvoiceBox", a separate company's app, prints nice invoices and tracks expenses. Alice wants it to read her orders from the shop. The shop runs an authorization server at `auth.shop.example.com` and its API (application programming interface) at `api.shop.example.com`.
 
 ### Stage 1: the password anti-pattern
 
@@ -25,7 +25,7 @@ The naive way: InvoiceBox asks Alice for her shop email and password, stores the
 | No limits | Can't say "read orders only" |
 | No independent revocation | To stop InvoiceBox, Alice must change her password, which breaks every other app she gave it to |
 | InvoiceBox gets breached | Her password leaks, and probably works on other sites |
-| MFA breaks it | The app can't type her TOTP code |
+| MFA (multi-factor authentication) breaks it | The app can't type her TOTP (time-based one-time password) code |
 | The shop can't tell | Requests from InvoiceBox look like Alice herself |
 
 OAuth's whole design is to give the app **a limited key instead of the master key**.
@@ -47,7 +47,7 @@ flowchart LR
 | Role | Who | Job |
 |---|---|---|
 | **Resource owner** | Alice | Owns the data, grants access |
-| **Client** | InvoiceBox (registered with the shop: `client_id`, redirect URIs, maybe a secret) | Wants access on Alice's behalf |
+| **Client** | InvoiceBox (registered with the shop: `client_id`, redirect URIs (Uniform Resource Identifiers), maybe a secret) | Wants access on Alice's behalf |
 | **Authorization server** | `auth.shop.example.com` | Authenticates Alice, shows consent, issues tokens |
 | **Resource server** | `api.shop.example.com` | Accepts tokens, enforces scopes |
 
@@ -117,11 +117,11 @@ sequenceDiagram
     API-->>C: Alice's orders
 ```
 
-**Why two steps (code, then token) instead of returning the token in the redirect?** The redirect travels through the **browser**: URLs land in history, logs, `Referer` headers, and browser extensions can read them. A code alone is useless: it's single-use, expires in ~1 minute, and exchanging it requires the client's credentials and/or the PKCE verifier, over a direct TLS connection the browser never sees. The old **implicit flow** returned the token directly in the URL fragment; it's deprecated for exactly this reason.
+**Why two steps (code, then token) instead of returning the token in the redirect?** The redirect travels through the **browser**: URLs (Uniform Resource Locators) land in history, logs, `Referer` headers, and browser extensions can read them. A code alone is useless: it's single-use, expires in ~1 minute, and exchanging it requires the client's credentials and/or the PKCE verifier, over a direct TLS (Transport Layer Security) connection the browser never sees. The old **implicit flow** returned the token directly in the URL fragment; it's deprecated for exactly this reason.
 
 ### Stage 4: PKCE, for apps that can't keep a secret
 
-**Confidential** clients (a backend server) can keep a `client_secret`. **Public** clients can't: a mobile app or SPA ships its code to users, so any embedded secret is public. Then what stops an attacker who intercepts the code (a malicious app registered for the same custom URL scheme on the phone, for example) from exchanging it?
+**Confidential** clients (a backend server) can keep a `client_secret`. **Public** clients can't: a mobile app or SPA (single-page application) ships its code to users, so any embedded secret is public. Then what stops an attacker who intercepts the code (a malicious app registered for the same custom URL scheme on the phone, for example) from exchanging it?
 
 **PKCE** (Proof Key for Code Exchange, "pixy"): the app makes up a random secret **per login**.
 
@@ -130,7 +130,7 @@ VERIFIER=$(openssl rand -base64 48 | tr -d '=+/' | cut -c1-64)
 CHALLENGE=$(printf '%s' "$VERIFIER" | openssl dgst -sha256 -binary | openssl base64 -A | tr '+/' '-_' | tr -d '=')
 ```
 
-1. `/authorize` carries only the **challenge** (the SHA-256 hash)
+1. `/authorize` carries only the **challenge** (the SHA-256 (SHA: Secure Hash Algorithm) hash)
 2. `/token` must present the **verifier** (the original)
 3. The server checks `SHA256(verifier) == challenge`
 
@@ -172,11 +172,11 @@ sequenceDiagram
     W->>AS: new token when needed
 ```
 
-Compared with an [[API keys|API key]], the long-lived secret only goes to the token endpoint; APIs see tokens that expire within an hour. Stronger client authentication replaces the shared secret with a **signed JWT assertion** (`private_key_jwt`) or **mTLS** ([[mTLS]]).
+Compared with an [[API keys|API key]], the long-lived secret only goes to the token endpoint; APIs see tokens that expire within an hour. Stronger client authentication replaces the shared secret with a **signed JWT (JSON Web Token; JSON: JavaScript Object Notation) assertion** (`private_key_jwt`) or **mTLS (mutual TLS)** ([[mTLS]]).
 
 ### Stage 7: devices without a browser (device code)
 
-A smart TV, or a CLI on a server over SSH: no browser to redirect, typing a password on a remote is miserable. The **device authorization grant**:
+A smart TV, or a CLI on a server over SSH (Secure Shell): no browser to redirect, typing a password on a remote is miserable. The **device authorization grant**:
 
 ```text
 $ shop-cli login
@@ -223,7 +223,7 @@ A tempting shortcut: "Log in with the shop" = run the OAuth flow, get an access 
 - A token obtained by a **different** app (for the same user) can be replayed into my app's login, and I'd accept it: the attacker logs in as the victim
 - Every provider invented its own `/me` endpoint and fields
 
-Authentication on top of OAuth was standardised as **[[OpenID Connect]]**: an **ID token** issued **to the client**, with audience, nonce, auth time and standard claims.
+Authentication on top of OAuth was standardised as **[[OpenID Connect]]**: an **ID (identifier) token** issued **to the client**, with audience, nonce, auth time and standard claims.
 
 ## Advanced problems
 
@@ -237,15 +237,15 @@ The code was already used (a page reload, a double-submit), expired (codes live 
 
 ### 3. Consent phishing
 
-A malicious app registered on a big IdP asks for broad scopes ("read all your mail") with a convincing name. The user consents; no password is stolen, but the app has a token. Defenses: admin consent policies, verified publishers, reviewing granted apps.
+A malicious app registered on a big IdP (identity provider) asks for broad scopes ("read all your mail") with a convincing name. The user consents; no password is stolen, but the app has a token. Defenses: admin consent policies, verified publishers, reviewing granted apps.
 
 ### 4. The mobile app's client secret
 
 A secret embedded in a mobile app is public. Treat mobile apps as public clients: PKCE, no secret, refresh token rotation, and use the system browser (ASWebAuthenticationSession / Custom Tabs), never an embedded WebView that lets the app watch the password being typed.
 
 ## In AWS
-- **Amazon Cognito** user pools are an OAuth 2.0 / OIDC authorization server (hosted login UI, authorization code + PKCE, client credentials with resource servers and custom scopes)
-- **API Gateway** JWT authorizers enforce scopes from OAuth access tokens; ALB can run the authorization code flow itself in front of targets
+- **Amazon Cognito** user pools are an OAuth 2.0 / OIDC authorization server (hosted login UI (user interface), authorization code + PKCE, client credentials with resource servers and custom scopes)
+- **API Gateway** JWT authorizers enforce scopes from OAuth access tokens; ALB (Application Load Balancer) can run the authorization code flow itself in front of targets
 - [[AWS Identity Center]]'s `aws sso login` is the **device authorization grant**
 
 ## Practice
@@ -254,7 +254,7 @@ A secret embedded in a mobile app is public. Treat mobile apps as public clients
 > The redirect passes through the browser (history, logs, extensions). The code is single-use, short-lived, and needs the client's credentials or PKCE verifier to exchange over a direct back channel.
 
 > [!example]- What does the `state` parameter protect against?
-> CSRF on the callback: an attacker injecting their own authorization code into the victim's session.
+> CSRF (Cross-Site Request Forgery) on the callback: an attacker injecting their own authorization code into the victim's session.
 
 > [!example]- How does PKCE protect a public client?
 > The app sends a hash (challenge) at authorize time and the original (verifier) at token time; an attacker who intercepts the code doesn't have the verifier.

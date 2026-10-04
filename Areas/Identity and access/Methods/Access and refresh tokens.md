@@ -9,7 +9,7 @@ aliases: [Access token, Access tokens, Refresh token, Refresh tokens, Refresh to
 # Access and refresh tokens
 
 > [!abstract] In one sentence
-> Instead of one long-lived token, the client gets two: a **short-lived access token** (minutes) sent to the APIs on every request, cheap to verify and harmless soon after it leaks, and a **long-lived refresh token** (days to months) sent **only** to the authorization server to get new access tokens, stored carefully, **revocable**, and **rotated** on each use so a stolen copy is detected; that pair gives long logins without long-lived credentials on the wire.
+> Instead of one long-lived token, the client gets two: a **short-lived access token** (minutes) sent to the APIs (application programming interfaces) on every request, cheap to verify and harmless soon after it leaks, and a **long-lived refresh token** (days to months) sent **only** to the authorization server to get new access tokens, stored carefully, **revocable**, and **rotated** on each use so a stolen copy is detected; that pair gives long logins without long-lived credentials on the wire.
 
 ## Build-up: keeping the mobile app logged in
 
@@ -20,7 +20,7 @@ The shop's mobile app logs Alice in once and calls `api.shop.example.com` with a
 | Token lives… | Good | Bad |
 |---|---|---|
 | **30 days** | Alice logs in once a month | A token copied from a log, a backup or a compromised device works for **30 days**. Revoking it needs a denylist checked everywhere |
-| **10 minutes** | A leaked token is useless almost immediately | Alice types her password (and MFA code) every 10 minutes |
+| **10 minutes** | A leaked token is useless almost immediately | Alice types her password (and MFA (multi-factor authentication) code) every 10 minutes |
 
 One token can't be both. So split the job in two.
 
@@ -42,7 +42,7 @@ At login, the authorization server (see [[OAuth 2.0]]) returns:
 |---|---|---|
 | Sent to | **Every API** (resource servers) | **Only** the authorization server's token endpoint |
 | Lifetime | 5–60 min (15 here) | Days to months, often with a sliding window |
-| Format | Often a JWT, verified locally by APIs | Usually **opaque**, looked up in the auth server's database |
+| Format | Often a JWT (JSON Web Token; JSON: JavaScript Object Notation), verified locally by APIs | Usually **opaque**, looked up in the auth server's database |
 | Exposure | High: every request, many services, logs | Low: one endpoint, rarely sent |
 | Revocation | Waits for expiry (or denylist) | **Instant**: delete the database row |
 | If stolen | Minutes of access | Detected through rotation (Stage 3) |
@@ -104,10 +104,10 @@ If an old refresh token shows up again, either the legitimate app or a thief has
 
 | Client | Access token | Refresh token |
 |---|---|---|
-| **Server-side web app / BFF** | Server memory or session store | Server-side store, **never sent to the browser**. The browser only has a `HttpOnly` session cookie (see [[Session authentication]]) |
-| **SPA (pure browser app)** | **JavaScript memory** (a variable, lost on reload) | The weakest case: in-memory too (re-login or silent refresh on reload), or in an `HttpOnly`, `SameSite` cookie scoped to the token endpoint. **Not `localStorage`**: any XSS reads it |
-| **Mobile app** | Memory | OS secure storage: iOS **Keychain**, Android **Keystore**-backed encrypted storage |
-| **CLI tool** | Memory | OS keyring, or a `0600` file under the user's config dir (`~/.aws/sso/cache`, `~/.config/gh/hosts.yml`) |
+| **Server-side web app / BFF (backend for frontend)** | Server memory or session store | Server-side store, **never sent to the browser**. The browser only has a `HttpOnly` session cookie (see [[Session authentication]]) |
+| **SPA (single-page application) (pure browser app)** | **JavaScript memory** (a variable, lost on reload) | The weakest case: in-memory too (re-login or silent refresh on reload), or in an `HttpOnly`, `SameSite` cookie scoped to the token endpoint. **Not `localStorage`**: any XSS (cross-site scripting) reads it |
+| **Mobile app** | Memory | OS (operating system) secure storage: iOS **Keychain**, Android **Keystore**-backed encrypted storage |
+| **CLI (command-line interface) tool** | Memory | OS keyring, or a `0600` file under the user's config dir (`~/.aws/sso/cache`, `~/.config/gh/hosts.yml`) |
 | **Server / daemon (client credentials)** | Memory, cached until near expiry | Usually none: it just asks for a new access token with its own credentials |
 
 The trend for browser apps: keep tokens **off the browser** entirely with a BFF. A browser can't keep a secret from injected JavaScript; a server can.
@@ -141,8 +141,8 @@ Rotation detects theft after the fact. **Sender-constrained** tokens make a stol
 
 | Mechanism | How | Status |
 |---|---|---|
-| **DPoP** (RFC 9449) | The client holds a key pair; each request carries a fresh signed proof (method, URL, time) with that key; the token is bound to the key's thumbprint | Growing support (IdPs, SPAs, mobile) |
-| **mTLS-bound tokens** (RFC 8705) | The token is bound to the client's TLS certificate ([[mTLS]]); the API checks the connection uses that certificate | Server-to-server, open banking |
+| **DPoP (Demonstrating Proof of Possession)** (RFC (Request for Comments, an internet standards document) 9449) | The client holds a key pair; each request carries a fresh signed proof (method, URL (Uniform Resource Locator), time) with that key; the token is bound to the key's thumbprint | Growing support (IdPs (identity providers), SPAs, mobile) |
+| **mTLS-bound (mTLS: mutual TLS) tokens** (RFC 8705) | The token is bound to the client's TLS (Transport Layer Security) certificate ([[mTLS]]); the API checks the connection uses that certificate | Server-to-server, open banking |
 
 A thief with the token but not the private key gets nowhere. Public SPA clients often get refresh tokens **only** with DPoP or a BFF.
 
@@ -162,11 +162,11 @@ The user clicks "log out everywhere"; the auth server deletes refresh tokens, bu
 
 ### 4. Refresh tokens in logs and analytics
 
-Mobile crash reporters, HTTP logging interceptors or proxy logs capture the token endpoint's request body. Scrub token parameters in every logging layer; the token endpoint is the most sensitive URL in the system.
+Mobile crash reporters, HTTP (Hypertext Transfer Protocol) logging interceptors or proxy logs capture the token endpoint's request body. Scrub token parameters in every logging layer; the token endpoint is the most sensitive URL in the system.
 
 ## In AWS
-- **Cognito** user pools: access and ID tokens valid 5 min–1 day (default 1 h), refresh tokens 1 h–10 years (default 30 days), optional **refresh token rotation**, `GlobalSignOut`/`RevokeToken` to kill refresh tokens
-- AWS's own credentials follow the same idea: **STS temporary credentials** (15 min–12 h) instead of long-lived access keys, and `aws sso login` stores an SSO token plus a refresh token in `~/.aws/sso/cache` to mint short-lived role credentials ([[AWS Identity Center]])
+- **Cognito** user pools: access and ID (identifier) tokens valid 5 min–1 day (default 1 h), refresh tokens 1 h–10 years (default 30 days), optional **refresh token rotation**, `GlobalSignOut`/`RevokeToken` to kill refresh tokens
+- AWS (Amazon Web Services)'s own credentials follow the same idea: **STS (Security Token Service) temporary credentials** (15 min–12 h) instead of long-lived access keys, and `aws sso login` stores an SSO (single sign-on) token plus a refresh token in `~/.aws/sso/cache` to mint short-lived role credentials ([[AWS Identity Center]])
 
 ## Practice
 

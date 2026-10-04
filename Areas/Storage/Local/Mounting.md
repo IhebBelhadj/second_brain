@@ -32,7 +32,7 @@ Two ways an OS can let programs reach several filesystems:
 | Example | `C:\Windows`, `D:\photos`, `Z:\` (a network share) | `/` (root fs), `/home` (another disk), `/srv/uploads` (NFS) |
 | Program sees | Which drive a file is on | Just a path. Which disk or server is behind it is invisible |
 
-(Windows can also mount a volume into an empty NTFS folder, but drive letters are the norm.)
+(Windows can also mount a volume into an empty NTFS folder, but drive letters are the norm. How Windows names and mounts volumes: [[Windows vs Linux storage#3. Mounting: automatic and lazy]].)
 
 The Linux model means the root filesystem holds `/`, and everything else hangs from directories inside it:
 
@@ -87,6 +87,8 @@ When I run `mount`, the kernel:
 1. Asks the requested filesystem **driver** (ext4) to read the device's **superblock** and check it's really ext4 and in a sane state (replaying the journal if needed)
 2. Creates a **mount** object: "filesystem X (device `/dev/loop0p1`, type ext4, options rw) is attached at the directory `/mnt/invoices`"
 3. Marks the directory entry `/mnt/invoices` as a **mount point** in its cache
+
+(Step by step with the system calls, the in-memory objects, path walks across mount points and unmounting: [[How mounting works]].)
 
 From then on, every file operation goes through the **Virtual File System (VFS)**, the layer that sits between system calls and the actual filesystems:
 
@@ -264,6 +266,9 @@ Files on a FAT/exFAT stick all belong to root and ignore `chmod`: the filesystem
 
 ## Related
 - Before:: [[Storage devices]], [[Partitions and filesystems]]
+- Under the hood:: [[How mounting works]]
+- The first mount at boot:: [[Booting from disk]]
+- Other OS:: [[Windows vs Linux storage]]
 - Network filesystems:: [[NFS and SMB]], [[How network file sharing works]], [[EFS]]
 - Containers:: [[Docker]] (overlay, bind mounts)
 - Processes and files:: [[Inter-process communication]]

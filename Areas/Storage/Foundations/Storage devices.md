@@ -205,6 +205,7 @@ The app wrote, `write()` returned success, power failed, the data is gone: it wa
 - Filling SSDs to 100% and never trimming
 
 ## Related
+- Next, how a drive is cut up and booted:: [[Partition tables (GPT and MBR)]], [[Booting from disk]]
 - Next:: [[Partitions and filesystems]], [[Mounting]]
 - Over the network:: *[[iSCSI and SAN]]*, [[NFS and SMB]], [[How network file sharing works]]
 - Performance:: *[[Storage performance]]*

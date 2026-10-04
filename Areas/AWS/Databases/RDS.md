@@ -261,6 +261,7 @@ Mental shortcut: in Aurora, **the replicas are the Multi-AZ**. A cluster with on
 - Forgetting that a stopped instance starts again by itself after 7 days
 
 ## Related
+- The write-ahead log behind backups and point-in-time restore:: [[Journaling]]
 - Depends on:: [[VPC]], [[Security groups]], [[IAM]]
 - Works with:: [[EC2]], [[Lambda]], [[Bastion host]], [[CloudTrail]]
 - Certificates:: [[TLS]], [[Certificate rotation]]

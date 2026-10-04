@@ -194,6 +194,7 @@ Running PostgreSQL or MySQL data directories on NFS/SMB: latency on every fsync,
 - Calling SMB "CIFS" and enabling SMB1 (old, insecure)
 
 ## Related
+- Windows and Linux filesystems, permissions and mounting compared:: [[Windows vs Linux storage]]
 - Alternatives:: *[[Block, file and object storage]]*, *[[iSCSI and SAN]]*, *[[Object storage]]*, [[S3]]
 - Underneath:: [[Storage devices]], [[Partitions and filesystems]], [[Mounting]], [[Sockets]] (ports 2049, 445)
 - Under the hood:: [[How network file sharing works]]

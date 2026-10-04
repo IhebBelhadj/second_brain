@@ -207,6 +207,7 @@ The `customer-profiles` topic holds profile updates keyed by `customerId`. With 
 - Reading ZooKeeper-era tutorials as current: Kafka 4.0 runs on KRaft only
 
 ## Related
+- The same append-only log idea in filesystems and databases:: [[Journaling]]
 - Compared with:: [[Kafka vs AWS messaging services]]
 - Queue and pub/sub alternatives:: [[SQS]], [[SNS]], [[EventBridge]]
 - Broker protocols:: [[AMQP]], [[MQTT]], [[JMS]]

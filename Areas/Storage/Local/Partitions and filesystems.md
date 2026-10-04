@@ -4,7 +4,7 @@ created: 2026-10-03
 topic: Storage
 confidence: 1
 tags: [storage, filesystems, linux, partitions, foundations]
-aliases: [Filesystem, Filesystems, File system, Partition, Partitions, GPT, Partition table, Inode, Inodes, ext4, XFS, Journaling, Hard link, Directory entry, mkfs]
+aliases: [Filesystem, Filesystems, File system, Partition, Partitions, ext4, XFS, Hard link, Directory entry, mkfs]
 ---
 # Partitions and filesystems
 
@@ -39,7 +39,7 @@ That notebook, stored **on the drive itself** in a standard format so any comput
 
 ### Stage 2: partitions, splitting the drive first
 
-Before the filesystem, I can split the drive into **partitions**: independent ranges of blocks, each of which can hold its own filesystem. A **partition table** at the start of the drive lists them. The modern format is **GPT** (GUID Partition Table): up to 128 partitions, a backup copy at the **end** of the drive, each entry with a start block, an end block, a type, and a unique ID. (The old **MBR** format: 4 primary partitions, 2 TiB maximum.)
+Before the filesystem, I can split the drive into **partitions**: independent ranges of blocks, each of which can hold its own filesystem. A **partition table** at the start of the drive lists them. The modern format is **GPT** (GUID Partition Table): up to 128 partitions, a backup copy at the **end** of the drive, each entry with a start block, an end block, a type, and a unique ID. (The old **MBR** format: 4 primary partitions, 2 TiB maximum.) What these tables look like byte by byte, and why GPT replaced MBR: [[Partition tables (GPT and MBR)]].
 
 ```bash
 sudo parted -s /dev/loop0 mklabel gpt mkpart invoices ext4 1MiB 100%
@@ -67,7 +67,7 @@ flowchart LR
     end
 ```
 
-Why partition at all: a computer's boot drive needs an **EFI system partition** (FAT32) besides the OS's own filesystem; separating `/` from data means one filling up doesn't kill the other; different partitions can use different filesystems. Cloud **data** volumes often skip partitioning and put the filesystem directly on `/dev/nvme1n1`, which makes growing them simpler.
+Why partition at all: a computer's boot drive needs an **EFI system partition** (FAT32, holding the bootloaders the firmware runs, see [[Booting from disk]]) besides the OS's own filesystem; separating `/` from data means one filling up doesn't kill the other; different partitions can use different filesystems. Cloud **data** volumes often skip partitioning and put the filesystem directly on `/dev/nvme1n1`, which makes growing them simpler.
 
 ### Stage 3: creating a filesystem (`mkfs`)
 
@@ -131,7 +131,7 @@ The file is **inode 12**. An inode is a fixed-size record (256 bytes in ext4) ho
 - **Link count**: how many names point to it (Stage 5)
 - **Where the data is**: in ext4, a list of **extents** = "logical blocks 0–255 of this file are physical blocks 34816–35071"
 
-What's **not** in the inode: the **file name**. Names live in directories.
+What's **not** in the inode: the **file name**. Names live in directories. (The inode drawn field by field, block pointers vs extents, sparse files, and what a process holds: [[Inodes]].)
 
 ```bash
 sudo debugfs -R "stat /o-8812.pdf" /dev/loop0p1 | grep -A1 EXTENTS
@@ -217,6 +217,8 @@ sequenceDiagram
 
 After a crash, mounting just **replays** committed transactions: seconds instead of hours, and metadata is always consistent. ext4's default (`data=ordered`) journals **metadata** and makes sure file **data** blocks are written before the metadata pointing at them, so a crash doesn't expose old garbage in a new file. Data that wasn't `fsync`ed can still be lost: journaling protects the **structure**, not unsaved content.
 
+The full mechanism (crash cases, commit points, flushes, journal modes) and the same idea in databases, Kafka, Raft and RAID: [[Journaling]].
+
 **Copy-on-write** filesystems (btrfs, ZFS) take another route: never overwrite in place, write new versions elsewhere and switch a pointer atomically. That also gives cheap **snapshots** and **checksums** of all data.
 
 ### Stage 8: choosing a filesystem
@@ -227,7 +229,7 @@ After a crash, mounting just **replays** committed transactions: seconds instead
 | **XFS** | RHEL, Amazon Linux default | Big files, parallel I/O, dynamic inodes | **Can't shrink** |
 | **btrfs** | Fedora, openSUSE | Snapshots, checksums, compression, subvolumes | Some RAID modes still discouraged |
 | **ZFS** | FreeBSD, TrueNAS, Ubuntu (module) | Checksums, snapshots, pooled storage, very robust | Out-of-tree on Linux, RAM hungry |
-| **NTFS** | Windows | ACLs, journaling | Linux support via ntfs3 |
+| **NTFS** | Windows | ACLs, journaling, MFT (see [[Windows vs Linux storage]]) | Linux support via ntfs3 |
 | **FAT32 / exFAT** | USB sticks, SD cards, EFI partition | Readable everywhere | FAT32: **4 GiB max file size**, no permissions |
 | **APFS** | macOS | Snapshots, encryption, copy-on-write | Apple only |
 
@@ -314,8 +316,10 @@ A filesystem with real damage (bad sectors, a crash on hardware that lied about 
 - FAT32 for files over 4 GiB
 
 ## Related
-- Before:: [[Storage devices]]
-- Next:: [[Mounting]]
+- Before:: [[Storage devices]], [[Partition tables (GPT and MBR)]]
+- Deep dives:: [[Inodes]], [[Journaling]], [[Booting from disk]] (ESP, firmware)
+- Next:: [[Mounting]], [[How mounting works]]
+- Other OS:: [[Windows vs Linux storage]]
 - Sharing over the network:: [[NFS and SMB]], [[How network file sharing works]]
 - Combining disks:: *[[LVM]]*, *[[RAID]]*
 - Protecting data:: *[[Snapshots]]*, *[[Backups]]*

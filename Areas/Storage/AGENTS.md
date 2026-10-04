@@ -12,8 +12,14 @@ Storage/
 ├── Foundations/
 │   └── Storage devices.md         HDD/SSD/NVMe, LBA, block devices, page cache/fsync, loop devices, virtual drives
 ├── Local/
-│   ├── Partitions and filesystems.md   GPT, mkfs layout, inodes, directories, path lookup, links, journaling, choosing, inode/space problems, growing
-│   └── Mounting.md                one tree, mount/umount, VFS, options, fstab, virtual fs, bind mounts, namespaces, failures
+│   ├── Partition tables (GPT and MBR).md   MBR/GPT byte layout, protective MBR, type GUIDs, real layouts, PARTUUID vs UUID, repair, conversion
+│   ├── Booting from disk.md       BIOS vs UEFI, ESP and .efi images, NVRAM entries, Secure Boot/shim, initramfs, UKI, Windows boot chain, failures
+│   ├── Partitions and filesystems.md   overview: partitions, mkfs layout, inodes, directories, path lookup, links, journaling, choosing, inode/space problems, growing
+│   ├── Inodes.md                  inode fields, block pointers vs extents, sparse files, links, fd → inode, limits, other filesystems
+│   ├── Journaling.md              crash cases, transactions/commit, flushes, journal modes, CoW/log-structured, WAL pattern elsewhere
+│   ├── Mounting.md                one tree, mount/umount, VFS, options, fstab, virtual fs, bind mounts, namespaces, failures
+│   ├── How mounting works.md      kernel view: ownership, syscalls, superblock/mount objects, path walk, unmount, propagation
+│   └── Windows vs Linux storage.md   (compare) volumes/letters, NTFS MFT, journals, ACLs, file locking, links, VSS, BitLocker, filters, commands
 └── Network storage/
     ├── NFS and SMB.md             exports/mounts, NFS versions, UID trust, SMB/Samba, cross-OS support, stale handles, hard/soft
     └── How network file sharing works.md   RPC, file handles, read/write paths, COMMIT, caching, leases/locks/delegations, SMB comparison

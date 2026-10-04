@@ -202,7 +202,7 @@ Source IP: ...
 ```
 
 ## Connects to
-- [[STS]]: how roles are assumed and temporary credentials issued, trust policies, external ID, GitHub OIDC, why roles beat users with permissions. Hands-on: [[Assuming a role step by step]]
+- [[STS]]: how roles are assumed and temporary credentials issued, trust policies, external ID, GitHub OIDC, why roles beat users with permissions. Hands-on: [[Assuming a role step by step]], and for CI/CD (Continuous Integration / Continuous Delivery) [[Connecting GitHub Actions to AWS]]
 - [[ARN]]: how policies point at resources
 - [[AWS Organizations]]: SCPs **cap** what IAM can grant
 - [[AWS Identity Center]]: the modern way for people to log in (instead of IAM users)

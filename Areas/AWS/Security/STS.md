@@ -226,7 +226,7 @@ What the `sub` claim looks like depends on how the job runs:
 | runs on a pull request | `repo:acme/shop:pull_request` |
 | runs on a tag `v1.2.0` | `repo:acme/shop:ref:refs/tags/v1.2.0` |
 
-The production version with Terraform, one role per kind of job and environment approvals enforced by AWS is in [[ECS production stack#Stage 0: the pipeline needs state and a way to log in]].
+The full production tutorial (one role per kind of job, environments and branch rules, least-privilege deploy policies, Terraform, workflows, hardening) is [[Connecting GitHub Actions to AWS]]. The ECS-specific version is in [[ECS production stack#Stage 0: the pipeline needs state and a way to log in]].
 
 ### Stage 7: the same idea everywhere in AWS
 
@@ -378,7 +378,7 @@ role_session_name = invoker-cli
 ## Related
 - Part of:: [[IAM]]
 - Depends on:: [[IAM]], [[ARN]], [[Authentication and authorization]]
-- Walkthrough:: [[Assuming a role step by step]]
+- Walkthrough:: [[Assuming a role step by step]], [[Connecting GitHub Actions to AWS]]
 - Federation:: [[OpenID Connect]], [[JWT and bearer tokens]], [[Single sign-on]], [[AWS Identity Center]]
 - Used by:: [[Lambda]], [[EC2]], [[ECS]], [[ECS production stack]], [[S3 replication]]
 - Auditing:: [[CloudTrail]], [[CloudTrail in production]]

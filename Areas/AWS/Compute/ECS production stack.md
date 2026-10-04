@@ -4,7 +4,7 @@ created: 2026-10-04
 topic: AWS
 confidence: 1
 tags: [aws, compute, containers, ecs, ec2, fargate, ci-cd, infrastructure-as-code, terraform, github-actions, secrets, route53, acm]
-aliases: [ECS in production, Production ECS, ECS CI/CD, GitHub Actions to ECS, GitHub OIDC to AWS, Deploying ECS from GitHub]
+aliases: [ECS in production, Production ECS, ECS CI/CD, GitHub Actions to ECS, Deploying ECS from GitHub]
 ---
 # ECS production stack
 
@@ -1128,7 +1128,7 @@ resource "aws_ecs_service" "api" {
 - The pieces in detail:: [[VPC]], [[Security groups]], [[VPC IP address planning]], [[Route 53]], [[Certificate Manager (ACM)]], [[Certificate rotation]], [[Load balancers]], [[AWS WAF]], [[RDS]]
 - ECS itself:: [[ECS]], [[ECS tasks and task definitions]], [[ECS on Fargate vs EC2]], [[Auto Scaling]], [[EC2]]
 - Identity and secrets:: [[IAM]], [[AWS Organizations]], [[AWS Identity Center]], [[Systems Manager]] (Parameter Store, Session Manager), *[[Secrets Manager]]*, *[[KMS]]*
-- How GitHub OIDC works:: [[OpenID Connect#Stage 8: OIDC for machines]], [[JWT and bearer tokens]], [[STS]] (trust policies, AssumeRoleWithWebIdentity)
+- How GitHub OIDC works:: [[Connecting GitHub Actions to AWS]] (the general tutorial), [[OpenID Connect#Stage 8: OIDC for machines]], [[JWT and bearer tokens]], [[STS]] (trust policies, AssumeRoleWithWebIdentity)
 - Infrastructure as code:: *[[Terraform]]*, [[Packer]] (when hosts need a custom AMI)
 - Operations:: [[CloudWatch]], [[CloudWatch Logs]], [[CloudWatch alarms]], [[CloudTrail]]
 - Images:: [[Docker]], [[Docker image tags]]

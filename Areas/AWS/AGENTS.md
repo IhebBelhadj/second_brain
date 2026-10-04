@@ -67,6 +67,7 @@ AWS/
 └── Security/
     ├── IAM.md                      users, roles, policies
     ├── STS.md                      temporary credentials, AssumeRole, trust policies, external ID, GitHub OIDC, why roles over users
+    ├── Connecting GitHub Actions to AWS.md   (procedure) production GitHub OIDC: provider, per-job roles, environments, Terraform, workflows, hardening
     ├── Assuming a role step by step.md   (procedure) console + code: outside app invokes a Lambda via a user that can only assume a role
     ├── AWS Organizations.md        accounts, SCPs
     ├── AWS Identity Center.md      SSO across accounts

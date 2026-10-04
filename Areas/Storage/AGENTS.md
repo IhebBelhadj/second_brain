@@ -9,8 +9,14 @@
 ```
 Storage/
 ├── Storage.md                     topic index (the learning path)
+├── Foundations/
+│   └── Storage devices.md         HDD/SSD/NVMe, LBA, block devices, page cache/fsync, loop devices, virtual drives
+├── Local/
+│   ├── Partitions and filesystems.md   GPT, mkfs layout, inodes, directories, path lookup, links, journaling, choosing, inode/space problems, growing
+│   └── Mounting.md                one tree, mount/umount, VFS, options, fstab, virtual fs, bind mounts, namespaces, failures
 └── Network storage/
-    └── NFS and SMB.md             exports/mounts, NFS versions, UID trust, SMB/Samba, cross-OS support, stale handles, hard/soft
+    ├── NFS and SMB.md             exports/mounts, NFS versions, UID trust, SMB/Samba, cross-OS support, stale handles, hard/soft
+    └── How network file sharing works.md   RPC, file handles, read/write paths, COMMIT, caching, leases/locks/delegations, SMB comparison
 ```
 
 `S3.md`, `S3 replication.md` and `EFS.md` are listed in this area's index (section 7) but the files live in `Areas/AWS/Storage/` with `topic: AWS`.

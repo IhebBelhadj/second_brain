@@ -229,7 +229,7 @@ Rules of thumb:
 - Confusing the package names: `amazon-efs-utils` (helper) vs `nfs-utils`/`nfs-common` (plain NFS client)
 
 ## Related
-- Concept:: [[NFS and SMB]], *[[Block, file and object storage]]*, [[Storage]]
+- Concept:: [[NFS and SMB]], [[How network file sharing works]], [[Mounting]], *[[Block, file and object storage]]*, [[Storage]]
 - Clients:: [[EC2]], [[ECS]], [[ECS tasks and task definitions]] (EFS volumes), [[Lambda]]
 - Network and access:: [[VPC]], [[Security groups]], [[IAM]]
 - Other storage:: [[S3]], *[[EBS]]*

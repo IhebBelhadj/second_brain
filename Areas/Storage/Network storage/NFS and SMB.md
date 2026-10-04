@@ -13,6 +13,9 @@ aliases: [NFS, SMB, CIFS, Samba, Network file system, File shares, NFSv4, Stale 
 
 ## Build-up: a shared folder for the shop
 
+> [!info] Read first
+> This note is about **using** NFS and SMB. The foundations it builds on, step by step: what a drive is ([[Storage devices]]), how a filesystem turns blocks into files ([[Partitions and filesystems]]), what mounting means ([[Mounting]]). And what happens on the wire for every read and write: [[How network file sharing works]].
+
 The shop's web servers store customer uploads (product photos, invoices) on their local disks. With three servers behind a load balancer, a photo uploaded through server 1 doesn't exist on servers 2 and 3: a customer sees the photo, refreshes, lands on another server, and it's gone.
 
 Options:
@@ -125,7 +128,7 @@ So a service that **only speaks NFSv4** (like some cloud file services) **can't 
 
 ## Advanced problems
 
-### 1. "Stale file handle"
+### 1. Stale file handle
 
 `ls /srv/uploads` → `Stale file handle`. The client holds a reference (a handle) to a file or directory that **no longer exists on the server** in the same form: it was deleted and recreated, the export was moved, or the server's filesystem was replaced/restored. Fix: unmount and remount (`umount -l` if busy), and avoid replacing exported directories underneath clients.
 
@@ -192,7 +195,8 @@ Running PostgreSQL or MySQL data directories on NFS/SMB: latency on every fsync,
 
 ## Related
 - Alternatives:: *[[Block, file and object storage]]*, *[[iSCSI and SAN]]*, *[[Object storage]]*, [[S3]]
-- Underneath:: *[[Partitions and filesystems]]*, [[Sockets]] (ports 2049, 445)
+- Underneath:: [[Storage devices]], [[Partitions and filesystems]], [[Mounting]], [[Sockets]] (ports 2049, 445)
+- Under the hood:: [[How network file sharing works]]
 - Security:: [[Security groups]], *[[Encryption at rest]]*
 - In AWS:: [[EFS]]
 - Area:: [[Storage]]

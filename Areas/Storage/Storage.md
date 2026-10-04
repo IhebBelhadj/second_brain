@@ -25,16 +25,18 @@ flowchart TD
 
 ## 1. Foundations
 - *[[Block, file and object storage]]*: the three ways to hand out storage, what each one gives the client (raw blocks, a filesystem, whole objects over HTTP), and when I'd pick which. **The map everything else hangs on**
-- *[[Storage devices]]*: HDD vs SSD vs NVMe, what a "block" and a "sector" are, why random I/O hurts spinning disks
+- [[Storage devices]]: what a drive really is. HDD vs SSD (FTL, TRIM) vs the interface (SATA, NVMe), numbered blocks (LBA), block devices in `/dev`, the page cache and `fsync`, drives that aren't physical (loop devices, VM disks, EBS), a fake drive to practise on
 - *[[Storage performance]]*: IOPS vs throughput vs latency, queue depth, block size, why "500 MB/s" and "3 000 IOPS" are different promises, measuring with `fio` and `iostat`
 
 ## 2. On one machine
-- *[[Partitions and filesystems]]*: partition tables (GPT), ext4/XFS/btrfs, inodes, mounting, `/etc/fstab`, "disk full" with free space (inodes, deleted-but-open files)
+- [[Partitions and filesystems]]: from raw blocks to named files. GPT partitions, what `mkfs` lays out, inodes (no name inside), directories as name → inode lists, path lookup step by step, hard links, writing a file, journaling after a power cut, choosing ext4/XFS/btrfs/ZFS, inode exhaustion, deleted-but-open files, growing filesystems
+- [[Mounting]]: one tree vs drive letters, what `mount` does and hides, the VFS dispatching to ext4/NFS/proc/FUSE, mount options, `/etc/fstab` with UUIDs, virtual filesystems, bind mounts and container mount namespaces, busy unmounts, the mount that silently didn't happen
 - *[[LVM]]*: volume groups and logical volumes, growing a volume without downtime
 - *[[RAID]]*: RAID 0/1/5/6/10, what each one survives, rebuild times and why RAID isn't a backup
 
 ## 3. Over the network
 - [[NFS and SMB]]: sharing a filesystem with many machines. NFS on Linux (exports, versions, UID/GID trust, root_squash) vs SMB on Windows (users, ACLs, Samba), **which OS can mount which** (Windows' NFS client is v3 only), stale handles, hard vs soft mounts, locking, small-file slowness
+- [[How network file sharing works]]: under the hood. RPC and COMPOUND, the first file handle at mount, what a file handle is (and why it goes stale), a read and a write followed across both page caches, UNSTABLE writes and COMMIT, close-to-open consistency, leases, locks, grace periods, delegations and callbacks through NAT, network failures, the same shape in SMB, watching it with mountstats and Wireshark
 - *[[iSCSI and SAN]]*: sharing raw block devices over the network, why only one machine may mount a normal filesystem on one
 
 ## 4. Object storage

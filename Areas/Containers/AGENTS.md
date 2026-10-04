@@ -19,7 +19,8 @@ Containers/
 │   └── Deployment strategies.md   recreate, rolling, blue/green, canary, A/B, shadow, feature flags, expand/contract
 └── Kubernetes/                    Kubernetes itself (vendor-neutral; EKS goes in the AWS area)
     ├── Kubernetes.md              the objects: pods, Deployments, probes, Services/Ingress, config, storage/StatefulSets, autoscaling, RBAC, CRDs/operators
-    └── Kubernetes architecture.md components under the hood: etcd, API server, controllers, scheduler, kubelet/CRI/CNI/CSI, kube-proxy, CoreDNS
+    ├── Kubernetes architecture.md components under the hood: etcd, API server, controllers, scheduler, kubelet/CRI/CNI/CSI, kube-proxy, CoreDNS
+    └── Kubernetes worked example.md   e-commerce shop with every common object in YAML, step by step, and the mental model
 ```
 
 `ECS.md`, `ECS tasks and task definitions.md` and `ECS on Fargate vs EC2.md` are listed in this area's index (section 2) but live in `Areas/AWS/Compute/` with `topic: AWS`.

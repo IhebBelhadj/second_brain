@@ -4,7 +4,7 @@ created: 2026-09-27
 topic: Networking
 confidence: 1
 tags: [networking, service-discovery, microservices, kubernetes]
-aliases: [Service registry, Client-side discovery, Server-side discovery, Consul, Kubernetes Service]
+aliases: [Service registry, Client-side discovery, Server-side discovery, Consul]
 ---
 # Service discovery
 

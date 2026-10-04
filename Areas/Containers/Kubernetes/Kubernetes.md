@@ -4,7 +4,7 @@ created: 2026-10-04
 topic: Containers
 confidence: 1
 tags: [containers, orchestration, kubernetes]
-aliases: [K8s, k8s, Pod, Kubernetes Deployment, kubectl, Kubernetes objects]
+aliases: [K8s, k8s, kubectl, Kubernetes objects]
 ---
 # Kubernetes
 
@@ -299,6 +299,7 @@ Every major cloud sells managed Kubernetes: EKS on AWS, GKE on Google Cloud, AKS
 ## Related
 - Concepts:: [[Container orchestration]], [[Deployment strategies]] (rolling, blue/green via Service selectors, canary with Argo Rollouts/Flagger)
 - Under the hood:: [[Kubernetes architecture]]
+- All of it on one app:: [[Kubernetes worked example]]
 - Compared:: [[Compose vs Swarm vs Kubernetes]], [[Docker Swarm]], [[Docker Compose]]
 - Networking:: [[Service discovery]], [[Reverse proxy]], [[Load balancing]], [[Network interfaces]], [[DNS]] (the `ndots:5` trap)
 - Identity:: [[Workload identity (SPIFFE)]], [[OpenID Connect]] (service account tokens), [[Service mesh]]

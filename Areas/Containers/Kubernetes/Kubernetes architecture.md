@@ -267,7 +267,7 @@ Managed Kubernetes splits along this architecture: the provider runs **etcd, the
 - Expecting pod networking without a CNI plugin
 
 ## Related
-- What runs on it:: [[Kubernetes]]
+- What runs on it:: [[Kubernetes]], [[Kubernetes worked example]]
 - Concepts:: [[Container orchestration]]
 - Compared:: [[Compose vs Swarm vs Kubernetes]], [[Docker Swarm]]
 - Networking under it:: [[Network interfaces]] (veth, namespaces, VXLAN), [[NAT and PAT]] (Service DNAT), [[Service discovery]], [[DNS]], [[IP address planning]], [[Policy-based routing]]

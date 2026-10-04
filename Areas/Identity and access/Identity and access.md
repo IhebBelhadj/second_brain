@@ -49,7 +49,7 @@ flowchart TD
 
 ## Related areas
 - [[Networking]]: [[HTTP]] (stateless requests, headers), [[TLS]] and [[mTLS]], [[Certificates and PKI]], [[Encryption basics]] (signatures, HMAC, key pairs), [[Reverse proxy]] (auth at the edge)
-- [[AWS]]: [[IAM]] (SigV4, policies), [[AWS Identity Center]] (workforce SSO), [[ECS production stack]] (GitHub OIDC to AWS), Cognito
+- [[AWS]]: the AWS reading path is [[AWS security]]. [[IAM]] (SigV4, policies), [[STS]] (roles, trust policies, temporary credentials), [[AWS Identity Center]] (workforce SSO), [[Connecting GitHub Actions to AWS]] and [[ECS production stack]] (GitHub OIDC to AWS), Cognito
 
 ## Weakest first
 ```dataview

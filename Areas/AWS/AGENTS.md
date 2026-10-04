@@ -2,7 +2,9 @@
 
 **Index:** `AWS.md` lists every note by domain with a one-line summary, plus open questions. Read it for *what* a note covers; use this file for *where* it is.
 
-**Sub-index:** `Networking/AWS networking.md` is the networking reading path (5 stages, the Networking notes to read first, a "which note answers…" table, planned notes). A new networking note goes in **both** `AWS.md` (same stage group) and `AWS networking.md`.
+**Sub-indexes:**
+- `Networking/AWS networking.md` is the networking reading path (5 stages, the Networking notes to read first, a "which note answers…" table, planned notes). A new networking note goes in **both** `AWS.md` (same stage group) and `AWS networking.md`.
+- `Security/AWS security.md` is the security reading path (5 stages: IAM/STS, keyless machines and pipelines, many accounts, traffic protection, audit; the Identity and access / Networking notes to read first; a "which note answers…" table; planned notes). A new security note goes in **both** `AWS.md` and `AWS security.md` (replace its italic planned link if there is one).
 
 **Scope:** AWS services for the current certification: console walkthroughs, how services plug together, exam traps. General concepts (how NAT, DNS, load balancing, VPNs work) belong in `Areas/Networking/`. AWS notes link to them instead of re-explaining, and "concept → AWS product" mappings live here.
 
@@ -65,6 +67,7 @@ AWS/
 │   ├── CloudWatch alarms.md        states, M of N, missing data, actions, symptom alerting, composite alarms, remediation
 │   └── Systems Manager.md          agent dial-out model, endpoints, Session Manager, Run Command, State/Patch Manager, Parameter Store, Automation
 └── Security/
+    ├── AWS security.md             sub-index: reading order in 5 stages, prerequisites, question → note table, roadmap
     ├── IAM.md                      users, roles, policies
     ├── STS.md                      temporary credentials, AssumeRole, trust policies, external ID, GitHub OIDC, why roles over users
     ├── Connecting GitHub Actions to AWS.md   (procedure) production GitHub OIDC: provider, per-job roles, environments, Terraform, workflows, hardening
@@ -86,7 +89,7 @@ Many notes embed console screenshots from `Attachments/` (`![[aws-console … si
 |---|---|
 | Something that runs code (ECS, EKS, Batch) | `Compute/` |
 | Networking services (CloudFront, PrivateLink, Network Firewall, Client VPN) | `Networking/` (also add it to `Networking/AWS networking.md`, and replace its italic planned link if there is one) |
-| Identity, encryption, audit, protection (KMS, Secrets Manager, Shield, GuardDuty) | `Security/` |
+| Identity, encryption, audit, protection (KMS, Secrets Manager, Shield, GuardDuty) | `Security/` (also add it to `Security/AWS security.md`, and replace its italic planned link if there is one) |
 | Monitoring and operations (CloudWatch, X-Ray, Config, Systems Manager) | `Monitoring/` |
 | Storage (EBS, EFS, AWS Backup) | `Storage/` (also add it to section 7 of `Areas/Storage/Storage.md`) |
 | Databases (DynamoDB, ElastiCache) | `Databases/` |

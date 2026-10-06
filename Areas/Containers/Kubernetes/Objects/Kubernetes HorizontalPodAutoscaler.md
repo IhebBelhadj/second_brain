@@ -134,12 +134,14 @@ Many runtimes don't give memory back, so average memory stays high after the spi
 - Expecting instant scale-down (5-minute window by default)
 - HPA and VPA both acting on CPU for the same workload
 - `minReplicas: 1` for a service that must survive a pod failure
+- Counting on `minReplicas` to protect against node drains: the HPA doesn't react to evictions, that's a PodDisruptionBudget's job
 - Scaling on memory for runtimes that don't release it
 
 ## Related
 - Scales:: [[Kubernetes Deployment]], [[Kubernetes StatefulSet]]
 - Depends on:: [[Kubernetes Pod]] (requests), [[Kubernetes Node]] (capacity)
 - Limited by:: [[Kubernetes ResourceQuota and LimitRange]]
+- Not the same as:: [[Kubernetes PodDisruptionBudget]] (minReplicas sets how many should run; a PDB limits how many may be evicted at once, see [[Kubernetes PodDisruptionBudget#Stage 6: why a PDB when the HPA already has minReplicas]])
 - Queue-based scaling:: [[Messaging]], [[SQS]]
 - In AWS (Amazon Web Services):: [[Auto Scaling]] (the EC2 (Elastic Compute Cloud) equivalent: target tracking)
 - Overview:: [[Kubernetes]], [[Kubernetes worked example]]

@@ -642,7 +642,8 @@ spec:
     matchLabels:
       app: postgres
   policyTypes:
-    - Ingress               # incoming connections (nothing to do with the Ingress object)
+    - Ingress 
+      # incoming connections (nothing to do with the Ingress object)
   ingress:
     - from:
         - podSelector:
@@ -757,7 +758,7 @@ spec:
       labels:
         app: node-monitor
     spec:
-      tolerations:                 # also run on control plane nodes, which are tainted
+      tolerations: # also run on control plane nodes which are tainted
         - key: node-role.kubernetes.io/control-plane
           effect: NoSchedule
       containers:
@@ -948,6 +949,7 @@ That's why Kubernetes has so many YAML objects: each one describes a **different
 ## Related
 - The objects explained:: [[Kubernetes]]
 - The YAML grammar:: [[Kubernetes manifest syntax]]
+- The same shop on AWS:: [[Kubernetes worked example on EKS]]
 - Objects, one note each:: [[Kubernetes Pod]], [[Kubernetes ReplicaSet]], [[Kubernetes Deployment]], [[Kubernetes StatefulSet]], [[Kubernetes DaemonSet]], [[Kubernetes Job]], [[Kubernetes CronJob]], [[Kubernetes Service]], [[Kubernetes Ingress]], [[Kubernetes NetworkPolicy]], [[Kubernetes ConfigMap]], [[Kubernetes Secret]], [[Kubernetes PersistentVolumeClaim]], [[Kubernetes StorageClass]], [[Kubernetes ServiceAccount]], [[Kubernetes RBAC]], [[Kubernetes Namespace]], [[Kubernetes Node]], [[Kubernetes ResourceQuota and LimitRange]], [[Kubernetes HorizontalPodAutoscaler]], [[Kubernetes PodDisruptionBudget]], [[Kubernetes CustomResourceDefinition]]
 - How they're processed:: [[Kubernetes architecture]]
 - Releasing new versions:: [[Deployment strategies]]

@@ -101,7 +101,7 @@ Service-to-service networking **across VPCs and accounts**: define services and 
 AWS's Envoy-based service mesh. AWS announced end of support for it (September 2026) and points to Service Connect and VPC Lattice instead. Worth recognizing on older architectures and exam material, not for new designs.
 
 ### EKS
-Kubernetes' own discovery (Services, CoreDNS, kube-proxy, see [[Service discovery#How Kubernetes does it (the one I'll meet most)]]) works as usual. The **AWS Load Balancer Controller** turns Kubernetes objects into AWS load balancers: an Ingress becomes an **ALB**, a `LoadBalancer` Service becomes an **NLB**, and with **IP targets** the LB sends straight to pod IPs, skipping the extra kube-proxy hop.
+Kubernetes' own discovery (Services, CoreDNS, kube-proxy, see [[Service discovery#How Kubernetes does it (the one I'll meet most)]]) works as usual. The **AWS Load Balancer Controller** turns Kubernetes objects into AWS load balancers: an Ingress becomes an **ALB**, a `LoadBalancer` Service becomes an **NLB**, and with **IP targets** the LB sends straight to pod IPs, skipping the extra kube-proxy hop. Full walkthrough: [[Kubernetes worked example on EKS#Stage 6: traffic in, the Ingress becomes an ALB]].
 
 ## Forward proxies and egress control in AWS
 

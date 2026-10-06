@@ -1127,6 +1127,7 @@ resource "aws_ecs_service" "api" {
 ## Related
 - The pieces in detail:: [[VPC]], [[Security groups]], [[VPC IP address planning]], [[Route 53]], [[Certificate Manager (ACM)]], [[Certificate rotation]], [[Load balancers]], [[AWS WAF]], [[RDS]]
 - ECS itself:: [[ECS]], [[ECS tasks and task definitions]], [[ECS on Fargate vs EC2]], [[Auto Scaling]], [[EC2]]
+- The Kubernetes alternative:: [[Kubernetes worked example on EKS]]
 - Identity and secrets:: [[IAM]], [[AWS Organizations]], [[AWS Identity Center]], [[Systems Manager]] (Parameter Store, Session Manager), *[[Secrets Manager]]*, *[[KMS]]*
 - How GitHub OIDC works:: [[Connecting GitHub Actions to AWS]] (the general tutorial), [[OpenID Connect#Stage 8: OIDC for machines]], [[JWT and bearer tokens]], [[STS]] (trust policies, AssumeRoleWithWebIdentity)
 - Infrastructure as code:: *[[Terraform]]*, [[Packer]] (when hosts need a custom AMI)

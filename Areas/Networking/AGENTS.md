@@ -10,6 +10,7 @@
 Networking/
 ├── Networking.md                  topic index (the learning path)
 ├── ACL.md                         allow/deny rule lists, stateless vs stateful
+├── Ingress and egress.md          in vs out relative to a boundary, packet vs connection direction, north-south/east-west, egress control and fees
 ├── Network interfaces.md          NICs, virtual interfaces (bridge, veth, tun/tap, VLAN, VXLAN), namespaces, Docker, ENIs
 ├── Inter-process communication.md  fds, files, pipes, FIFOs, signals, Unix sockets, shared memory
 ├── Sockets.md                     socket API, 5-tuple, ss, bind addresses, event loops, framing, TIME_WAIT/CLOSE_WAIT, port exhaustion

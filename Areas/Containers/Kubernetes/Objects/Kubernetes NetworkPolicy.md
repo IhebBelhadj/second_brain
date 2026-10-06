@@ -165,7 +165,7 @@ Kubelet probes come from the node itself; most plugins always allow node-to-loca
 - Protects:: [[Kubernetes Pod]], [[Kubernetes Service]] (applies to pods behind it)
 - Scoped by:: [[Kubernetes Namespace]]
 - Who can create matching pods:: [[Kubernetes RBAC]]
-- Concepts:: [[ACL]] (stateless vs stateful rule lists), [[Security groups]] (the AWS (Amazon Web Services) equivalent for instances), [[Service mesh]] (Layer 7 policies with identity)
+- Concepts:: [[Ingress and egress]] (what the two rule lists mean), [[ACL]] (stateless vs stateful rule lists), [[Security groups]] (the AWS (Amazon Web Services) equivalent for instances), [[Service mesh]] (Layer 7 policies with identity)
 - Overview:: [[Kubernetes]], [[Kubernetes architecture]] (CNI), [[Kubernetes worked example]]
 - Area:: [[Containers]]
 

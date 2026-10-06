@@ -87,6 +87,7 @@ Rule 90 has to come **before** rule 100: if the allow came first, the bad range 
 - Similar to:: [[Security groups]] (also a firewall, but stateful and allow-only)
 - Differs from:: IAM policies (control *who* can call AWS APIs, not network traffic, see [[IAM]])
 - Used in:: [[VPC]] (Network ACLs), [[AWS WAF]] (web ACLs)
+- Inbound vs outbound rules:: [[Ingress and egress]]
 
 ## Flashcards
 #flashcards

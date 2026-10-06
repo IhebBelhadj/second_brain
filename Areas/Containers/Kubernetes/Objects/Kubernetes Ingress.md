@@ -151,6 +151,7 @@ The controller is a proxy: the real client is in `X-Forwarded-For`. The app must
 ## Related
 - Routes to:: [[Kubernetes Service]]
 - Implemented by:: [[Reverse proxy]], [[Load balancing]]
+- Not to confuse with:: [[Ingress and egress]] (the general idea of traffic in vs out)
 - Certificates:: [[TLS]], [[Certificates and PKI]], [[Kubernetes Secret]]
 - Canary routing:: [[Deployment strategies]]
 - Overview:: [[Kubernetes]], [[Kubernetes worked example]]

@@ -59,6 +59,7 @@ flowchart TD
 - Not written yet: *[[OSPF]]* (routing inside one organization) · *[[First-hop redundancy (VRRP)]]* (two gateways, one IP)
 
 ## 5. Filtering
+- [[Ingress and egress]]: traffic into vs out of something, and why it only means something once the boundary is named. Packet direction vs connection direction (stateful vs stateless rules, ephemeral ports), north-south vs east-west, why egress filtering matters, cloud egress fees, and the things named after the words (Kubernetes Ingress, egress gateways)
 - [[ACL]]: ordered allow/deny rule lists, stateless vs stateful
 - Not written yet: *[[Firewalls]]* (stateful inspection, zones, iptables/nftables, next-gen firewalls)
 

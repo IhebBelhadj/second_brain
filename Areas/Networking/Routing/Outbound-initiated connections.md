@@ -240,7 +240,7 @@ No inbound rule in the [[Security groups|security group]], no public IP, no port
 - Protocols that keep connections open:: [[HTTP]], [[HTTP2]], [[WebSocket]], [[MQTT]]
 - The 5-tuple and ports:: [[Sockets]]
 - Firewall side of the same idea:: [[ACL]], [[Security groups]]
-- Egress control:: [[Proxies]]
+- Egress control:: [[Proxies]], [[Ingress and egress]]
 - AWS:: [[Systems Manager]], [[VPC]], [[Bastion host]]
 
 ## Flashcards

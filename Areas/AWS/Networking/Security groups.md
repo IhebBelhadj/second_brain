@@ -98,7 +98,7 @@ A web server that answers HTTPS to the world and SSH only to me:
 ## Related
 - Similar to:: Network ACLs (subnet level, see [[VPC]]), the [[Lightsail]] instance firewall
 - Differs from:: [[AWS WAF]] (L7, reads the HTTP request; SGs only see IPs and ports)
-- Depends on:: [[VPC]]
+- Depends on:: [[VPC]], [[Ingress and egress]]
 - Used by:: [[EC2]], [[Load balancers]], [[Bastion host]], [[Lambda]] in a VPC, [[RDS]]
 - Debugging "why can't A reach B?" → **Reachability Analyzer** in the VPC console
 

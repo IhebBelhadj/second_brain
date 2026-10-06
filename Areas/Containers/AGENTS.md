@@ -20,6 +20,7 @@ Containers/
 └── Kubernetes/                    Kubernetes itself (vendor-neutral; EKS goes in the AWS area)
     ├── Kubernetes.md              the objects: pods, Deployments, probes, Services/Ingress, config, storage/StatefulSets, autoscaling, RBAC, CRDs/operators
     ├── Kubernetes architecture.md components under the hood: etcd, API server, controllers, scheduler, kubelet/CRI/CNI/CSI, kube-proxy, CoreDNS
+    ├── Kubernetes manifest syntax.md   apiVersion/kind/metadata/spec/status, YAML types, API groups, labels/selectors, PodSpec, units, ports, kubectl explain
     ├── Kubernetes worked example.md   e-commerce shop with every common object in YAML, step by step, and the mental model
     └── Objects/                   one note per object type, all named "Kubernetes <Kind>"
         ├── Kubernetes Pod.md, Kubernetes ReplicaSet.md, Kubernetes Deployment.md, Kubernetes StatefulSet.md,

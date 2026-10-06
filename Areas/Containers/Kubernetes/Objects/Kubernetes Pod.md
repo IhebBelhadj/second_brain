@@ -187,6 +187,7 @@ Endpoint removal and SIGTERM happen at the same time, so requests still arrive f
 - Reached through:: [[Kubernetes Service]]
 - Configured by:: [[Kubernetes ConfigMap]], [[Kubernetes Secret]], [[Kubernetes ServiceAccount]]
 - Storage:: [[Kubernetes PersistentVolumeClaim]]
+- The YAML fields (PodSpec):: [[Kubernetes manifest syntax]]
 - Runs on:: [[Kubernetes Node]]
 - Overview:: [[Kubernetes]], [[Kubernetes architecture]], [[Kubernetes worked example]]
 - Under the hood:: [[Docker]] (images, PID 1), [[Network interfaces]] (namespaces, veth)

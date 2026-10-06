@@ -4,12 +4,81 @@ created: 2026-10-04
 topic: Containers
 confidence: 1
 tags: [containers, orchestration, kubernetes]
-aliases: [K8s, k8s, kubectl, Kubernetes objects]
+aliases: [K8s, k8s, kubectl, Kubernetes objects, Kubernetes mental model]
 ---
 # Kubernetes
 
 > [!abstract] In one sentence
 > Kubernetes is a container orchestrator built around **one extensible API (application programming interface)**: everything (pods, deployments, services, volumes, permissions) is an **object** I declare in YAML (YAML Ain't Markup Language), stored by the cluster, and kept true by **controllers** running reconciliation loops. What it adds over Compose and Swarm is mostly **that API model**: more building blocks (workloads for stateless, stateful, per-node and batch jobs; storage that follows the pod; autoscaling; access control; network policies) and the ability to **add new kinds of objects**, which is why a whole ecosystem is built on top of it.
+
+## The mental model: a giant state machine
+
+Before any object, the one picture that explains all of them: **Kubernetes is a giant state machine.** I never tell it *what to do*, I tell it *what I want*, and it keeps moving the cluster from whatever state it's in toward that.
+
+```mermaid
+flowchart TD
+    DEC["Declaration<br/>(my YAML manifest)"] --> API["Kubernetes API<br/>(the API server, the only door)"]
+    API --> DS["Desired state<br/>(spec, stored in etcd)"]
+    DS --> W["Controllers watch"]
+    W --> AS["Actual state<br/>(status: what nodes and pods report)"]
+    AS --> Q{"Is it different?"}
+    Q -- yes --> FIX["Take corrective action<br/>(create, delete, restart, reschedule)"]
+    Q -- no --> WAIT["Wait"]
+    FIX -. "the world changes" .-> AS
+    WAIT -. "next change or resync" .-> W
+
+    classDef want fill:#e8f1fb,stroke:#2e86c1,color:#000
+    classDef have fill:#fef9e7,stroke:#b7950b,color:#000
+    classDef act fill:#eafaf1,stroke:#239b56,color:#000
+    class DEC,API,DS want
+    class AS have
+    class FIX,WAIT act
+```
+
+Step by step, with the shop's API (3 replicas):
+
+1. **Declaration**: I write a Deployment saying `replicas: 3` and run `kubectl apply`
+2. **Kubernetes API**: the API server checks it (authentication, permissions, schema) and stores it. `kubectl apply` returns **here**: nothing is running yet, I've only changed what's *wanted*
+3. **Desired state**: the object's `spec` in etcd. That's the "should be"
+4. **Controllers watch**: each controller subscribes to the kinds it's responsible for and is told when one changes
+5. **Actual state**: what's really there: how many pods exist, which are running and ready, which nodes answer. Reported back in `status`
+6. **Is it different?** 3 wanted, 0 existing → yes
+7. **Corrective action**: create the missing pods. Then the loop runs again: 3 wanted, 3 running → no → **wait** until something changes (a pod dies, a node disappears, I edit the manifest)
+
+The same loop handles every situation without a special rule for each. A crashed container, a dead node, a pod deleted by hand, a new image version: all of them show up as "actual ≠ desired", and the controller does whatever closes the gap. It works like a thermostat: it doesn't care *why* the room is cold, only that it's colder than the setting.
+
+### Many small machines, chained
+
+There isn't one big loop but **dozens of small ones**, each owning one kind of object. One controller's corrective action is often just **writing a new desired state** for the next one:
+
+```mermaid
+flowchart LR
+    DEP["Deployment<br/>replicas: 3"] -- "Deployment controller<br/>creates" --> RS["ReplicaSet<br/>replicas: 3"]
+    RS -- "ReplicaSet controller<br/>creates" --> P["3 Pod objects<br/>(no node yet)"]
+    P -- "scheduler<br/>sets nodeName" --> PN["Pods assigned<br/>to nodes"]
+    PN -- "kubelet on each node<br/>starts containers" --> C["Running containers"]
+    C -- "kubelet reports" --> ST["Pod status: Running, Ready"]
+```
+
+| Loop | Desired state it reads | Actual state it observes | Corrective action |
+|---|---|---|---|
+| Deployment controller | Deployment `spec.template`, `replicas` | Its ReplicaSets | Create a ReplicaSet for a new template, scale old/new ones (rolling update) |
+| ReplicaSet controller | ReplicaSet `replicas` | Pods it owns | Create or delete pods |
+| Scheduler | Pods with no node | Free capacity on nodes | Assign a node (`spec.nodeName`) |
+| kubelet (on each node) | Pods assigned to its node | Containers actually running there | Start, restart or kill containers, run probes |
+| EndpointSlice controller | Service `selector` | Ready pods with matching labels | Update the list of addresses the Service sends to |
+| HPA (HorizontalPodAutoscaler) | Target CPU/metric | Current usage | Change the Deployment's `replicas` (a new desired state for the loops above) |
+
+### What follows from it
+
+- **`kubectl apply` succeeding means "accepted", not "done".** To know if it worked I watch the actual state converge: `kubectl rollout status`, `kubectl get pods -w`, `kubectl wait`
+- **Changes made around the declaration get undone.** Delete a pod by hand → the ReplicaSet controller sees 2 instead of 3 and makes a new one. Scale with `kubectl scale` → the next `apply` from Git sets it back. Fixes go **into the declaration**
+- **Debugging = finding the loop that isn't converging.** Compare `spec` with `status`, read the conditions and events (`kubectl describe`), then ask: which controller should close this gap, and why can't it? (Pending pod → the scheduler finds no node; `CrashLoopBackOff` → the kubelet restarts but the app keeps dying; Service with no endpoints → no pod matches the labels)
+- **Missed events don't matter.** Controllers re-compare the whole state (level-triggered), and resync periodically, so a lost notification only delays the fix. See [[Container orchestration]] for the general pattern
+- **Two loops owning the same field fight.** An HPA and a GitOps tool both setting `replicas` flip it back and forth forever: one owner per field
+- **Extending Kubernetes = adding a loop.** A CRD (Custom Resource Definition) adds a new kind of desired state, an operator adds the controller that reconciles it (Stage 8 below)
+
+How each component does its part is in [[Kubernetes architecture]]; how the declaration itself is written is in [[Kubernetes manifest syntax]].
 
 ## Build-up: why the shop outgrows Swarm
 
@@ -300,6 +369,7 @@ Every major cloud sells managed Kubernetes: EKS on AWS, GKE on Google Cloud, AKS
 - Concepts:: [[Container orchestration]], [[Deployment strategies]] (rolling, blue/green via Service selectors, canary with Argo Rollouts/Flagger)
 - Under the hood:: [[Kubernetes architecture]]
 - All of it on one app:: [[Kubernetes worked example]]
+- How to read and write the YAML:: [[Kubernetes manifest syntax]]
 - Objects, one note each:: [[Kubernetes Pod]], [[Kubernetes ReplicaSet]], [[Kubernetes Deployment]], [[Kubernetes StatefulSet]], [[Kubernetes DaemonSet]], [[Kubernetes Job]], [[Kubernetes CronJob]], [[Kubernetes Service]], [[Kubernetes Ingress]], [[Kubernetes NetworkPolicy]], [[Kubernetes ConfigMap]], [[Kubernetes Secret]], [[Kubernetes PersistentVolumeClaim]], [[Kubernetes StorageClass]], [[Kubernetes ServiceAccount]], [[Kubernetes RBAC]], [[Kubernetes Namespace]], [[Kubernetes Node]], [[Kubernetes ResourceQuota and LimitRange]], [[Kubernetes HorizontalPodAutoscaler]], [[Kubernetes PodDisruptionBudget]], [[Kubernetes CustomResourceDefinition]]
 - Compared:: [[Compose vs Swarm vs Kubernetes]], [[Docker Swarm]], [[Docker Compose]]
 - Networking:: [[Service discovery]], [[Reverse proxy]], [[Load balancing]], [[Network interfaces]], [[DNS]] (the `ndots:5` trap)
@@ -334,3 +404,8 @@ What does GitOps do? :: A controller in the cluster keeps it equal to manifests 
 Pending pod: where do you look? :: kubectl describe pod, events: insufficient requests, taints, affinity, unbound PVC
 How do you see the logs of a crashed container? :: kubectl logs <pod> --previous
 Why are requests dropped during pod shutdown? :: Endpoint removal and SIGTERM happen at the same time. Handle SIGTERM gracefully and add a preStop delay
+What's the mental model for Kubernetes as a whole? :: A giant state machine: declaration → API → desired state → controllers watch → actual state → different? yes: take corrective action, no: wait
+What does a successful kubectl apply mean? :: The desired state was accepted and stored, not that anything is running yet. Watch the actual state converge (rollout status, get -w, wait)
+Why does a pod I delete by hand come back? :: The ReplicaSet controller sees fewer pods than desired and creates a new one. Changes must go into the declaration
+How are Kubernetes controllers chained? :: One loop's corrective action writes the next loop's desired state: Deployment → ReplicaSet → Pods → scheduler (node) → kubelet (containers)
+How do I debug something that isn't working in Kubernetes? :: Compare spec with status, read conditions and events, and find which controller should close the gap and why it can't

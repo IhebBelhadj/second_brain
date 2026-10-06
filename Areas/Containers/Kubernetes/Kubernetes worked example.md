@@ -227,7 +227,7 @@ spec:
                 secretKeyRef:
                   name: database-secret
                   key: DATABASE_PASSWORD
-            - name: PGDATA                                  # a subdirectory of the volume (see below)
+            - name: PGDATA  # a subdirectory of the volume (see below)
               value: /var/lib/postgresql/data/pgdata
           readinessProbe:
             exec:
@@ -244,7 +244,7 @@ spec:
         name: postgres-storage
       spec:
         accessModes:
-          - ReadWriteOnce            # one node at a time can mount it read-write
+          - ReadWriteOnce # 1 node at a time can mount it read-write
         storageClassName: fast-storage   # step 20
         resources:
           requests:
@@ -946,6 +946,7 @@ That's why Kubernetes has so many YAML objects: each one describes a **different
 
 ## Related
 - The objects explained:: [[Kubernetes]]
+- The YAML grammar:: [[Kubernetes manifest syntax]]
 - Objects, one note each:: [[Kubernetes Pod]], [[Kubernetes ReplicaSet]], [[Kubernetes Deployment]], [[Kubernetes StatefulSet]], [[Kubernetes DaemonSet]], [[Kubernetes Job]], [[Kubernetes CronJob]], [[Kubernetes Service]], [[Kubernetes Ingress]], [[Kubernetes NetworkPolicy]], [[Kubernetes ConfigMap]], [[Kubernetes Secret]], [[Kubernetes PersistentVolumeClaim]], [[Kubernetes StorageClass]], [[Kubernetes ServiceAccount]], [[Kubernetes RBAC]], [[Kubernetes Namespace]], [[Kubernetes Node]], [[Kubernetes ResourceQuota and LimitRange]], [[Kubernetes HorizontalPodAutoscaler]], [[Kubernetes PodDisruptionBudget]], [[Kubernetes CustomResourceDefinition]]
 - How they're processed:: [[Kubernetes architecture]]
 - Releasing new versions:: [[Deployment strategies]]

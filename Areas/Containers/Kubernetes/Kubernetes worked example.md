@@ -374,11 +374,11 @@ spec:
             limits:
               cpu: "1"
               memory: "512Mi"       # above this: OOM-killed
-          readinessProbe:           # may it receive traffic? (can reach the database)
+          readinessProbe: # may it receive traffic?
             httpGet:
               path: /ready
               port: 8080
-          livenessProbe:            # is the process stuck? (must NOT check the database)
+          livenessProbe:  # is the process stuck? 
             httpGet:
               path: /health
               port: 8080
@@ -453,7 +453,7 @@ spec:
       labels:
         app: frontend
     spec:
-      automountServiceAccountToken: false   # it never calls the Kubernetes API
+      automountServiceAccountToken: false #never calls Kubernetes API
       containers:
         - name: frontend
           image: registry.example.com/shop-frontend:2.1.0
@@ -502,12 +502,13 @@ metadata:
   name: shop
   namespace: shop
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt   # if cert-manager is installed: certificate issued automatically
+    cert-manager.io/cluster-issuer: letsencrypt   
+    # if cert-manager is installed: certificate issued automatically
 spec:
-  ingressClassName: nginx        # which ingress controller implements this
+  ingressClassName: nginx # which ingress controller implements this
   tls:
     - hosts: [shop.example.com]
-      secretName: shop-tls       # the certificate and key, as a Secret
+      secretName: shop-tls  # the certificate and key, as a Secret
   rules:
     - host: shop.example.com
       http:

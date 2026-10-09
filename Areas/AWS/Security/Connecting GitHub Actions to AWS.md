@@ -2,6 +2,7 @@
 type: procedure
 created: 2026-10-04
 topic: AWS
+subtopic: AWS › Security
 tags: [aws, security, iam, sts, oidc, github, cicd]
 aliases: [GitHub OIDC to AWS, GitHub Actions OIDC, GitHub Actions to AWS, configure-aws-credentials, CI roles for GitHub]
 ---
@@ -495,6 +496,7 @@ Each repository gets its **own** roles with its own `sub`. Never one shared `gha
 - Simpler hands-on first:: [[Assuming a role step by step]]
 - Deploy targets:: [[Lambda]], [[ECS]], [[S3]]
 - Full ECS pipeline in Terraform:: [[ECS production stack]]
+- Terraform pipelines:: [[Terraform in production]], [[Terraform worked example]]
 - Accounts and guardrails:: [[AWS Organizations]], [[AWS Identity Center]]
 - Audit:: [[CloudTrail]], [[CloudTrail in production]]
 

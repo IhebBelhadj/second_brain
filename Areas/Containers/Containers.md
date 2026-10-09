@@ -7,6 +7,12 @@ tags: [topic]
 
 > What this covers: packaging and running applications as **containers**: how images are built, named and shipped, how containers run on a host, and how orchestrators run many of them. Vendor-neutral first. AWS (ECS, Fargate, ECR) is one place it's applied, and lives in the AWS area.
 
+## Sub-topics
+Each sub-topic has its own index with the same reading order, for studying one part at a time (and a cleaner graph).
+- [[Containers › Images and containers]]: building, tagging and running images on one host: Docker, tags, Compose
+- [[Containers › Orchestration]]: running containers on many machines: orchestration concepts, Swarm, comparisons, deployment strategies, the Spring Cloud era
+- [[Containers › Kubernetes]]: Kubernetes itself: the model, the architecture, manifest syntax, a worked example and every object type
+
 ## How to use this
 
 Read top to bottom. Links in *italics* are notes not written yet (the roadmap).

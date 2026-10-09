@@ -69,6 +69,25 @@ Networking/
 
 `Certificate rotation.md` is listed in this area's index (section 6) but the file lives in `Areas/AWS/Security/` with `topic: AWS`.
 
+## Sub-topics
+
+Every note in this area has `subtopic: <index name>` in its frontmatter, and is linked from that sub-topic index (`type: subtopic`, tag `subtopic`). The area index `Networking.md` links every sub-topic index in its "Sub-topics" section.
+
+| Sub-topic index | Lives in | Covers |
+|---|---|---|
+| `Networking › Protocols.md` | `Protocols/` | the layer model and the protocols on top of it: ICMP, HTTP, HTTP/2 and HTTP/3, WebSocket, BGP |
+| `Networking › Host networking.md` | `(area root)` | where one machine meets the network: interfaces and namespaces, inter-process communication, sockets |
+| `Networking › Addressing.md` | `Addressing/` | IP addresses, subnetting and designing an address plan |
+| `Networking › DNS.md` | `DNS/` | name resolution, its security and running it in production |
+| `Networking › LAN.md` | `LAN/` | Layer 2: switches, ARP, VLANs, Spanning Tree |
+| `Networking › Routing.md` | `Routing/` | Layer 3: routing tables, policy routing, NAT, overlapping ranges, high availability |
+| `Networking › Security.md` | `Security/` | filtering (ACLs, ingress and egress) and securing traffic: encryption, PKI, TLS, mTLS, workload identity |
+| `Networking › Traffic.md` | `Traffic/` | delivering traffic to services: proxies, reverse proxies, load balancing, service discovery, service mesh |
+| `Networking › Resilience.md` | `Resilience/` | surviving slow and failing dependencies: the patterns, the libraries (Hystrix, Resilience4j, Polly, others) and the service mesh |
+| `Networking › VPN.md` | `VPN/` | joining networks: VPN types, IPsec, WireGuard and friends, nested VPNs |
+
+A new note gets the `subtopic` of the folder it goes in (notes at the area root: see the table), and a line in that sub-topic index as well as in `Networking.md`.
+
 ## Where a new note goes
 
 | It's about… | Folder |

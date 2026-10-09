@@ -2,6 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
+subtopic: Networking › LAN
 confidence: 1
 tags: [networking, lan, arp, protocol]
 aliases: [Address Resolution Protocol, ARP cache, Gratuitous ARP, Proxy ARP, Neighbor table]

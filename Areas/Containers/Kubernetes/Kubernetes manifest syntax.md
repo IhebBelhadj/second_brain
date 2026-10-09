@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-06
 topic: Containers
+subtopic: Containers › Kubernetes
 confidence: 1
 tags: [containers, kubernetes, yaml, syntax]
 aliases: [Kubernetes YAML, Kubernetes manifest, Kubernetes manifests, apiVersion, kubectl explain, Labels and selectors]

@@ -2,6 +2,7 @@
 type: compare
 created: 2026-10-04
 topic: Containers
+subtopic: Containers › Orchestration
 confidence: 1
 tags: [containers, orchestration, compose, swarm, kubernetes]
 ---

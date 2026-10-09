@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-02
 topic: Data structures and algorithms
+subtopic: Data structures and algorithms › Foundations
 confidence: 1
 tags: [dsa, numbers, binary, hexadecimal]
 aliases: [Base conversion, Hexadecimal, Binary numbers, Positional notation, Two's complement, Endianness]

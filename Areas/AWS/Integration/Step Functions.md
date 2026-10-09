@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-02
 topic: AWS
+subtopic: AWS › Integration
 confidence: 1
 tags: [aws, integration, step-functions, orchestration, workflows]
 aliases: [AWS Step Functions, State machine, Amazon States Language, ASL, Distributed Map]

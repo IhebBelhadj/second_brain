@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-09
 topic: Networking
+subtopic: Networking › Resilience
 confidence: 1
 tags: [networking, resilience, go, python, nodejs, grpc, microservices]
 aliases: [gobreaker, tenacity, opossum, Failsafe, Alibaba Sentinel, gRPC retry policy, concurrency-limits, Finagle]

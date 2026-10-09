@@ -26,6 +26,17 @@ Identity and access/
     └── Single sign-on.md          IdP/SP, the IdP session, SAML flow and assertion, provisioning (JIT/SCIM), risks, break-glass
 ```
 
+## Sub-topics
+
+Every note in this area has `subtopic: <index name>` in its frontmatter, and is linked from that sub-topic index (`type: subtopic`, tag `subtopic`). The area index `Identity and access.md` links every sub-topic index in its "Sub-topics" section.
+
+| Sub-topic index | Lives in | Covers |
+|---|---|---|
+| `Identity and access › Methods.md` | `Methods/` | authentication and authorization, every authentication method, and choosing between them |
+| `Identity and access › Protocols.md` | `Protocols/` | delegation and federation: OAuth 2.0, OpenID Connect, single sign-on |
+
+A new note gets the `subtopic` of the folder it goes in (notes at the area root: see the table), and a line in that sub-topic index as well as in `Identity and access.md`.
+
 ## Where a new note goes
 
 | It's about… | Folder |

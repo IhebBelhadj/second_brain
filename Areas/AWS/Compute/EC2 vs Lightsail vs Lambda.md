@@ -2,6 +2,7 @@
 type: compare
 created: 2026-09-26
 topic: AWS
+subtopic: AWS › Compute
 confidence: 1
 tags: [aws, compute]
 ---

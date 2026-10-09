@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: AWS
+subtopic: AWS › Compute
 confidence: 1
 tags: [aws, compute, containers, ecs, ec2, fargate, ci-cd, infrastructure-as-code, terraform, github-actions, secrets, route53, acm]
 aliases: [ECS in production, Production ECS, ECS CI/CD, GitHub Actions to ECS, Deploying ECS from GitHub]
@@ -71,7 +72,7 @@ The pieces, and which ones I build in which order:
 
 ## The repo
 
-One repo `acme/shop` on GitHub holds the app **and** the infrastructure. Infrastructure as code with *[[Terraform]]* (CloudFormation/CDK work the same way: the ideas below don't change).
+One repo `acme/shop` on GitHub holds the app **and** the infrastructure. Infrastructure as code with [[Terraform]] (CloudFormation/CDK work the same way: the ideas below don't change).
 
 ```text
 shop/
@@ -1130,7 +1131,7 @@ resource "aws_ecs_service" "api" {
 - The Kubernetes alternative:: [[Kubernetes worked example on EKS]]
 - Identity and secrets:: [[IAM]], [[AWS Organizations]], [[AWS Identity Center]], [[Systems Manager]] (Parameter Store, Session Manager), *[[Secrets Manager]]*, *[[KMS]]*
 - How GitHub OIDC works:: [[Connecting GitHub Actions to AWS]] (the general tutorial), [[OpenID Connect#Stage 8: OIDC for machines]], [[JWT and bearer tokens]], [[STS]] (trust policies, AssumeRoleWithWebIdentity)
-- Infrastructure as code:: *[[Terraform]]*, [[Packer]] (when hosts need a custom AMI)
+- Infrastructure as code:: [[Terraform]], [[Terraform in production]], [[Terraform worked example]], [[Packer]] (when hosts need a custom AMI)
 - Operations:: [[CloudWatch]], [[CloudWatch Logs]], [[CloudWatch alarms]], [[CloudTrail]]
 - Images:: [[Docker]], [[Docker image tags]]
 - Concepts:: [[Load balancing]], [[Reverse proxy]], [[TLS]], [[Certificates and PKI]], [[DNS]], [[NAT and PAT]], [[Outbound-initiated connections]]

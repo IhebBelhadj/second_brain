@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Identity and access
+subtopic: Identity and access › Protocols
 confidence: 1
 tags: [identity, oidc, oauth, authentication, sso, jwt]
 aliases: [OIDC, OpenID, ID token, ID tokens, UserInfo endpoint, OIDC discovery, Login with Google, Relying party, OpenID Provider]

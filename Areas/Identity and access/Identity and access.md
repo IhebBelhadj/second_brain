@@ -7,6 +7,11 @@ tags: [topic]
 
 > What this covers: how systems know **who** is calling and **what** they may do: authentication methods (passwords, sessions, keys, tokens, signatures, MFA), the protocols that delegate and federate identity (OAuth (Open Authorization) 2.0, OpenID Connect, SAML (Security Assertion Markup Language), SSO), and how to choose between them. Vendor-neutral first. AWS (Amazon Web Services)'s own identity services ([[IAM]], [[AWS Identity Center]], Cognito) live in the AWS area and are linked from here.
 
+## Sub-topics
+Each sub-topic has its own index with the same reading order, for studying one part at a time (and a cleaner graph).
+- [[Identity and access › Methods]]: authentication and authorization, every authentication method, and choosing between them
+- [[Identity and access › Protocols]]: delegation and federation: OAuth 2.0, OpenID Connect, single sign-on
+
 ## How to use this
 
 Read the sections **top to bottom**: each one assumes the ones above it. Links in *italics* are notes I haven't written yet (the roadmap).

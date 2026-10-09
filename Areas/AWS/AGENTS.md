@@ -3,8 +3,8 @@
 **Index:** `AWS.md` lists every note by domain with a one-line summary, plus open questions. Read it for *what* a note covers; use this file for *where* it is.
 
 **Sub-indexes:**
-- `Networking/AWS networking.md` is the networking reading path (5 stages, the Networking notes to read first, a "which note answers…" table, planned notes). A new networking note goes in **both** `AWS.md` (same stage group) and `AWS networking.md`.
-- `Security/AWS security.md` is the security reading path (5 stages: IAM/STS, keyless machines and pipelines, many accounts, traffic protection, audit; the Identity and access / Networking notes to read first; a "which note answers…" table; planned notes). A new security note goes in **both** `AWS.md` and `AWS security.md` (replace its italic planned link if there is one).
+- `Networking/AWS › Networking.md` is the networking reading path (5 stages, the Networking notes to read first, a "which note answers…" table, planned notes). A new networking note goes in **both** `AWS.md` (same stage group) and `AWS › Networking.md`.
+- `Security/AWS › Security.md` is the security reading path (5 stages: IAM/STS, keyless machines and pipelines, many accounts, traffic protection, audit; the Identity and access / Networking notes to read first; a "which note answers…" table; planned notes). A new security note goes in **both** `AWS.md` and `AWS › Security.md` (replace its italic planned link if there is one).
 
 **Scope:** AWS services for the current certification: console walkthroughs, how services plug together, exam traps. General concepts (how NAT, DNS, load balancing, VPNs work) belong in `Areas/Networking/`. AWS notes link to them instead of re-explaining, and "concept → AWS product" mappings live here.
 
@@ -32,7 +32,7 @@ AWS/
 │   ├── Lightsail.md                simple VPS
 │   └── EC2 vs Lightsail vs Lambda.md   which to pick
 ├── Networking/
-│   ├── AWS networking.md           sub-index: reading order in 5 stages, prerequisites, question → note table, roadmap
+│   ├── AWS › Networking.md           sub-index: reading order in 5 stages, prerequisites, question → note table, roadmap
 │   ├── VPC.md                      subnets, route tables, internet/NAT gateways, console wizard
 │   ├── Security groups.md          stateful per-interface firewall vs NACLs
 │   ├── Connecting VPCs.md          peering vs transit gateway, transitivity
@@ -68,7 +68,7 @@ AWS/
 │   ├── CloudWatch alarms.md        states, M of N, missing data, actions, symptom alerting, composite alarms, remediation
 │   └── Systems Manager.md          agent dial-out model, endpoints, Session Manager, Run Command, State/Patch Manager, Parameter Store, Automation
 └── Security/
-    ├── AWS security.md             sub-index: reading order in 5 stages, prerequisites, question → note table, roadmap
+    ├── AWS › Security.md             sub-index: reading order in 5 stages, prerequisites, question → note table, roadmap
     ├── IAM.md                      users, roles, policies
     ├── STS.md                      temporary credentials, AssumeRole, trust policies, external ID, GitHub OIDC, why roles over users
     ├── Connecting GitHub Actions to AWS.md   (procedure) production GitHub OIDC: provider, per-job roles, environments, Terraform, workflows, hardening
@@ -84,13 +84,29 @@ AWS/
 
 Many notes embed console screenshots from `Attachments/` (`![[aws-console … sidebar.png]]`, `![[aws-docs … .png]]`). Keep those embeds when editing.
 
+## Sub-topics
+
+Every note in this area has `subtopic: <index name>` in its frontmatter, and is linked from that sub-topic index (`type: subtopic`, tag `subtopic`). The area index `AWS.md` links every sub-topic index in its "Sub-topics" section.
+
+| Sub-topic index | Lives in | Covers |
+|---|---|---|
+| `AWS › Foundations.md` | `(area root)` | the ground rules: Regions and Availability Zones, ARNs (Amazon Resource Names), naming, the service map and how services connect |
+| `AWS › Compute.md` | `Compute/` | what runs my code: EC2, Auto Scaling, load balancers, Lambda, Lightsail, ECS, EKS, Packer |
+| `AWS › Storage and databases.md` | `Storage/` | where data lives: S3, EFS, replication, RDS |
+| `AWS › Integration.md` | `Integration/` | services talking without waiting for each other: SQS, SNS, EventBridge, Step Functions |
+| `AWS › Monitoring.md` | `Monitoring/` | is it working and how I operate it: CloudWatch, its agent, logs and alarms, Systems Manager |
+| `AWS › Networking.md` | `Networking/` | every AWS networking note in 5 stages, with prerequisites and a question → note table |
+| `AWS › Security.md` | `Security/` | every AWS security, identity and audit note in 5 stages, with prerequisites and a question → note table |
+
+A new note gets the `subtopic` of the folder it goes in (notes at the area root: see the table), and a line in that sub-topic index as well as in `AWS.md`.
+
 ## Where a new note goes
 
 | It's about… | Folder |
 |---|---|
 | Something that runs code (ECS, EKS, Batch) | `Compute/` |
-| Networking services (CloudFront, PrivateLink, Network Firewall, Client VPN) | `Networking/` (also add it to `Networking/AWS networking.md`, and replace its italic planned link if there is one) |
-| Identity, encryption, audit, protection (KMS, Secrets Manager, Shield, GuardDuty) | `Security/` (also add it to `Security/AWS security.md`, and replace its italic planned link if there is one) |
+| Networking services (CloudFront, PrivateLink, Network Firewall, Client VPN) | `Networking/` (also add it to `Networking/AWS › Networking.md`, and replace its italic planned link if there is one) |
+| Identity, encryption, audit, protection (KMS, Secrets Manager, Shield, GuardDuty) | `Security/` (also add it to `Security/AWS › Security.md`, and replace its italic planned link if there is one) |
 | Monitoring and operations (CloudWatch, X-Ray, Config, Systems Manager) | `Monitoring/` |
 | Storage (EBS, EFS, AWS Backup) | `Storage/` (also add it to section 7 of `Areas/Storage/Storage.md`) |
 | Databases (DynamoDB, ElastiCache) | `Databases/` |

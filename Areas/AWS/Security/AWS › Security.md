@@ -1,10 +1,11 @@
 ---
-type: topic
+type: subtopic
+topic: AWS
 created: 2026-10-04
-tags: [topic, aws, security]
-aliases: [AWS security index]
+tags: [subtopic, aws, security]
+aliases: [AWS security, AWS security index]
 ---
-# AWS security
+# AWS › Security
 
 > What this covers: every AWS security, identity and audit note, in the order I'd study them. Each stage assumes the ones above it. The vendor-neutral concept behind each stage is listed first, so I know what to read in [[Identity and access]] or [[Networking]] before the AWS product.
 
@@ -100,7 +101,7 @@ Read first: [[Authentication and authorization]] (an audit log records both who 
 ## Weakest first
 ```dataview
 TABLE WITHOUT ID file.link AS Note, type AS Type, confidence AS Conf
-FROM "Areas/AWS/Security"
-WHERE confidence
+FROM ""
+WHERE subtopic = this.file.name AND confidence
 SORT confidence ASC
 ```

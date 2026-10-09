@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
+subtopic: Containers › Images and containers
 confidence: 1
 tags: [containers, docker, compose, local-development]
 aliases: [Compose, docker compose, compose.yaml, docker-compose.yml]

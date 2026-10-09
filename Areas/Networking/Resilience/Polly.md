@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-09
 topic: Networking
+subtopic: Networking › Resilience
 confidence: 1
 tags: [networking, resilience, dotnet, circuit-breaker, retries]
 aliases: [Polly .NET, Microsoft.Extensions.Http.Resilience, Standard resilience handler, ResiliencePipeline]

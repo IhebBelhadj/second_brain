@@ -2,6 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
+subtopic: Networking › Traffic
 confidence: 1
 tags: [networking, proxy, http, web]
 aliases: [Reverse proxies, X-Forwarded-For, PROXY protocol, TLS termination, API gateway]

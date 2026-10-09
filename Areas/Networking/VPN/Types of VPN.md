@@ -2,6 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
+subtopic: Networking › VPN
 confidence: 1
 tags: [networking, security, vpn, architecture]
 ---

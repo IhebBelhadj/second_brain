@@ -27,6 +27,17 @@ Storage/
 
 `S3.md`, `S3 replication.md` and `EFS.md` are listed in this area's index (section 7) but the files live in `Areas/AWS/Storage/` with `topic: AWS`.
 
+## Sub-topics
+
+Every note in this area has `subtopic: <index name>` in its frontmatter, and is linked from that sub-topic index (`type: subtopic`, tag `subtopic`). The area index `Storage.md` links every sub-topic index in its "Sub-topics" section.
+
+| Sub-topic index | Lives in | Covers |
+|---|---|---|
+| `Storage › Local storage.md` | `Local/` | one machine's storage: devices, partitions, filesystems, inodes, journaling, mounting, booting |
+| `Storage › Network storage.md` | `Network storage/` | sharing storage over the network: how it works, NFS and SMB |
+
+A new note gets the `subtopic` of the folder it goes in (notes at the area root: see the table), and a line in that sub-topic index as well as in `Storage.md`.
+
 ## Where a new note goes
 
 | It's about… | Folder |

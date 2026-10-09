@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-06
 topic: Networking
+subtopic: Networking › Security
 confidence: 1
 tags: [networking, security, vocabulary]
 aliases: [Egress, Ingress traffic, Egress traffic, Inbound and outbound, North-south and east-west]

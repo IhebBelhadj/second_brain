@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Identity and access
+subtopic: Identity and access › Methods
 confidence: 1
 tags: [identity, authentication, authorization, security, http]
 aliases: [Authentication, Authorization, AuthN, AuthZ, 401 vs 403, Authentication factors, Credentials, Password hashing, WWW-Authenticate, Authorization header]

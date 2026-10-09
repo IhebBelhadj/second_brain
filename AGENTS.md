@@ -8,7 +8,7 @@ An **Obsidian vault** of study notes. The owner is working toward **systems engi
 
 1. **This file**: layout and conventions
 2. **The area guide** `Areas/<Area>/AGENTS.md`: which folder holds what, and the file name of every note in the area
-3. **The topic index** `Areas/<Area>/<Area>.md`: every note with a one-line summary, in reading order. It's also what the owner uses to study, so it's always kept up to date
+3. **The topic index** `Areas/<Area>/<Area>.md`: every note with a one-line summary, in reading order. It's also what the owner uses to study, so it's always kept up to date. Its "Sub-topics" section links the **sub-topic indexes** (`<Area> › <Sub-topic>.md`, one per folder): the same lines for one part of the area
 4. **Search, don't browse**. Notes also answer to their `aliases:` (e.g. `[[OSI model]]` opens `Network layers.md`):
    ```bash
    grep -rl --include='*.md' -i "^aliases:.*\bNAT\b" Areas      # find a note by alias
@@ -20,9 +20,9 @@ An **Obsidian vault** of study notes. The owner is working toward **systems engi
 
 | Folder | Holds | State |
 |---|---|---|
-| `Home.md` | Dashboard: Dataview queries (weakest notes, inbox, projects, topics). Don't hand-edit the queries | |
+| `Home.md` | Dashboard: Dataview queries (weakest notes, inbox, projects, topics, sub-topics). Don't hand-edit the queries | |
 | `How this works.md` | The owner's own manual for the system: folders, templates, properties. Read it before restructuring anything | |
-| `Areas/` | Subjects built up over time, **one folder per subject** with a topic index | **Where almost everything is**: `Networking/`, `AWS/`, `Storage/`, `Messaging/`, `Containers/`, `Identity and access/`, `Data structures and algorithms/` |
+| `Areas/` | Subjects built up over time, **one folder per subject** with a topic index | **Where almost everything is**: `Networking/`, `AWS/`, `Storage/`, `Messaging/`, `Containers/`, `Identity and access/`, `Infrastructure as code/`, `Data structures and algorithms/` |
 | `Inbox/` | Undecided captures | Nearly empty |
 | `Journal/` | Daily/weekly notes | Empty |
 | `Notes/` | The owner's own ideas | Empty |
@@ -44,18 +44,22 @@ An **Obsidian vault** of study notes. The owner is working toward **systems engi
 | Messaging | `Areas/Messaging/AGENTS.md` | `Areas/Messaging/Messaging.md` | **Vendor-neutral** messaging: queues, pub/sub, event streaming (Kafka), delivery guarantees, event-driven patterns. Ordered as a learning path. Mostly a roadmap so far |
 | Containers | `Areas/Containers/AGENTS.md` | `Areas/Containers/Containers.md` | **Vendor-neutral** containers: building, tagging and shipping images, running containers, internals, orchestration. AWS container services (ECS, Fargate, ECR) stay in the AWS area and are linked from the index |
 | Identity and access | `Areas/Identity and access/AGENTS.md` | `Areas/Identity and access/Identity and access.md` | **Vendor-neutral** identity: authentication methods (Basic/Digest, sessions, API keys, JWT, access/refresh tokens, HMAC signing, MFA/passkeys), OAuth 2.0, OIDC, SSO/SAML, choosing between them. TLS/mTLS/PKI stay in Networking, AWS identity services in the AWS area |
+| Infrastructure as code | `Areas/Infrastructure as code/AGENTS.md` | `Areas/Infrastructure as code/Infrastructure as code.md` | Infrastructure defined in code: **Terraform** from zero to production (syntax, state, modules, environments, testing, CI/CD). Examples use the AWS provider; AWS service details stay in the AWS area |
 | Data structures and algorithms | `Areas/Data structures and algorithms/AGENTS.md` | `Areas/Data structures and algorithms/Data structures and algorithms.md` | Data structures, algorithms, techniques and practice problems, with Python code. Ordered as a learning path |
 
 A new subject gets its own `Areas/<Subject>/` folder with an index note `<Subject>.md` (type `topic`, from `Templates/Topic.md`), its own `AGENTS.md` and `CLAUDE.md`, and a row in the table above.
+
+**Sub-topics.** Once an area has subfolders, each folder gets a **sub-topic index** named `<Area> › <Sub-topic>` (the `›` keeps names unique: `Networking › DNS` can't clash with `DNS.md`), from `Templates/Subtopic.md`: `type: subtopic`, `topic: <Area>`, tag `subtopic`. It lists its notes in the same reading order and with the same one-line summaries as the area index, and has a "Weakest first" query on `subtopic = this.file.name`. Every note in the area then carries `subtopic: <Area> › <Sub-topic>`. Notes at an area's root belong to the sub-topic the area guide says. The area guide has a "Sub-topics" table. Messaging has no sub-topics yet (no subfolders).
 
 ## Note conventions
 
 **Frontmatter** (every note under `Areas/`):
 ```yaml
 ---
-type: concept        # concept | compare | procedure | note | topic | event | person | source | practice | mistake
+type: concept        # concept | compare | procedure | note | topic | subtopic | event | person | source | practice | mistake
 created: 2026-09-27  # YYYY-MM-DD
 topic: Networking    # = the area's index note name. Drives the index's "Weakest first" query
+subtopic: Networking › DNS   # = the sub-topic index note name (areas with sub-topics). Drives that index's query
 confidence: 1        # 1 (can't explain it) → 5 (could teach it). The OWNER rates this: new notes start at 1, never raise it for them.
                      # Only on types whose template has it (not note/procedure/topic): check Templates/<Type>.md
 tags: [networking, dns]
@@ -95,7 +99,7 @@ Older notes still open with "Common misconceptions": leave them unless the owner
 
 1. Put the note in the right `Areas/<Area>/<folder>/` (see the area guide). Folders say what a note is *for*, and the `topic` property says what it's *about*
 2. Fill in the frontmatter above
-3. Add it to the **topic index** (right section, one-line summary). If it fills a planned `*[[X]]*` item, replace that item
+3. Add it to the **topic index** (right section, one-line summary). If it fills a planned `*[[X]]*` item, replace that item. Set `subtopic:` and add the same line to the **sub-topic index** (a new folder means a new sub-topic index, linked from the area index's "Sub-topics" section and listed in the area guide)
 4. Add its file name to the **area guide's** folder map
 5. Link it from the closest existing notes (their `## Related`), and link back
 6. Run the checker and fix what it reports:

@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
+subtopic: AWS › Monitoring
 confidence: 1
 tags: [aws, operations, systems-manager, ec2, security]
 aliases: [AWS Systems Manager, SSM, SSM agent, Session Manager, Run Command, Parameter Store, Patch Manager, State Manager, Managed node, Managed nodes]

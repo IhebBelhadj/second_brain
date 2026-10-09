@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-02
 topic: Data structures and algorithms
+subtopic: Data structures and algorithms › Algorithms and problems
 confidence: 1
 tags: [dsa, algorithms, graphs, bfs]
 aliases: [BFS, Level-order traversal, Multi-source BFS, Bidirectional BFS, 0-1 BFS]

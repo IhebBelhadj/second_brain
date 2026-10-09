@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Networking
+subtopic: Networking › Host networking
 confidence: 1
 tags: [networking, linux, os, ipc]
 aliases: [IPC, Pipes, Named pipe, FIFO, Shared memory, Signals, Unix domain sockets, Unix socket, File descriptor, File descriptors]

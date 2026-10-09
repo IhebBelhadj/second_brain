@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
+subtopic: Containers › Kubernetes
 confidence: 1
 tags: [containers, orchestration, kubernetes]
 aliases: [K8s, k8s, kubectl, Kubernetes objects, Kubernetes mental model]

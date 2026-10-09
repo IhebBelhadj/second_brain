@@ -24,6 +24,18 @@ Data structures and algorithms/
     └── Arrays and strings problems.md  CtCI ch. 1 (permutation, URLify, palindrome permutation, one away)
 ```
 
+## Sub-topics
+
+Every note in this area has `subtopic: <index name>` in its frontmatter, and is linked from that sub-topic index (`type: subtopic`, tag `subtopic`). The area index `Data structures and algorithms.md` links every sub-topic index in its "Sub-topics" section.
+
+| Sub-topic index | Lives in | Covers |
+|---|---|---|
+| `Data structures and algorithms › Foundations.md` | `Foundations/` | what everything else builds on: recursion, number bases |
+| `Data structures and algorithms › Data structures.md` | `Data structures/` | linked lists, hash tables, trees |
+| `Data structures and algorithms › Algorithms and problems.md` | `Algorithms/` | searching and sorting algorithms, and practice problems |
+
+A new note gets the `subtopic` of the folder it goes in (notes at the area root: see the table), and a line in that sub-topic index as well as in `Data structures and algorithms.md`.
+
 ## Where a new note goes
 
 | It's about… | Folder |

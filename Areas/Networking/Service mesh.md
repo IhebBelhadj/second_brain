@@ -2,6 +2,7 @@
 type: concept
 created: 2026-09-26
 topic: Networking
+subtopic: Networking › Traffic
 confidence: 1
 tags: [networking, security, kubernetes, microservices]
 ---

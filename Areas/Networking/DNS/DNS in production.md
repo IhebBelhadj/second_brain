@@ -2,6 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
+subtopic: Networking › DNS
 confidence: 1
 tags: [networking, dns, operations]
 aliases: [Split-horizon DNS, Split DNS, Conditional forwarding, DNS load balancing, DNS migration]

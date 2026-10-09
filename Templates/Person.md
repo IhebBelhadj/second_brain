@@ -2,6 +2,7 @@
 type: person
 created: <% tp.date.now("YYYY-MM-DD") %>
 topic: 
+subtopic: 
 lived: 
 field: 
 confidence: 1

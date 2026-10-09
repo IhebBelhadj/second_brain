@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Storage
+subtopic: Storage › Network storage
 confidence: 1
 tags: [storage, network-storage, nfs, smb, file-sharing]
 aliases: [NFS, SMB, CIFS, Samba, Network file system, File shares, NFSv4, Stale file handle, root_squash]

@@ -2,6 +2,7 @@
 type: compare
 created: 2026-09-26
 topic: Networking
+subtopic: Networking › VPN
 confidence: 1
 tags: [networking, security, vpn]
 ---

@@ -7,6 +7,16 @@ tags: [topic]
 
 > What this covers: everything I'm learning about AWS. Services, how to click through them in the console, and above all **how they plug into each other**.
 
+## Sub-topics
+Each sub-topic has its own index with the same reading order, for studying one part at a time (and a cleaner graph).
+- [[AWS › Foundations]]: the ground rules: Regions and Availability Zones, ARNs (Amazon Resource Names), naming, the service map and how services connect
+- [[AWS › Networking]]: every AWS networking note in 5 stages, with prerequisites and a question → note table
+- [[AWS › Storage and databases]]: where data lives: S3, EFS, replication, RDS
+- [[AWS › Compute]]: what runs my code: EC2, Auto Scaling, load balancers, Lambda, Lightsail, ECS, EKS, Packer
+- [[AWS › Integration]]: services talking without waiting for each other: SQS, SNS, EventBridge, Step Functions
+- [[AWS › Monitoring]]: is it working and how I operate it: CloudWatch, its agent, logs and alarms, Systems Manager
+- [[AWS › Security]]: every AWS security, identity and audit note in 5 stages, with prerequisites and a question → note table
+
 ## Start here
 1. [[AWS services overview]]: the big table of every service category, so I know what exists
 2. [[How AWS services connect]]: follows one request from the browser to the database and shows which service does what along the way
@@ -107,6 +117,7 @@ Full reading path in 5 stages, prerequisites, a "which note answers…" table an
 - [[Storage]]: block vs file vs object, filesystems, backups, the concepts behind S3/EBS/EFS
 - [[Containers]]: Docker images, tags and digests, the concepts behind ECS/ECR
 - [[Identity and access]]: authentication methods, OAuth 2.0, OIDC, SSO, the concepts behind IAM, Identity Center and Cognito
+- [[Infrastructure as code]]: building all of this with [[Terraform]], from the first apply to CI/CD pipelines and a full worked example
 
 ## Weakest first
 ```dataview

@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Networking
+subtopic: Networking › Protocols
 confidence: 1
 tags: [networking, http, protocols, web]
 aliases: [HTTP 1.1, HTTP1.1, HTTP 1.0, Keep-alive, Persistent connections, Chunked transfer encoding, Long polling, Server-Sent Events]

@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Storage
+subtopic: Storage › Local storage
 confidence: 1
 tags: [storage, linux, filesystems, mount, vfs, kernel]
 aliases: [Mounting under the hood, mount syscall, Mount table, mountinfo, Mount propagation, Superblock object, Dentry cache]

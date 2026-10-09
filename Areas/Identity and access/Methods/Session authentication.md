@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Identity and access
+subtopic: Identity and access › Methods
 confidence: 1
 tags: [identity, authentication, sessions, cookies, csrf, web]
 aliases: [Session, Session cookie, Cookie-based authentication, Server-side session, Session ID, CSRF, Cross-site request forgery, SameSite, HttpOnly, Session fixation]

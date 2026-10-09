@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-02
 topic: AWS
+subtopic: AWS › Integration
 confidence: 1
 tags: [aws, integration, sqs, messaging]
 aliases: [Amazon SQS, Simple Queue Service, Dead-letter queue, DLQ, Visibility timeout, FIFO queue]

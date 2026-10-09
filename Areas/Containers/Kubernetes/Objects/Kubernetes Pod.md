@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
+subtopic: Containers › Kubernetes
 confidence: 1
 tags: [containers, kubernetes, kubernetes-object, workload]
 aliases: [Pod, Pods, Init container, Sidecar container, Pod lifecycle, QoS class, CrashLoopBackOff]

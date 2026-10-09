@@ -2,6 +2,7 @@
 type: practice
 date: <% tp.date.now("YYYY-MM-DD") %>
 topic: 
+subtopic: 
 score: 
 total: 
 tags: []

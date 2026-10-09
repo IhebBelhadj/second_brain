@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Containers
+subtopic: Containers › Images and containers
 confidence: 1
 tags: [containers, docker, build, deployment]
 aliases: [Docker image, Docker container, Dockerfile, Docker build, Container image, Multi-stage build, BuildKit, buildx, docker run]

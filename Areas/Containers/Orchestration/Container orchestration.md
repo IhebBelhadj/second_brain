@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
+subtopic: Containers › Orchestration
 confidence: 1
 tags: [containers, orchestration, scheduling, desired-state]
 aliases: [Orchestration, Orchestrator, Container orchestrator, Desired state, Reconciliation loop]

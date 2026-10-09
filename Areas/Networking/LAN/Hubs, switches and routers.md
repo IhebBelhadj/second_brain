@@ -2,6 +2,7 @@
 type: compare
 created: 2026-09-27
 topic: Networking
+subtopic: Networking › LAN
 confidence: 1
 tags: [networking, lan, switching, routing]
 aliases: [Hub, Switch, Router, Collision domain, Broadcast domain]

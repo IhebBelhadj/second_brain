@@ -5,6 +5,7 @@ medium: book | course | article | video | docs
 author: 
 url: 
 topic: 
+subtopic: 
 status: reading
 tags: []
 ---

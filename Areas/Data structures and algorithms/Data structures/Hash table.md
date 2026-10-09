@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-02
 topic: Data structures and algorithms
+subtopic: Data structures and algorithms › Data structures
 confidence: 1
 tags: [dsa, data-structures, hashing]
 aliases: [Hash map, Hashmap, Hash tables, Hash function, Load factor, Separate chaining, Open addressing, Linear probing]

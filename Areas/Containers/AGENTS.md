@@ -37,6 +37,18 @@ Containers/
 
 `ECS.md`, `ECS tasks and task definitions.md` and `ECS on Fargate vs EC2.md` are listed in this area's index (section 2) but live in `Areas/AWS/Compute/` with `topic: AWS`.
 
+## Sub-topics
+
+Every note in this area has `subtopic: <index name>` in its frontmatter, and is linked from that sub-topic index (`type: subtopic`, tag `subtopic`). The area index `Containers.md` links every sub-topic index in its "Sub-topics" section.
+
+| Sub-topic index | Lives in | Covers |
+|---|---|---|
+| `Containers › Images and containers.md` | `(area root)` | building, tagging and running images on one host: Docker, tags, Compose |
+| `Containers › Orchestration.md` | `Orchestration/` | running containers on many machines: orchestration concepts, Swarm, comparisons, deployment strategies, the Spring Cloud era |
+| `Containers › Kubernetes.md` | `Kubernetes/` | Kubernetes itself: the model, the architecture, manifest syntax, a worked example and every object type |
+
+A new note gets the `subtopic` of the folder it goes in (notes at the area root: see the table), and a line in that sub-topic index as well as in `Containers.md`.
+
 ## Where a new note goes
 
 | It's about… | Folder |

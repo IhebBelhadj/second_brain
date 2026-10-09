@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-06
 topic: AWS
+subtopic: AWS › Compute
 confidence: 1
 tags: [aws, compute, containers, kubernetes, eks, example]
 aliases: [Shop on EKS, EKS worked example, AWS Load Balancer Controller, EBS CSI driver, EKS Pod Identity, eksctl, EKS access entries]

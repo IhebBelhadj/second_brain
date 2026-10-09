@@ -2,6 +2,7 @@
 type: compare
 created: 2026-10-02
 topic: AWS
+subtopic: AWS › Integration
 confidence: 1
 tags: [aws, integration, messaging, compare]
 aliases: [Decoupling in AWS, Queue vs topic vs event bus]

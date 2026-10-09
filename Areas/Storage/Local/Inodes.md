@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Storage
+subtopic: Storage › Local storage
 confidence: 1
 tags: [storage, filesystems, inodes, linux, ext4]
 aliases: [Inode, Index node, Inode table, Extents, Block pointers, Indirect blocks, File descriptor table, Sparse file, Link count]

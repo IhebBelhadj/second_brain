@@ -7,6 +7,19 @@ tags: [topic]
 
 > What this covers: networking as a **systems engineer** needs it: how packets move from a cable to an application, how networks are built, connected and secured, and how to reason about any of it when it breaks. Vendor-neutral first. Clouds (AWS today, others later) are one place it's applied, not the frame.
 
+## Sub-topics
+Each sub-topic has its own index with the same reading order, for studying one part at a time (and a cleaner graph).
+- [[Networking › Protocols]]: the layer model and the protocols on top of it: ICMP, HTTP, HTTP/2 and HTTP/3, WebSocket, BGP
+- [[Networking › Addressing]]: IP addresses, subnetting and designing an address plan
+- [[Networking › DNS]]: name resolution, its security and running it in production
+- [[Networking › Host networking]]: where one machine meets the network: interfaces and namespaces, inter-process communication, sockets
+- [[Networking › LAN]]: Layer 2: switches, ARP, VLANs, Spanning Tree
+- [[Networking › Routing]]: Layer 3: routing tables, policy routing, NAT, overlapping ranges, high availability
+- [[Networking › Security]]: filtering (ACLs, ingress and egress) and securing traffic: encryption, PKI, TLS, mTLS, workload identity
+- [[Networking › Traffic]]: delivering traffic to services: proxies, reverse proxies, load balancing, service discovery, service mesh
+- [[Networking › Resilience]]: surviving slow and failing dependencies: the patterns, the libraries (Hystrix, Resilience4j, Polly, others) and the service mesh
+- [[Networking › VPN]]: joining networks: VPN types, IPsec, WireGuard and friends, nested VPNs
+
 ## How to use this
 
 Read the sections **top to bottom**: each one assumes the ones above it. Inside a section, notes go from basic to advanced. Links in *italics* under "Not written yet" are the gaps I still have to fill.

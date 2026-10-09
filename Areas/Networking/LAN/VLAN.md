@@ -2,6 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
+subtopic: Networking › LAN
 confidence: 1
 tags: [networking, lan, switching, vlan]
 aliases: [VLANs, 802.1Q, Trunk port, Inter-VLAN routing]

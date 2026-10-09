@@ -8,6 +8,12 @@ aliases: [DSA]
 
 > What this covers: how to organize data in memory and how to process it efficiently: the structures (lists, hash tables, trees, graphs), the algorithms that work on them (traversals, sorting, searching), the techniques behind them (recursion, two pointers, dynamic programming), and the interview-style problems I practice with. Code examples are in Python. Each note also points to where the structure shows up in real systems.
 
+## Sub-topics
+Each sub-topic has its own index with the same reading order, for studying one part at a time (and a cleaner graph).
+- [[Data structures and algorithms › Foundations]]: what everything else builds on: recursion, number bases
+- [[Data structures and algorithms › Data structures]]: linked lists, hash tables, trees
+- [[Data structures and algorithms › Algorithms and problems]]: searching and sorting algorithms, and practice problems
+
 ## How to use this
 
 Read the sections **top to bottom**: each one assumes the ones above it. Links in *italics* are notes not written yet (the roadmap).

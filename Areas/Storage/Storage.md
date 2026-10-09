@@ -7,6 +7,11 @@ tags: [topic]
 
 > What this covers: storage as a **systems engineer** needs it: where bytes actually live, how a machine turns a disk into files, how storage is shared over the network, how data is kept safe when disks, servers, whole sites or people fail, and how to reason about performance when "the disk is slow". Vendor-neutral first. Clouds (AWS today) are one place it's applied, not the frame.
 
+## Sub-topics
+Each sub-topic has its own index with the same reading order, for studying one part at a time (and a cleaner graph).
+- [[Storage › Local storage]]: one machine's storage: devices, partitions, filesystems, inodes, journaling, mounting, booting
+- [[Storage › Network storage]]: sharing storage over the network: how it works, NFS and SMB
+
 ## How to use this
 
 Read the sections **top to bottom**: each one assumes the ones above it. Links in *italics* are notes I haven't written yet (the roadmap). For now the only real note is the AWS one at the end, so this page is mostly my plan.

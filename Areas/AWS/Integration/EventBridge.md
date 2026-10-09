@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-02
 topic: AWS
+subtopic: AWS › Integration
 confidence: 1
 tags: [aws, integration, eventbridge, events]
 aliases: [Amazon EventBridge, CloudWatch Events, Event bus, EventBridge Scheduler, EventBridge Pipes]

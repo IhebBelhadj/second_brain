@@ -2,6 +2,7 @@
 type: compare
 created: 2026-10-04
 topic: Identity and access
+subtopic: Identity and access › Methods
 confidence: 1
 tags: [identity, authentication, compare, architecture]
 aliases: [Authentication methods compared, Types of authentication, Which authentication method]

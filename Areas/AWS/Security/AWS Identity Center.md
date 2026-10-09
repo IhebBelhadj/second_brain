@@ -2,6 +2,7 @@
 type: concept
 created: 2026-09-21
 topic: AWS
+subtopic: AWS › Security
 confidence: 1
 tags: [aws, security]
 ---

@@ -1,10 +1,11 @@
 ---
-type: topic
+type: subtopic
+topic: AWS
 created: 2026-10-03
-tags: [topic, aws, networking]
-aliases: [AWS networking index]
+tags: [subtopic, aws, networking]
+aliases: [AWS networking, AWS networking index]
 ---
-# AWS networking
+# AWS › Networking
 
 > What this covers: every AWS networking note, in the order I'd study them. Each stage assumes the ones above it. The vendor-neutral concept behind each stage is listed first, so I know what to read in [[Networking]] before the AWS product.
 
@@ -95,7 +96,7 @@ Read first in Networking: [[Nested VPNs]], [[Overlapping address spaces]].
 ## Weakest first
 ```dataview
 TABLE WITHOUT ID file.link AS Note, type AS Type, confidence AS Conf
-FROM "Areas/AWS/Networking"
-WHERE confidence
+FROM ""
+WHERE subtopic = this.file.name AND confidence
 SORT confidence ASC
 ```

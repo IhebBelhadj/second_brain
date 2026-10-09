@@ -10,6 +10,8 @@ Checks:
     when the template for that type has them)
   - notes under Areas/<Area>/ not linked from the topic index Areas/<Area>/<Area>.md
   - notes under Areas/<Area>/ not listed in the area guide Areas/<Area>/AGENTS.md
+  - sub-topics: in an area that has sub-topic indexes (type: subtopic), every note needs
+    `subtopic: <index name>` naming a sub-topic index of the same area, and that index must link it
 
 Exit code 1 if anything other than planned notes is reported.
 """
@@ -140,11 +142,28 @@ def main():
             problems["missing area guide"].append(rel(guide))
         linked = {m[2].replace("\\|", "|").split("|")[0].split("#")[0].strip().lower()
                   for m in LINK_RE.findall(index_text)}
+        subtopics = {}  # lowercase name -> set of lowercase link targets (resolved to note paths)
+        for path in texts:
+            if path.startswith(area_path + os.sep) and frontmatter(texts[path]).get("type") == "subtopic":
+                fm = frontmatter(texts[path])
+                if fm.get("topic") != area:
+                    problems["sub-topic index with the wrong topic"].append(f"{rel(path)}: topic should be {area}")
+                targets = {resolve(m[2].replace("\\|", "|").split("|")[0].split("#")[0].strip())
+                           for m in LINK_RE.findall(texts[path])}
+                subtopics[os.path.basename(path)[:-3].lower()] = targets
         for path in texts:
             if not path.startswith(area_path + os.sep) or path == index:
                 continue
             name = os.path.basename(path)[:-3]
             fm = frontmatter(texts[path])
+            if subtopics and fm.get("type") != "subtopic":
+                sub = fm.get("subtopic", "")
+                if not sub:
+                    problems["missing subtopic"].append(rel(path))
+                elif sub.lower() not in subtopics:
+                    problems["subtopic names no sub-topic index of this area"].append(f"{rel(path)}: {sub}")
+                elif path not in subtopics[sub.lower()]:
+                    problems["not linked from its sub-topic index"].append(f"{rel(path)} ← {sub}")
             expected = {"type"} | ({"topic", "confidence"} & template_fields.get(fm.get("type", ""), set()))
             missing = sorted(k for k in expected if not fm.get(k))
             if missing:

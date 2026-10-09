@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Networking
+subtopic: Networking › VPN
 confidence: 1
 tags: [networking, vpn, routing, architecture]
 aliases: [Chained VPNs, VPN inside a VPN, Tunnel in a tunnel, Double VPN]

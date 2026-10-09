@@ -2,6 +2,7 @@
 type: concept
 created: 2026-09-20
 topic: Networking
+subtopic: Networking › Protocols
 confidence: 2
 tags: [networking, protocol]
 ---

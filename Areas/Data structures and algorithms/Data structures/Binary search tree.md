@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-02
 topic: Data structures and algorithms
+subtopic: Data structures and algorithms › Data structures
 confidence: 1
 tags: [dsa, data-structures, trees, bst]
 aliases: [BST, Binary search trees, In-order successor, Tree rotation, Order statistic tree]

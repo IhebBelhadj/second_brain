@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
+subtopic: AWS › Compute
 confidence: 1
 tags: [aws, ec2, ami, packer, infrastructure-as-code, immutable-infrastructure]
 aliases: [HashiCorp Packer, Golden image, Golden AMI, AMI baking, Bake vs fry, Immutable infrastructure, EC2 Image Builder]
@@ -405,6 +406,7 @@ If people still SSH in and change running servers, the AMI no longer describes p
 - Permissions and accounts:: [[IAM]], [[AWS Organizations]]
 - Audit of builds:: [[CloudTrail]]
 - Agents baked into the image:: [[CloudWatch agent]]
+- Infrastructure that launches the image:: [[Terraform]]
 
 ## Flashcards
 #flashcards

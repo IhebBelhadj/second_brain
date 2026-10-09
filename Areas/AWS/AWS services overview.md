@@ -2,6 +2,7 @@
 type: note
 created: 2026-09-19
 topic: AWS
+subtopic: AWS › Foundations
 tags: [aws]
 ---
 # AWS services overview

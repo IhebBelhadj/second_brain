@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
+subtopic: Containers › Kubernetes
 confidence: 1
 tags: [containers, kubernetes, kubernetes-object, security, authorization]
 aliases: [Role, ClusterRole, RoleBinding, ClusterRoleBinding, Kubernetes role-based access control, kubectl auth can-i]

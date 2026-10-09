@@ -2,6 +2,7 @@
 type: compare
 created: 2026-10-03
 topic: AWS
+subtopic: AWS › Compute
 confidence: 1
 tags: [aws, compute, containers, ecs, fargate, ec2]
 aliases: [Fargate, AWS Fargate, Fargate Spot, ECS launch types, EC2 launch type, ECS container instance, ECS capacity provider, ECS-optimized AMI, Task placement]

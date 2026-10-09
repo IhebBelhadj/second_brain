@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
+subtopic: Containers › Kubernetes
 confidence: 1
 tags: [containers, kubernetes, example, yaml]
 aliases: [Kubernetes e-commerce example, Kubernetes objects by example]

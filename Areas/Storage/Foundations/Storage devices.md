@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Storage
+subtopic: Storage › Local storage
 confidence: 1
 tags: [storage, devices, linux, block-devices, foundations]
 aliases: [Drive, Drives, Disk, Block device, Block devices, HDD, SSD, NVMe, LBA, Logical block addressing, Sector, Loop device, Page cache]

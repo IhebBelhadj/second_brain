@@ -2,6 +2,7 @@
 type: mistake
 created: <% tp.date.now("YYYY-MM-DD") %>
 topic: 
+subtopic: 
 confidence: 1
 resolved: false
 tags: []

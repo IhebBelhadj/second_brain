@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Identity and access
+subtopic: Identity and access › Protocols
 confidence: 1
 tags: [identity, oauth, authorization, delegation, tokens]
 aliases: [OAuth, OAuth2, OAuth 2, Authorization code flow, PKCE, Client credentials, Client credentials grant, Device authorization grant, Device code flow, Authorization server, Resource server, Scopes, OAuth scopes, Consent screen]

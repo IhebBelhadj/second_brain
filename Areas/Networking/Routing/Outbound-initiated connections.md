@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Networking
+subtopic: Networking › Routing
 confidence: 1
 tags: [networking, nat, tcp, http, agents]
 aliases: [Connections vs requests, Phone-home agents, Reverse connection, Outbound-only connectivity, Return traffic through NAT]

@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
+subtopic: AWS › Security
 confidence: 1
 tags: [aws, security, audit, incident-response, cloudtrail]
 aliases: [CloudTrail audit, CloudTrail alerts, Auditing with CloudTrail, CloudTrail Athena]

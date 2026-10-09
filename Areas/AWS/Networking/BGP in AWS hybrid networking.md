@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
+subtopic: AWS › Networking
 confidence: 1
 tags: [aws, networking, routing, bgp, hybrid, vpn]
 aliases: [BGP with AWS VPN, Dynamic routing in AWS]

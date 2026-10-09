@@ -2,6 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
+subtopic: Networking › Traffic
 confidence: 1
 tags: [networking, load-balancing, high-availability]
 aliases: [Load balancer, L4 load balancing, L7 load balancing, Health checks, Sticky sessions, Direct server return, GSLB]

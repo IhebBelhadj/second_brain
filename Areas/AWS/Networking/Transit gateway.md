@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
+subtopic: AWS › Networking
 confidence: 1
 tags: [aws, networking, vpn, hybrid, routing]
 aliases: [TGW, AWS Transit Gateway, TGW Connect]

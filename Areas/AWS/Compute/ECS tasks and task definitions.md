@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
+subtopic: AWS › Compute
 confidence: 1
 tags: [aws, compute, containers, ecs, fargate]
 aliases: [ECS task, ECS tasks, Task definition, Task definitions, Task role, Execution role, ECS task lifecycle, run-task, Scheduled tasks]

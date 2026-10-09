@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
+subtopic: AWS › Monitoring
 confidence: 1
 tags: [aws, monitoring, cloudwatch, logs]
 aliases: [Amazon CloudWatch Logs, Log group, Log groups, CloudWatch Logs Insights, Logs Insights, Metric filter, Metric filters, Subscription filter]

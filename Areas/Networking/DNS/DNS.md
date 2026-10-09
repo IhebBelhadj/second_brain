@@ -2,6 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
+subtopic: Networking › DNS
 confidence: 1
 tags: [networking, dns, protocol]
 aliases: [Domain Name System, DNS resolution, DNS records, dig, resolv.conf, TTL]

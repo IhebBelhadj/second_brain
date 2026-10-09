@@ -2,6 +2,7 @@
 type: event
 created: <% tp.date.now("YYYY-MM-DD") %>
 topic: 
+subtopic: 
 when: 
 where: 
 confidence: 1

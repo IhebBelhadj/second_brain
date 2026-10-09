@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-02
 topic: Data structures and algorithms
+subtopic: Data structures and algorithms › Algorithms and problems
 confidence: 1
 tags: [dsa, algorithms, sorting, divide-and-conquer]
 aliases: [Mergesort, Divide and conquer, External sort, Stable sort, Counting inversions, K-way merge]

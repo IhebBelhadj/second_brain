@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
+subtopic: AWS › Foundations
 confidence: 1
 tags: [aws, regions, availability-zones, global-infrastructure, governance]
 aliases: [AWS Regions, AWS Region, Region, Availability Zones, Availability Zone, AZ, AZ ID, Opt-in Regions, Opt-in Region, Enabled Regions, Local Zones, Global infrastructure]

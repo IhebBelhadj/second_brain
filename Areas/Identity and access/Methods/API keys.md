@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Identity and access
+subtopic: Identity and access › Methods
 confidence: 1
 tags: [identity, authentication, api, api-keys, secrets]
 aliases: [API key, API key authentication, X-API-Key, Personal access token, Personal access tokens]

@@ -2,6 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
+subtopic: Networking › DNS
 confidence: 1
 tags: [networking, dns, security]
 aliases: [DNSSEC, DoH, DoT, DNS spoofing, Cache poisoning, DNS tunneling, Subdomain takeover]

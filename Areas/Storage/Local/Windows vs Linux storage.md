@@ -2,6 +2,7 @@
 type: compare
 created: 2026-10-04
 topic: Storage
+subtopic: Storage › Local storage
 confidence: 1
 tags: [storage, windows, linux, ntfs, filesystems, mount, compare]
 aliases: [NTFS, MFT, Master File Table, ReFS, Drive letters, Drive letter, Volume GUID path, chkdsk, VSS, Volume Shadow Copy, Storage Spaces, USN journal, Alternate data streams, Windows storage]

@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-09
 topic: Containers
+subtopic: Containers › Orchestration
 confidence: 1
 tags: [containers, orchestration, microservices, service-discovery, spring, java, history]
 aliases: [Spring Cloud, Spring Cloud Netflix, Netflix OSS, Eureka, Ribbon, Zuul, Spring Cloud Config]

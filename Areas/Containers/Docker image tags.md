@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Containers
+subtopic: Containers › Images and containers
 confidence: 1
 tags: [containers, docker, tagging, deployment, registry]
 aliases: [Docker tags, Image tags, Image tag, Image digest, Digest pinning, latest tag, Immutable tags, Image promotion, docker tag]

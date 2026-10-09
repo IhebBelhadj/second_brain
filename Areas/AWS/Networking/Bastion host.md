@@ -2,6 +2,7 @@
 type: concept
 created: 2026-09-26
 topic: AWS
+subtopic: AWS › Networking
 confidence: 1
 tags: [aws, networking, security]
 ---

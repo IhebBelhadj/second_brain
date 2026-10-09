@@ -59,6 +59,13 @@ FROM #topic
 SORT file.name ASC
 ```
 
+## Sub-topics
+```dataview
+TABLE WITHOUT ID topic AS Topic, file.link AS "Sub-topic"
+FROM #subtopic
+SORT topic ASC, file.name ASC
+```
+
 ## Orphans — link these or delete them
 ```dataview
 LIST

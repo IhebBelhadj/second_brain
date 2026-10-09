@@ -2,6 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Networking
+subtopic: Networking › Protocols
 confidence: 1
 tags: [networking, http, protocols, web]
 aliases: [HTTP 2, h2, h2c, HTTP2 multiplexing, HPACK, ALPN, HTTP3, HTTP 3, QUIC]

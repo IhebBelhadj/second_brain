@@ -2,6 +2,7 @@
 type: concept
 created: 2026-09-20
 topic: AWS
+subtopic: AWS › Compute
 confidence: 2
 tags: [aws, compute]
 ---

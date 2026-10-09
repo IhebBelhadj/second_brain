@@ -1,0 +1,52 @@
+---
+type: topic
+created: 2026-10-09
+tags: [topic, iac]
+aliases: [IaC]
+---
+# Infrastructure as code
+
+> What this covers: describing servers, networks, databases and permissions as **code** that is reviewed, versioned and applied by a tool, instead of clicking them together in a console. Terraform first, from the first `apply` to a team running it safely in production. Examples use the AWS (Amazon Web Services) provider; what each AWS service does is explained in the [[AWS]] area.
+
+## Sub-topics
+Each sub-topic has its own index with the same reading order, for studying one part at a time (and a cleaner graph).
+- [[Infrastructure as code › Terraform]]: Terraform from the first `apply` to a team running it in production
+
+## How to use this
+
+Read top to bottom: it's a tutorial from zero to production, and each note assumes the ones above it. Every note uses the same scenario (Acme's "shop" on AWS), and [[Terraform worked example]] puts it all together. Links in *italics* are notes not written yet (the roadmap).
+
+## 1. Terraform: the first steps
+- [[Terraform]]: from clicking in the console, to CLI (command-line interface) scripts that aren't idempotent, to declaring the end state. The core loop (init, plan, apply, destroy) with a first real config (S3 bucket with public access block, then an EC2 instance in a security group with an AMI from SSM), what init downloads (.terraform, lock file), reading plan symbols (+ - ~ -/+ +/- <=) and "forces replacement", how it works inside (configuration + state + refreshed real world → dependency graph → provider API calls), drift and idempotence, vs OpenTofu/CloudFormation/CDK/Pulumi/Ansible, the BSL license change and OpenTofu, and the traps (lost local state, console drift, an edit that replaces a database, wrong account, stuck lock)
+- [[Terraform language syntax]]: HCL decoded, using Acme's subnet code. Blocks, labels and arguments (and argument vs nested block), every block type, reference syntax, types (list/set/tuple/map/object/null, optional attributes), strings, heredocs, %{ } template directives and strip markers, operators and conditionals, for expressions (lists, maps, filtering, grouping, flatten), splats (and why they fail on for_each), the most-used functions tried in terraform console, jsonencode policies, dynamic blocks, file layout conventions and fmt, and the traps (unknown for_each keys, indexing sets, ${ in shell templates, timestamp() diffs, map keys)
+- [[Terraform variables, locals and outputs]]: a module's interface, built up from copy-pasting dev into prod. Input variables (required vs default, types and object types with optional attributes, validation, nullable), setting them (tfvars, auto.tfvars, TF_VAR_, -var) and the precedence order, locals for derived names and common tags (and default_tags), outputs (-raw, -json, module outputs, preconditions), secrets (what sensitive really hides, AWS-managed passwords, ephemeral variables and write-only arguments), and the traps (variables in backend blocks, CI waiting on a prompt, sensitive for_each, secrets in tfvars, defaults leaking across environments)
+
+## 2. Terraform: building real infrastructure
+- [[Terraform resources and data sources]]: what Terraform owns vs only reads. Resource block anatomy, arguments vs attributes ("known after apply"), how references build the dependency graph (parallel walk, reverse order on destroy), `depends_on` only for hidden dependencies, `count` vs `for_each` (the index-shift trap, keys known at plan time, converting with `moved`), plan symbols and forces-replacement, `lifecycle` (create_before_destroy, prevent_destroy, ignore_changes, replace_triggered_by), `-replace`, provisioners as a last resort (user data, Packer, `terraform_data`), data sources (AMI, existing VPC, IAM policy documents, caller identity) and when they're read, `check` blocks, and the traps (cycles, half-done replacements, perpetual diffs)
+- [[Terraform providers]]: the plugins that turn HCL into API calls. Core vs provider over gRPC, `required_providers` and `required_version`, version constraints (`~>` vs `>=`, minimums for modules and narrower ranges for root modules), the lock file (hashes, the multi-platform trap, `providers lock`, `init -upgrade`), credentials from the standard chain only (profiles/SSO, OIDC, assume_role), `default_tags`, aliases for multi-region (the ACM cert in us-east-1 for CloudFront) and multi-account, passing providers into modules, utility providers (random, tls, http, kubernetes, github, cloudflare), mirrors and plugin cache, and the traps (major upgrades, removed provider configs, wrong account → `allowed_account_ids`)
+- [[Terraform state]]: Terraform's memory of code address → real object. Why it exists, what's inside (serial, lineage, secrets in plain text), why local state fails a team, the S3 backend with native `use_lockfile` locking (DynamoDB deprecated), hardening the bucket and the bootstrap chicken-and-egg (`init -migrate-state`), locks and `force-unlock`, state commands, `moved` / `import` (+ `-generate-config-out`) / `removed` blocks, drift and `-refresh-only`, splitting state for blast radius and `terraform_remote_state`, HCP Terraform, and recovery (stuck locks, "already exists", refactors that destroy, lost state restored from versioning)
+
+## 3. Terraform: scaling to a team
+- [[Terraform modules]]: from three copy-pasted network folders to one module. Root vs child modules, variables in and outputs out as the interface, re-running `init`, module sources (local path, Git with `?ref=` and `//subdir`, registry with `version`, S3), releasing internal modules with semver tags and a changelog, module design (small and composable, no provider blocks inside, passing provider aliases with `configuration_aliases`, outputs as IDs not objects, safe defaults, validation, typed objects), composition vs deep nesting, `for_each` on modules, `moved` blocks to refactor live resources into a module with 0 to destroy, the standard module structure and terraform-docs, public terraform-aws-modules pros and cons, and the traps (modules not installed, upgrades that replace resources, modules that can't be removed because of their own provider block, unknown `for_each` keys, version skew)
+- [[Terraform environments and project layout]]: from one big state to isolated environments. CLI workspaces (`terraform.workspace`, `env:/` keys, why they're weak for dev/prod and where they fit), a directory per environment, one root with a tfvars and backend config per environment, a comparison table, one AWS account per environment with `assume_role` and `allowed_account_ids`, splitting state into layers (bootstrap, network, data, app) by change rate and ownership, passing values between layers (`terraform_remote_state` vs data source lookups vs SSM parameters), monorepo vs a modules repo plus a live repo, promoting a module version from dev to prod, Terragrunt and HCP Terraform workspaces and Stacks briefly, and the traps (applying to the wrong environment, slow plans and throttling, destroy order across layers, stale values passed between layers, environments that drift apart in structure)
+- [[Terraform testing and validation]]: the checking ladder from cheap to expensive. `fmt -check` and `validate` (what it can't know), tflint with the AWS ruleset, Trivy (which absorbed tfsec) and Checkov with skips that state a reason, variable validation, preconditions and postconditions, `check` blocks, `terraform test` (`.tftest.hcl`, plan vs apply runs, `expect_failures`, mock providers), reading the plan as JSON, policy as code with OPA/Conftest and Sentinel, Infracost, pre-commit hooks, which check runs where in CI, and the traps (validate passes but apply fails, ignored scanner warnings, unknown values in plan tests, apply tests that leave resources behind, checking one plan and applying another, conditions that only fail in prod)
+
+## 4. Terraform: production
+- [[Terraform in production]]: from laptop applies to a team pipeline. Every change through a pull request: `fmt`/`validate`/`tflint`/`checkov`/`test`, the plan posted on the PR with deletes flagged, the saved plan applied after merge with an environment approval, apply-after vs apply-before merge, OIDC plan (read-only) vs apply roles, `allowed_account_ids`, one run at a time, secrets kept out of state (service-managed, ephemeral and write-only), scheduled drift detection, pinned versions and Renovate upgrades, state split by layer, double protection (`prevent_destroy`, AWS-side deletion protection, SCPs), break-glass and importing click-ops, tags and cost, the alternatives (Atlantis, HCP Terraform, Spacelift, OpenTofu), 11 failure modes with symptoms and fixes, and a production checklist
+- [[Terraform worked example]]: the Acme shop from an empty AWS account to prod, every file shown. Bootstrap (state bucket and GitHub OIDC roles, applied locally then migrated into the bucket), the repo layout (`modules/` + `live/dev`, `live/prod`), a network module (3 AZs, three subnet tiers via `cidrsubnet`, one or several NAT gateways), a web tier (ACM certificate, ALB, security group rules without cycles, launch template, Auto Scaling group with instance refresh), RDS with the password managed by Secrets Manager, the first dev apply with its real plan output, `terraform test` with a mocked provider, tflint/checkov, GitHub environments and the plan/apply workflows, promotion to prod through tfvars, day 2 (a rename with `moved`, importing a clicked bucket with `-generate-config-out`, a provider upgrade from Renovate), the final tree and the "one question per file" mental model
+
+## 5. Other tools (roadmap)
+- Not written yet: *[[CloudFormation]]* (AWS's own IaC, stacks and change sets) · *[[Pulumi]]* (IaC in general-purpose languages) · *[[Ansible]]* (configuring what runs inside servers) · *[[GitOps]]* (Git as the desired state, pulled by a controller)
+- Images instead of configuring servers: [[Packer]] (in the AWS area)
+
+## Related areas
+- [[AWS]]: what the resources in the examples are. [[ECS production stack]] builds a full ECS (Elastic Container Service) platform in Terraform, and [[Connecting GitHub Actions to AWS]] covers the OIDC (OpenID Connect) roles pipelines use
+- [[Containers]]: the same desired-state idea as [[Container orchestration]] and [[Kubernetes]]
+
+## Weakest first
+```dataview
+TABLE WITHOUT ID file.link AS Note, type AS Type, confidence AS Conf
+FROM ""
+WHERE topic = this.file.name AND confidence
+SORT confidence ASC
+```

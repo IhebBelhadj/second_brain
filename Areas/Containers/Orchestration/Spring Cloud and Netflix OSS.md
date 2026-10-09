@@ -793,6 +793,7 @@ What replaces Hystrix today? :: Mesh timeouts, retries, connection limits and ou
 Why do fallbacks stay in the application? :: Choosing a degraded answer is a business decision a proxy can't make
 What replaces Zuul? :: Ingress / Gateway API controllers, cloud load balancers and API gateways, or Spring Cloud Gateway
 What replaces Sleuth and Zipkin? :: Micrometer Tracing and OpenTelemetry, with Jaeger, Tempo or X-Ray
+<!--SR:!2026-10-09,0,230-->
 What replaces Config Server on Kubernetes? :: ConfigMaps and Secrets managed with GitOps, with a rolling restart on change
 What's the AWS equivalent of Eureka + Ribbon for ECS? :: ECS Service Connect: Cloud Map registry plus an injected Envoy proxy
 When were Ribbon, Hystrix and Zuul 1 removed from Spring Cloud? :: Spring Cloud 2020.0 (Ilford), after maintenance mode from 2018–2019

@@ -162,7 +162,7 @@ A 4-cycle is bipartite, a triangle isn't.
 ## 4. Where BFS appears in systems
 
 - **Fewest hops** between machines or routers, degrees of separation, minimum number of transfers
-- **Flooding and broadcast**: a switch flooding an unknown destination, a gossip protocol, an OSPF link-state advertisement all spread in BFS-like waves. On a graph with cycles, flooding without a "seen" rule never stops, which is why switched networks need [[Spanning Tree]] and routing protocols use sequence numbers
+- **Flooding and broadcast**: a switch flooding an unknown destination, a gossip protocol, an [[OSPF]] link-state advertisement all spread in BFS-like waves. On a graph with cycles, flooding without a "seen" rule never stops, which is why switched networks need [[Spanning Tree]] and routing protocols use sequence numbers
 - **Shortest paths in link-state routing** (OSPF, IS-IS) are Dijkstra, the weighted generalization ([[Routing tables]])
 - **Web crawlers** (frontier queue, depth limit), **garbage collectors** (Cheney's copying collector is a BFS over live objects), **peer discovery**, **dependency layers**
 

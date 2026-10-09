@@ -195,6 +195,7 @@ flowchart LR
 ## Related
 - Same family:: [[MQTT]], [[JMS]], *[[RabbitMQ]]*
 - Compared with:: [[Kafka]], [[SQS]], [[SNS]]
+<!--SR:!2026-10-12,3,250-->
 - Network side:: [[TLS]], [[mTLS]], [[Load balancing]] (idle timeouts), [[NAT and PAT]]
 - In AWS:: [[SQS vs SNS vs EventBridge]] (when Amazon MQ is the answer)
 - Area:: [[Messaging]]

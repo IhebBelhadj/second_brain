@@ -374,7 +374,7 @@ See [[Proxies, load balancing and discovery in AWS]] and [[Route 53]].
 ## Related
 - Depends on:: [[AS and BGP]], [[Routing tables]], [[ARP]], [[DNS]]
 - Used by:: [[Load balancing]] (making the load balancer itself available), [[DNS in production]], [[Container orchestration]] (what sits in front of the cluster), [[Docker Swarm]] (routing mesh behind an external load balancer)
-- Next:: *[[First-hop redundancy (VRRP)]]*, *[[Consistent hashing]]* (ECMP and load balancer hashing)
+- Next:: [[OSPF]] (rerouting around failed links inside a network), *[[First-hop redundancy (VRRP)]]*, *[[Consistent hashing]]* (ECMP and load balancer hashing)
 - In AWS:: [[Proxies, load balancing and discovery in AWS]], [[Route 53]]
 - Area:: [[Networking]]
 

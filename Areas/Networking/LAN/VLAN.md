@@ -205,5 +205,6 @@ What is an SVI? :: A virtual interface for a VLAN on an L3 switch, acting as tha
 Are VLANs a security boundary? :: Only separation. Security depends on ACLs/firewalls where VLANs are routed together
 What is a private VLAN for? :: Hosts in one subnet reach the gateway but not each other
 What replaced VLANs in data centers and why? :: VXLAN: 24-bit VNI (16M segments) over IP, with EVPN
+<!--SR:!2026-10-12,3,250-->
 Where do VLANs appear in AWS? :: Direct Connect: each virtual interface is an 802.1Q VLAN
 What replaces VLANs inside a VPC? :: VPCs, subnets, NACLs and security groups

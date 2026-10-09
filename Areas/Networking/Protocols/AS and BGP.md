@@ -50,6 +50,7 @@ But **inside** an AS, shortest path is exactly what you want, so ASes still use 
 - The whole picture (BGP carries routes not traffic, BGP vs propagation, what each side announces, failover between tunnels) → [[BGP in AWS hybrid networking]]
 
 ## Connects to
+- [[OSPF]] (the interior protocol BGP sits on top of)
 - [[Connecting VPCs]], [[BGP in AWS hybrid networking]], [[Site-to-Site VPN]], [[Transit gateway]], [[Direct Connect]], [[Nested VPNs]]
 - [[High availability networking]] (anycast: one address announced from several networks, the internet as a graph with no root)
 - [[Networking]]

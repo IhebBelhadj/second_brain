@@ -67,9 +67,10 @@ flowchart TD
 - [[NAT and PAT]]: static/dynamic NAT, PAT tables, SNAT vs DNAT, NAT behaviors and hole punching, CGNAT, UPnP/NAT-PMP/PCP, why NAT isn't a firewall
     - [[Outbound-initiated connections]]: responses vs new connections through NAT, why an HTTP response doesn't end the TCP connection, why a NAT mapping isn't an open door, agents that dial out and keep the line open (SSM, CI runners, tunnels), keepalives, the egress-control lesson
 - [[Overlapping address spaces]]: two networks using the same IPs, and the ways out (separate routing domains, NAT, exposing services, renumbering)
+- [[OSPF]]: how routers inside one organization find each other. Static routes vs distance-vector rumours (count to infinity) vs link-state (same map everywhere), SPF worked by hand on Acme's four routers, Hellos and what must match, the neighbour states (ExStart, Full), DR/BDR on shared segments, cost and the reference bandwidth trap, ECMP, areas and the backbone, ABR/ASBR, LSA types, stub/NSSA, E1 vs E2, BFD and fast convergence, authentication and passive interfaces, OSPFv3, an FRRouting lab with show commands, vs RIP/IS-IS/BGP, and the classic failures (MTU stuck in ExStart, Init, duplicate router ID, partitioned area 0, redistribution loops)
 - [[AS and BGP]]: how independent networks route between each other, the protocol the internet runs on
 - [[High availability networking]]: where "replicate it" stops (the gateway for the gateways). One address, one machine; multiple A records and their limits; one address served by several machines: floating IP (VRRP) on a LAN, ECMP in a site, anycast across networks; DNS vs BGP jobs; hierarchy vs distributed graph; redundancy at every level (DNS root included); black holes, split brain, ECMP rehash, shared fate, slow failover
-- Not written yet: *[[OSPF]]* (routing inside one organization) · *[[First-hop redundancy (VRRP)]]* (two gateways, one IP)
+- Not written yet: *[[First-hop redundancy (VRRP)]]* (two gateways, one IP)
 
 ## 5. Filtering
 - [[Ingress and egress]]: traffic into vs out of something, and why it only means something once the boundary is named. Packet direction vs connection direction (stateful vs stateless rules, ephemeral ports), north-south vs east-west, why egress filtering matters, cloud egress fees, and the things named after the words (Kubernetes Ingress, egress gateways)

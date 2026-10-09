@@ -21,6 +21,7 @@ Networking/
 │   ├── HTTP.md                    messages, methods, status, 1.0 vs 1.1 persistent connections, chunked, HOL, Host, long polling/SSE/WebSocket
 │   ├── HTTP2.md                   frames, streams, multiplexing, ALPN, HPACK, TCP HOL, HTTP/3 and QUIC, LB trap
 │   ├── WebSocket.md               upgrade handshake, frames/masking, crossing NAT/proxies/LBs, scaling, close codes, security, API Gateway
+│   ├── OSPF.md                    link-state vs distance-vector, SPF, adjacencies, DR/BDR, cost, areas/LSAs, stub/NSSA, FRR lab, failures
 │   └── AS and BGP.md              inter-network routing, ASNs
 ├── Addressing/
 │   ├── IP addressing and subnetting.md   binary, masks, CIDR, special ranges, VLSM, summarization, practice
@@ -75,7 +76,7 @@ Every note in this area has `subtopic: <index name>` in its frontmatter, and is 
 
 | Sub-topic index | Lives in | Covers |
 |---|---|---|
-| `Networking › Protocols.md` | `Protocols/` | the layer model and the protocols on top of it: ICMP, HTTP, HTTP/2 and HTTP/3, WebSocket, BGP |
+| `Networking › Protocols.md` | `Protocols/` | the layer model and the protocols on top of it: ICMP, HTTP, HTTP/2 and HTTP/3, WebSocket, OSPF, BGP |
 | `Networking › Host networking.md` | `(area root)` | where one machine meets the network: interfaces and namespaces, inter-process communication, sockets |
 | `Networking › Addressing.md` | `Addressing/` | IP addresses, subnetting and designing an address plan |
 | `Networking › DNS.md` | `DNS/` | name resolution, its security and running it in production |

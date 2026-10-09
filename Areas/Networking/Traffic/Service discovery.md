@@ -43,7 +43,7 @@ A small, highly available database built for this: instances **register** themse
 | **Consul** | Registry + health checks + a DNS interface (`orders.service.consul`) + KV store. Agents on every node |
 | **etcd** | Strongly consistent key-value store. What Kubernetes stores everything in |
 | **ZooKeeper** | The older one (Hadoop, Kafka's old coordination). Ephemeral nodes disappear when an instance's session dies |
-| **Eureka** | Netflix's, for client-side discovery in Java/Spring |
+| **Eureka** | Netflix's, for client-side discovery in Java/Spring (the whole stack and its history: [[Spring Cloud and Netflix OSS]]) |
 | **Platform-provided** | Kubernetes, cloud registries (see [[Proxies, load balancing and discovery in AWS]]) |
 
 ### Client-side vs server-side discovery
@@ -108,6 +108,7 @@ The **service mesh** is the best of both: a sidecar proxy next to each client do
 - Identity:: [[Workload identity (SPIFFE)]], [[mTLS]]
 - Applied:: [[Proxies, load balancing and discovery in AWS]]
 - In orchestrators:: [[Kubernetes architecture]] (EndpointSlices, kube-proxy, CoreDNS), [[Docker Swarm]] (VIPs on overlay networks)
+- History:: [[Spring Cloud and Netflix OSS]] (Eureka + Ribbon client-side discovery on VMs, and what replaced it)
 
 ## Flashcards
 #flashcards

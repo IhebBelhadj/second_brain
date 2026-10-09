@@ -203,6 +203,7 @@ spec:
 - Identity:: [[Workload identity (SPIFFE)]]
 - Certificates:: [[Certificate rotation]]
 - Differs from:: [[Load balancers]] (one central hop) and [[Security groups]] (IP/port rules, no identity)
+- Before meshes:: [[Spring Cloud and Netflix OSS]] (the same jobs as Java libraries: Ribbon, Hystrix, Sleuth)
 
 ## Flashcards
 #flashcards

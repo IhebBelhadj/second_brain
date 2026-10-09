@@ -4,7 +4,7 @@ created: 2026-10-09
 topic: Containers
 confidence: 1
 tags: [containers, orchestration, microservices, service-discovery, spring, java, history]
-aliases: [Spring Cloud, Spring Cloud Netflix, Netflix OSS, Eureka, Ribbon, Hystrix, Zuul, Spring Cloud Config]
+aliases: [Spring Cloud, Spring Cloud Netflix, Netflix OSS, Eureka, Ribbon, Zuul, Spring Cloud Config]
 ---
 	# Spring Cloud and Netflix OSS
 
@@ -92,7 +92,7 @@ This is **client-side discovery** (see [[Service discovery#Client-side vs server
 
 Black Friday: `inventory` gets slow. Every `orders` request now waits 30 seconds on it. Each waiting request holds a Tomcat thread. After 200 of them, `orders` has no threads left and stops answering **everything**, including requests that never needed `inventory`. Then the frontend, which waits on `orders`, runs out of threads too. One slow dependency, **cascading failure** across the whole shop.
 
-**Hystrix** (Netflix, 2012) wraps every outbound call with:
+**Hystrix** (Netflix, 2012) wraps every outbound call with (the patterns in depth: [[Resilience patterns]]; a hands-on tutorial: [[Hystrix]]):
 - A **timeout**: never wait more than, say, 1 second
 - A **bulkhead**: each dependency gets its own small thread pool (10 threads for `inventory`). When it's full, extra calls fail at once instead of eating the shared pool. One slow dependency can only exhaust *its* compartment, like the watertight compartments of a ship
 - A **circuit breaker**: if more than 50% of recent calls to `inventory` failed, the circuit **opens** and calls fail instantly for a few seconds, without even trying, giving `inventory` room to recover. Then it lets one test call through (**half-open**); if it succeeds, the circuit closes again
@@ -515,7 +515,7 @@ Once services ran in an **orchestrator**, the orchestrator already knew everythi
 | --------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | **Registry**                            | Eureka, self-registration with heartbeats              | **EndpointSlices** of a [[Kubernetes Service]], filled by the platform from pod **readiness probes** (third-party registration)                                                                 | **Cloud Map**, filled automatically by ECS                                            |
 | **Finding a service**                   | `http://payments` resolved by the Eureka client        | DNS name `payments.shop.svc.cluster.local` (CoreDNS) and a stable ClusterIP                                                                                                                     | ECS Service Connect short names (`http://payments:8080`), VPC Lattice service names   |
-| **Load balancing**                      | Ribbon in the caller                                   | kube-proxy on every node (L4( per connection), or a mesh sidecar (L7, Layer 7: per request)                                                                                                     | Service Connect's Envoy proxy, internal ALB (Application Load Balancer), VPC Lattice  |
+| **Load balancing**                      | Ribbon in the caller                                   | kube-proxy on every node (L4 per connection), or a mesh sidecar (L7 per request)                                                                                                                | Service Connect's Envoy proxy, internal ALB (Application Load Balancer), VPC Lattice  |
 | **Timeouts, retries, circuit breaking** | Hystrix in the caller                                  | [[Service mesh]] (Istio, Linkerd): timeouts, retries, outlier detection, connection limits, set in YAML (YAML Ain't Markup Language) per route                                                  | Service Connect (retries, outlier detection), VPC Lattice                             |
 | **Fallbacks** (business decisions)      | Hystrix fallbacks                                      | **Still in the app**: Resilience4j, or plain code. A proxy can't know that "stock unknown" is an acceptable answer                                                                              | Same, in the app                                                                      |
 | **Edge gateway**                        | Zuul 1 behind an ELB                                   | [[Kubernetes Ingress]] or the Gateway API, with an ingress controller (nginx, Envoy Gateway, Traefik)                                                                                           | ALB, API Gateway, CloudFront in front                                                 |
@@ -767,6 +767,7 @@ Most companies didn't jump from one picture to the other. Typical intermediate s
 - In AWS:: [[ECS]], [[Auto Scaling]], [[Systems Manager]]
 - How it was hosted:: [[VPC]], [[Security groups]], [[NAT and PAT]], [[Bastion host]], [[Packer]], [[Load balancers]], [[Route 53]], [[RDS]], [[SQS]], [[SNS]], [[CloudWatch alarms]], [[CloudWatch Logs]]
 - Rollouts:: [[Deployment strategies]]
+- Resilience:: [[Resilience patterns]], [[Hystrix]], [[Resilience4j]], [[Resilience in a service mesh]]
 
 ## Flashcards
 #flashcards

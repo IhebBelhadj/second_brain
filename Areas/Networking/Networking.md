@@ -78,6 +78,12 @@ flowchart TD
 - [[Reverse proxy]]: one entry point for many apps, TLS termination, the "real client IP" problem (X-Forwarded-For, PROXY protocol), 502/504 debugging, the family (LB, API gateway, CDN, ingress, sidecar)
 - [[Load balancing]]: L4 vs L7, algorithms, health checks and their traps, sticky sessions, draining and retries, the gRPC trap, making the LB itself HA (VRRP, ECMP, anycast, DSR), global load balancing
 - [[Service discovery]]: from config files to DNS to registries, client-side vs server-side, registration, how Kubernetes Services work, failure modes
+- [[Resilience patterns]]: surviving slow and failing dependencies. Cascading failure, timeouts (and deadlines), retries with backoff, jitter and budgets, circuit breakers, bulkheads and Little's law, fallbacks, rate limiting and load shedding, hedging, the nesting order, why it all lived in application code until about 2018, and what moved to the mesh
+    - [[Hystrix]]: tutorial for Netflix's Java library (2012, maintenance since 2018): commands, thread vs semaphore isolation, properties, Spring Cloud annotations, the dashboard, and moving off it
+    - [[Resilience4j]]: tutorial for its Java successor: circuit breaker, retry, time limiter, bulkheads, rate limiter, Spring Boot configuration and annotation order, metrics, traps
+    - [[Polly]]: tutorial for .NET: v7 policies, v8 resilience pipelines, `AddStandardResilienceHandler`, hedging, chaos testing
+    - [[Resilience libraries in other languages]]: Go, Python, Node.js, gRPC deadlines and retry policy, Failsafe, Sentinel, adaptive concurrency limits, Finagle, and the cost of a polyglot zoo
+    - [[Resilience in a service mesh]]: the same patterns as proxy configuration (Istio, Envoy, Linkerd): timeouts, retries and budgets, Envoy "circuit breakers" vs outlier detection, fault injection, what stays in the app, migrating without multiplying retries
 
 ## 8. Joining networks (VPNs and their alternatives)
 - [[VPN]]: the three ingredients, how a client works (tun, routes, DNS), site-to-site vs remote access, split vs full tunnel, WireGuard, MTU

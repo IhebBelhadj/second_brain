@@ -14,13 +14,13 @@ tags: [networking, security, kubernetes, microservices]
 
 With a few services, each app handles its own calls. With dozens or hundreds of microservices, **every** service needs the same things:
 
-| Concern | Without a mesh |
-|---|---|
-| Encrypt + authenticate every call ([[mTLS]]) | Each team issues, installs and **rotates** certificates |
-| "Who may call me?" | Custom auth code in every service |
-| Retries, timeouts, circuit breakers | A library per language (Hystrix, Polly, resilience4j…), configured differently everywhere |
-| Canary releases, traffic splitting | Custom load balancer config |
-| Metrics, traces for every call | Instrumentation in every codebase |
+| Concern                                      | Without a mesh                                                                                        |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Encrypt + authenticate every call ([[mTLS]]) | Each team issues, installs and **rotates** certificates                                               |
+| "Who may call me?"                           | Custom auth code in every service                                                                     |
+| Retries, timeouts, circuit breakers          | A library per language ([[Hystrix]], [[Polly]], [[Resilience4j]]…), configured differently everywhere |
+| Canary releases, traffic splitting           | Custom load balancer config                                                                           |
+| Metrics, traces for every call               | Instrumentation in every codebase                                                                     |
 
 The mesh does all of it **the same way for every service, in every language**, configured centrally.
 
@@ -203,6 +203,7 @@ spec:
 - Identity:: [[Workload identity (SPIFFE)]]
 - Certificates:: [[Certificate rotation]]
 - Differs from:: [[Load balancers]] (one central hop) and [[Security groups]] (IP/port rules, no identity)
+- Resilience in depth:: [[Resilience patterns]], [[Resilience in a service mesh]]
 - Before meshes:: [[Spring Cloud and Netflix OSS]] (the same jobs as Java libraries: Ribbon, Hystrix, Sleuth)
 
 ## Flashcards

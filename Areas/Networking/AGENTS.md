@@ -52,6 +52,13 @@ Networking/
 │   ├── Reverse proxy.md           TLS termination, X-Forwarded-For, PROXY protocol, 502/504, the family
 │   ├── Load balancing.md          L4/L7, algorithms, health checks, stickiness, LB HA, GSLB
 │   └── Service discovery.md       DNS vs registries, client/server-side, Kubernetes Services
+├── Resilience/                    surviving slow and failing dependencies
+│   ├── Resilience patterns.md     hub: timeouts, retries/backoff/jitter, circuit breakers, bulkheads, fallbacks, shedding, hedging, order, app → mesh history
+│   ├── Hystrix.md                 tutorial: HystrixCommand, isolation, properties, Spring Cloud, dashboard, migration
+│   ├── Resilience4j.md            tutorial: modules, decorators, Spring Boot config/annotations, aspect order, metrics
+│   ├── Polly.md                   tutorial (.NET): v7 policies, v8 pipelines, standard resilience handler
+│   ├── Resilience libraries in other languages.md   Go, Python, Node.js, gRPC, Failsafe, Sentinel, concurrency-limits, Finagle
+│   └── Resilience in a service mesh.md   Istio/Envoy/Linkerd timeouts, retries, budgets, outlier detection, what stays in the app
 └── VPN/
     ├── VPN.md                     ingredients, client internals, site-to-site vs remote access, split tunnel, DNS, MTU
     ├── Types of VPN.md            site-to-site → DMVPN → SD-WAN, ZTNA, mesh overlays, L2 VPNs, MPLS
@@ -73,6 +80,7 @@ Networking/
 | Layer 3 forwarding and translation (routing protocols, NAT, VRRP) | `Routing/` |
 | Crypto, certificates, identity, firewalls | `Security/` |
 | Proxies, load balancing, discovery, CDNs | `Traffic/` |
+| Timeouts, retries, circuit breakers, resilience libraries | `Resilience/` |
 | VPNs and tunnels | `VPN/` |
 | Doesn't fit (troubleshooting, monitoring, automation) | Area root, or a new folder if 2+ notes will share it |
 

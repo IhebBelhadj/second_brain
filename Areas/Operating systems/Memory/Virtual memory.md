@@ -12,20 +12,29 @@ aliases: [Paging, Page table, Page fault, TLB, Swap, OOM killer, Address space, 
 > [!abstract] In one sentence
 > The addresses a program uses are not places in RAM: each process gets its own private range of addresses, and the CPU translates every address, in fixed-size chunks called pages, to wherever the kernel really put the data, or to "not here", which hands control to the kernel. That one translation step is what keeps processes apart and what lets the kernel allocate lazily, share memory, swap, and promise more memory than it has.
 >
-> *RAM: random-access memory · CPU: central processing unit*
 
 ## The plan of this note
 
-Virtual memory is a chain of ideas, where each one exists because of a problem the previous one left behind. The note follows that chain:
+Virtual memory is a chain of ideas, where each one exists because of a problem the previous one left behind. The three at the heart of it:
+1. **Pages** cut the number of translations: one per 4 KiB instead of one per byte
+2. **A tree of page tables** avoids storing entries for the huge parts of the address space a process never uses
+3. **The TLB** avoids walking that tree on every memory access
+
+> <span style="color:rgb(255, 192, 0)"><b>TLB</b></span> : Translation Lookaside Buffer
+
+
+The note follows the chain step by step:
 
 1. **The surprise**: two processes use the same address and see different values. So addresses can't be places in RAM
 2. **Why translate at all**: what goes wrong when programs use RAM addresses directly
 3. **Why in fixed-size pages**: translating byte by byte is impossible, translating whole programs fragments memory
 4. **How an address is split** into a page number and a position inside the page, and why pages are 4 KiB
-5. **How big the address space is**, and where numbers like 128 TiB come from
-6. **Why the page table is a tree**: a flat table would be bigger than RAM
-7. **Why the TLB exists, and why it's so small**: translation must not slow every memory access down
-8. **Page faults**: what happens when the translation says "not here"
+5. **How big the address space is**, where numbers like 128 TiB come from, and why it's mostly empty
+6. **Why the page table is a tree**: a flat table would be bigger than RAM. Where the 4 levels and the 48 bits come from
+7. **Why the TLB exists, and why it's so small**: the tree makes every access slow, a cache fixes it
+8. **Huge pages**: the TLB can't grow, so each entry covers more
+9. **Switching processes**: one tree per process, and keeping every core's TLB correct
+10. **Page faults**: what happens when the translation says "not here"
 
 Then what that mechanism makes possible (lazy allocation, sharing, swap, overcommit and the OOM killer), and finally how to read all of it on a real Linux machine.
 
@@ -238,10 +247,10 @@ physical address  0x1a2f3 | 034  =  0x1a2f3034
 ```
 
 **Why 4 KiB and not something else?** Page size is a trade-off between two costs:
-- **Smaller pages** mean more pages for the same memory: bigger page tables, and more translations for the CPU to keep track of (Step 7)
+- **Smaller pages** mean more pages for the same memory: bigger page tables, and more translations for the TLB to keep track of (Steps 7 and 8)
 - **Bigger pages** waste memory, because the unit of allocation is a whole page: a process that needs 100 bytes in a new area gets a full page, and on average half a page is wasted at the end of every area. Copying or reading a page also gets more expensive (Part 2 copies pages one at a time on writes, and reads them from disk one at a time)
 
-4 KiB was the balance chosen when paging arrived on mainstream processors (Intel's 80386 in 1985 used it), and it stayed because operating systems, file formats and software assumed it. Some ARM systems use 16 KiB or 64 KiB pages, and every modern CPU can also use much larger **huge pages** (2 MiB or 1 GiB) for specific areas; Step 7 shows why that's worth it. A program can ask the size with `getconf PAGESIZE`; [[Memory pages]] follows a single page through its life.
+4 KiB was the balance chosen when paging arrived on mainstream processors (Intel's 80386 in 1985 used it), and it stayed because operating systems, file formats and software assumed it. Some ARM systems use 16 KiB or 64 KiB pages, and every modern CPU can also use much larger **huge pages** (2 MiB or 1 GiB) for specific areas; Step 8 shows why that's worth it. A program can ask the size with `getconf PAGESIZE`; [[Memory pages]] follows a single page through its life.
 
 ### Step 5: how big a virtual address space is
 
@@ -249,19 +258,96 @@ A 64-bit CPU has 64-bit registers, so in theory an address could reach 2⁶⁴ b
 - 2⁴⁸ bytes = **256 TiB** of virtual addresses in total
 - Linux gives the **lower half, 128 TiB**, to the process (addresses `0x0` to `0x7fffffffffff`), and keeps the **upper half for the kernel**, mapped in every process but only usable in kernel mode ([[Interrupts]] explains user mode and kernel mode)
 
-So each process has 128 TiB of addresses, on a machine that may have 16 GiB of RAM. That's not a contradiction: the address space is a **range of possible addresses**, almost all of it unused, and only pages actually in use need RAM. Recent CPUs can use 57 bits (a fifth table level, Step 6) for machines with enormous memory.
+So each process has 128 TiB of addresses, on a machine that may have 16 GiB of RAM. That's not a contradiction: the address space is a **range of possible addresses**, not memory the process owns. A typical process uses maybe 100 MiB of it, in a few regions far apart from each other, with enormous unused gaps in between:
+
+```mermaid
+flowchart TB
+    S["Stack<br/>near the top of user space, 0x7fff…"]
+    G1["unused"]
+    L["Shared libraries and memory mappings<br/>high addresses, 0x7f…"]
+    G2["unused: almost all of the 128 TiB"]
+    H["Heap<br/>grows upwards with malloc / new"]
+    C["Program code and data<br/>low addresses, from 0x400000"]
+    S ~~~ G1 ~~~ L ~~~ G2 ~~~ H ~~~ C
+    classDef used fill:#ddebf7,stroke:#2f5597,color:#1b1b1b
+    classDef gap fill:#ffffff,stroke:#bfbfbf,stroke-dasharray: 4 4,color:#7f7f7f
+    class S,L,H,C used
+    class G1,G2 gap
+```
+
+*From high addresses (top) to low addresses (bottom). The boxes show which regions exist, not their sizes: the gaps are billions of times bigger than the used regions.*
+
+Part 3 shows this layout on a real process. What matters now is the shape: **a few small used regions, scattered across a huge, mostly empty range**. That shape is the problem of the next step.
 
 ### Step 6: why the page table is a tree
 
-A process has 128 TiB / 4 KiB = 2⁴⁷ / 2¹² = 2³⁵ ≈ **34 billion** possible pages. A flat page table, one 8-byte entry per possible page, would take 2³⁵ × 8 bytes = **256 GiB per process**. Impossible again, and absurd, since a typical process uses a few thousand pages scattered in a few regions (code near the bottom, heap above it, libraries and stack near the top).
+#### The problem: a flat table describes every possible page
 
-The fix is to describe only the parts that exist, with a **tree**:
-- A page table is made of small tables, each exactly **one page** (4 KiB) holding **512 entries** of 8 bytes. 512 = 2⁹, so each table is indexed by **9 bits** of the address
-- x86-64 uses **4 levels**: 4 × 9 bits for the page number + 12 bits of offset = 48 bits. That's where the 48 comes from
-- The top table's entries point to second-level tables, which point to third-level tables, which point to the last level, whose entries finally hold the **frame number**
-- A region of the address space nobody uses is just an **empty entry** high in the tree: no table is created below it
+A flat page table has one entry per possible page, used or not. Counting them, one power of two at a time:
+- 128 TiB = 2⁷ × 2⁴⁰ = **2⁴⁷ bytes**
+- one page = 4 KiB = **2¹² bytes**
+- possible pages = 2⁴⁷ / 2¹² = **2³⁵** ≈ 34.4 billion
+- one entry = 8 bytes = 2³ bytes, so the table = 2³⁵ × 2³ = **2³⁸ bytes**
+- 1 GiB = 2³⁰ bytes, so the table = 2³⁸ / 2³⁰ = 2⁸ = **256 GiB per process**
 
-The address of `counter`, cut into the four indexes:
+A process using 100 MiB would need a 256 GiB table, almost all of it entries saying "nothing here". Pages are not the problem (they fixed the byte-by-byte problem of Step 3). The problem is that a **flat** table describes **every possible** page, including the billions in the gaps of Step 5.
+
+#### The fix: small tables, created only where memory is used
+
+Cut the page table into small tables, each exactly **one page**:
+- 4,096 bytes per table / 8 bytes per entry = **512 entries** per table
+- an entry either points to a **table one level down**, or (at the last level) holds a **frame number**
+- an **empty entry** ends its branch: no table exists below it
+
+It's the same idea as a filesystem's directories. The root directory doesn't list every file on the disk: it points to subdirectories, subdirectories exist only where files exist, and nobody creates millions of empty directories for files that don't exist. A page table tree does the same with address ranges.
+
+```mermaid
+flowchart TB
+    CR3["CR3 register:<br/>physical address of the root table"] --> R["Level 1 (root) table<br/>512 entries"]
+    R -- "entry 0" --> A2["Level 2 table"]
+    R -- "entry 255" --> B2["Level 2 table"]
+    R -.- E["entries 1 to 254: empty<br/>no tables below them at all"]
+    A2 --> A3["Level 3 table"] --> A4["Level 4 table(s)<br/>→ frames of code, data, heap"]
+    B2 --> B3["Level 3 table"] --> B4["Level 4 table(s)<br/>→ frames of libraries, stack"]
+    classDef reg fill:#1f4e79,stroke:#0b2540,color:#ffffff
+    classDef table fill:#fff2cc,stroke:#bf9000,color:#1b1b1b
+    classDef empty fill:#ffffff,stroke:#bfbfbf,stroke-dasharray: 4 4,color:#7f7f7f
+    classDef leaf fill:#e2efda,stroke:#548235,color:#1b1b1b
+    class CR3 reg
+    class R,A2,B2,A3,B3 table
+    class A4,B4 leaf
+    class E empty
+```
+
+Why entries 0 and 255? Each entry of a level covers a fixed slice of the address space, and the slice shrinks by 512 at every level:
+
+| One entry of… | Covers | Because |
+|---|---|---|
+| Level 4 (last) | 4 KiB | one page |
+| Level 3 | 512 × 4 KiB = **2 MiB** | a full level 4 table below it |
+| Level 2 | 512 × 2 MiB = **1 GiB** | a full level 3 table below it |
+| Level 1 (root) | 512 × 1 GiB = **512 GiB** | a full level 2 table below it |
+
+User space is 128 TiB = 256 × 512 GiB, so it's root entries **0 to 255**, and the kernel's half is entries 256 to 511. The code and heap at the bottom fall under entry 0; the libraries and stack at the top fall under entry 255. Everything between them is 254 empty entries and **no tables at all**. Remember the 2 MiB and 1 GiB lines: they come back as huge page sizes in Step 8.
+
+The tree is **sparse, not free**: the root table always exists, and every table on the path to a used page costs 4 KiB. The small process above needs about a dozen tables (the root, a level 2 and level 3 table per region, and a few level 4 tables), about 50 KiB in total, against 256 GiB for the flat table.
+
+#### Why four levels, and where the 48 bits come from
+
+Each level needs an index to pick one of its 512 entries, and 512 = 2⁹, so each index is **9 bits**. The offset inside the page is **12 bits**, because 2¹² = 4,096. Four levels make a 48-bit address:
+
+| Bits 47–39 | Bits 38–30 | Bits 29–21 | Bits 20–12 | Bits 11–0 |
+|---|---|---|---|---|
+| level 1 index | level 2 index | level 3 index | level 4 index | offset |
+| 9 bits | 9 bits | 9 bits | 9 bits | 12 bits |
+
+4 × 9 + 12 = **48 bits**. That's the 48 of Step 5: the number of levels and the table size fix the size of the address space, not the other way round.
+
+The registers are still 64 bits wide, so what about bits 48 to 63? The CPU requires them to be copies of bit 47 (a **canonical** address), and refuses any other address. Bit 47 = 0 gives the user half, `0x0000000000000000` to `0x00007fffffffffff`; bit 47 = 1 gives the kernel half, from `0xffff800000000000` up. CPUs with **five-level paging** add a fifth 9-bit index: 5 × 9 + 12 = 57-bit addresses, for machines with enormous memory.
+
+#### Following 0x404034 through the tree
+
+The address of `counter` from Step 1, cut into the five fields:
 
 ```text
 0x404034 in binary, 48 bits, grouped as 9 | 9 | 9 | 9 | 12:
@@ -271,32 +357,65 @@ level 1 index   level 2 index   level 3 index   level 4 index   offset
     0               0               2               4             0x034
 ```
 
+| Field | Value | What the MMU does with it |
+|---|---|---|
+| Level 1 index | 0 | read entry 0 of the root table → address of a level 2 table |
+| Level 2 index | 0 | read entry 0 of that table → address of a level 3 table |
+| Level 3 index | 2 | read entry 2 → address of a level 4 table |
+| Level 4 index | 4 | read entry 4 → frame number (`0x1a2f3` here) and permission bits |
+| Offset | `0x034` | byte 52 inside that frame |
+
 ```mermaid
 flowchart LR
-    CR3["CPU register CR3:<br/>where this process's<br/>top table is"] --> L1["Level 1 table<br/>entry 0"]
+    CR3["CR3 register:<br/>root table of<br/>this process"] --> L1["Level 1 table<br/>entry 0"]
     L1 --> L2["Level 2 table<br/>entry 0"]
     L2 --> L3["Level 3 table<br/>entry 2"]
     L3 --> L4["Level 4 table<br/>entry 4: frame 0x1a2f3<br/>+ permission bits"]
-    L4 --> PA["physical address<br/>0x1a2f3 · 034"]
+    L4 --> PA["physical address<br/>0x1a2f3 · 034<br/>= 0x1a2f3034"]
     classDef reg fill:#1f4e79,stroke:#0b2540,color:#ffffff
     classDef table fill:#fff2cc,stroke:#bf9000,color:#1b1b1b
     classDef out fill:#e2efda,stroke:#548235,color:#1b1b1b
     class CR3 reg
-    class L1,L2,L3,L4 table
-    class PA out
+    class L1,L2,L3 table
+    class L4,PA out
 ```
 
-A small process needs only a handful of these tables, a few dozen KiB in total. Switching to another process means pointing one CPU register (`CR3` on x86) at the other process's top table: that's the moment the whole address space changes.
+The MMU never **searches** a table: each 9-bit index is the position of the entry to read, so every level is one direct read. The frame number `0x1a2f3` is illustrative; the real one is whatever frame the kernel picked.
 
 Each last-level entry also holds the page's **permission bits** (present, writable, user-accessible, executable) and two bits the CPU sets by itself: **accessed** (the page was read) and **dirty** (the page was written). The kernel uses those two to decide which pages to evict and which must be saved first ([[Memory pages]]).
 
 ### Step 7: why the TLB exists, and why it's so small
 
-The tree solves the size problem and creates a speed problem. To translate one address, the MMU has to read **four table entries from memory**, one per level, before it can do the access the program asked for: **five memory accesses instead of one**. A read from RAM takes around 100 nanoseconds, while the CPU's own first-level cache answers in about 1 nanosecond. Doing a full walk on every access would make every program several times slower.
+The tree solves the size problem and creates a **speed** problem. To translate one address, the MMU reads four entries, one per level, and only then does the access the program asked for:
+1. read the level 1 entry
+2. read the level 2 entry
+3. read the level 3 entry
+4. read the level 4 entry
+5. **then** read or write the data
 
-Programs, though, touch the same pages over and over (a loop's variables, the current stack frame, the code being run). So the CPU keeps the translations it used recently in a small cache inside each core: the **TLB (translation lookaside buffer)**, a table of "virtual page → frame + permissions" pairs. On a **TLB hit**, the translation is free. On a **TLB miss**, the MMU walks the tree (helped by the normal data caches, which often hold the upper tables) and stores the result in the TLB.
+In the worst case that's **five memory accesses instead of one**. A read from RAM takes around 100 nanoseconds, while the CPU's first-level cache answers in about 1 nanosecond. The table entries are often in the CPU's normal data caches, so a walk isn't always five trips to RAM, but doing a walk on every access would still make every program several times slower.
 
-**Why it's small.** The TLB is consulted on **every** memory access, of every instruction, and must answer in about one CPU cycle, in parallel with the first-level cache lookup. To be that fast, it compares the page number against all its entries at once, in hardware. Each extra entry costs chip area and power and makes the lookup slower, so the first-level TLB holds only around **64 to 100 entries**, backed by a second-level TLB of about **1,500 to 3,000 entries** that's a few cycles slower (typical figures for recent x86 server cores).
+The way out is that programs reuse the same pages over and over (**locality**): a loop runs the same few code pages millions of times and touches the same variables and the same stack frame. So the CPU keeps the translations it used recently in a small cache inside each core: the **TLB (translation lookaside buffer)**, a table of "virtual page → frame + permissions" pairs.
+
+```mermaid
+flowchart TB
+    A["CPU accesses a virtual address"] --> B{"page number<br/>in the TLB?"}
+    B -- "TLB hit (most accesses)" --> F["frame from the TLB<br/>+ offset"]
+    B -- "TLB miss" --> W["walk the 4 levels of the tree,<br/>check permissions"]
+    W --> S["store the translation<br/>in the TLB"]
+    S --> F
+    F --> M["access the physical address"]
+    classDef fast fill:#e2efda,stroke:#548235,color:#1b1b1b
+    classDef slow fill:#f8cbad,stroke:#c00000,color:#1b1b1b
+    classDef step fill:#ddebf7,stroke:#2f5597,color:#1b1b1b
+    class F,M fast
+    class W,S slow
+    class A,B step
+```
+
+After the first few iterations of a loop, its pages' translations are in the TLB, and the millions of accesses that follow skip the walk.
+
+**Why it's small.** The TLB is consulted on **every** memory access, of every instruction, and must answer in about one CPU cycle, in parallel with the first-level cache lookup. To be that fast, it compares the page number against all its entries at once, in hardware. Each extra entry costs chip area and power and makes the lookup slower, so the first-level TLB holds only around **64 to 100 entries**, backed by a second-level TLB of about **1,500 to 3,000 entries** that's a few cycles slower (typical figures for recent x86 server cores; the exact numbers vary by CPU model).
 
 **What that means for a program.** The TLB's **reach** is how much memory its entries cover:
 
@@ -304,15 +423,56 @@ Programs, though, touch the same pages over and over (a loop's variables, the cu
 |---|---|---|---|
 | First-level TLB, 4 KiB pages | 64 | 4 KiB | 256 KiB |
 | Second-level TLB, 4 KiB pages | 2,048 | 4 KiB | 8 MiB |
-| Second-level TLB, 2 MiB huge pages | 2,048 | 2 MiB | 4 GiB |
 
-A program that jumps around a few GiB of data (a database's cache, a big hash table) touches far more than 8 MiB, so with 4 KiB pages it misses the TLB constantly and pays a table walk each time. With 2 MiB **huge pages**, one entry covers 512 times more memory, the same TLB reaches 4 GiB, and the tree is one level shorter. That's the main reason huge pages exist ([[Memory pages]] covers how to use them, and the transparent huge pages trap).
+A program that jumps around a few GiB of data (a database's cache, a big hash table) touches far more than 8 MiB. With 4 KiB pages its translations can't all stay in the TLB, so it misses constantly and pays a walk each time. That's the limitation of the next step.
 
-The TLB also explains two costs that look strange otherwise:
-- **Switching processes costs more than switching threads.** A new process means a new page table, so the TLB's entries belong to the wrong address space. CPUs tag entries with an address-space number (PCID (process-context identifier) on x86) to avoid flushing everything, but the new process still starts with few useful entries. Threads of one process share one page table, so their entries stay valid ([[Processes and threads]])
-- **TLB shootdowns.** When a multi-threaded process unmaps memory, other cores running its threads may still hold the old translation. The kernel interrupts them to flush it and waits for them ([[Interrupts]]). Programs that map and unmap memory constantly across many threads pay for it
-21
-### Step 8: when the translation says "not here" (page faults)
+### Step 8: huge pages, to make the TLB reach further
+
+The TLB can't get more entries (Step 7), so the other way to cover more memory is to make **each entry cover more**: a bigger page. The sizes are not arbitrary; they're the coverage of one entry higher up the tree (the table in Step 6):
+- a **level 3** entry covers 2 MiB. If it points **directly to a 2 MiB block of frames** instead of to a level 4 table, the walk stops one level early: a **2 MiB huge page**, 512 times a normal page
+- a **level 2** entry covers 1 GiB, which gives **1 GiB huge pages**, stopping two levels early
+
+What that changes for a program touching 4 GiB of data:
+
+| | Pages to cover 4 GiB | Fits the ~2,048-entry TLB? | Walk length on a miss |
+|---|---|---|---|
+| 4 KiB pages | 2³² / 2¹² = 2²⁰ = **1,048,576** | No: 512 times too many | 4 reads |
+| 2 MiB pages | 2³² / 2²¹ = 2¹¹ = **2,048** | Yes, just | 3 reads |
+
+So with 2 MiB pages, the second-level TLB reaches 2,048 × 2 MiB = **4 GiB** instead of 8 MiB, and each miss is cheaper too. That's why databases and other programs with large in-memory data sets use huge pages.
+
+They're not free, which is why they aren't the default:
+- the kernel needs **512 contiguous free frames**, aligned on 2 MiB, which is harder to find on a machine that has been running a while: the fragmentation problem of Step 2 comes back
+- the unit of allocation becomes 2 MiB, so a small region wastes much more memory
+- the first touch of a huge page has to clear 2 MiB, not 4 KiB, which is a visible pause for latency-sensitive programs
+
+[[Memory pages]] covers how to use them, and the trap of transparent huge pages.
+
+### Step 9: switching processes, and keeping TLBs correct
+
+Each process has its own tree, and on x86 the **CR3** register holds the physical address of the current process's root table. Switching to another process means the kernel loads that process's root into CR3, and from that instruction on, the same virtual address goes through a different tree. That's the full answer to Step 1: both processes use `0x404034`, but 7101's tree leads to one frame and 7102's to another, and neither tree contains any path to the other's frames. That's how processes are isolated from each other.
+
+Two consequences come from the TLB:
+- **Switching processes costs more than switching threads.** After a switch, the TLB's entries describe the previous process's tree, and using them would read the wrong frames. Flushing the whole TLB on every switch would be safe but slow, so x86 CPUs tag each entry with an address-space number, **PCID (process-context identifier)**, and only use entries whose tag matches the current process; entries of other processes can stay and be useful when they're scheduled again. The new process still starts with few useful entries. Threads of one process share one tree, so their entries stay valid across a switch ([[Processes and threads]])
+- **TLB shootdowns.** A process has threads running on two cores. A thread on core 0 frees some memory, so the kernel removes those pages from the tree. But core 1's TLB may still hold the old translation, and a thread there could keep using a frame that's about to be given to someone else. So the kernel interrupts every core that might hold it, and waits:
+
+```mermaid
+sequenceDiagram
+    participant C0 as Core 0 (thread A)
+    participant K as Kernel
+    participant C1 as Core 1 (thread B)
+    C0->>K: munmap(region)
+    K->>K: remove the pages from the tree
+    K->>C1: interrupt: "flush page X from your TLB"
+    C1->>C1: invalidate the TLB entry
+    C1-->>K: done
+    K->>K: only now reuse the frames
+    K-->>C0: munmap returns
+```
+
+That round trip is a **TLB shootdown** ([[Interrupts]] explains the interrupt). Programs whose threads map and unmap memory constantly pay it again and again.
+
+### Step 10: when the translation says "not here" (page faults)
 
 An entry in the tree can say **not present**. When the MMU meets one, it can't finish the access, so it stops the instruction and raises a **page fault**: a CPU exception that runs the kernel's fault handler ([[Interrupts]] explains how exceptions enter the kernel). The kernel then decides, based on its own records of which address ranges the process is allowed to use:
 
@@ -347,6 +507,18 @@ flowchart TB
 | **Invalid** | The address isn't in any range the process owns, or the access breaks the page's permissions (writing to code) | The kernel sends `SIGSEGV`, and the process usually dies ([[Signals]]) |
 
 After a minor or major fault, the program resumes **at the same instruction** and never notices anything except the time it took. That invisibility is what Part 2 builds on: since the kernel gets control whenever a page isn't there, it can decide **when** pages get RAM, **which** frame they use, and **where** they are kept.
+
+### Part 1 in one table
+
+| Mechanism | Problem it solves | The problem it leaves |
+|---|---|---|
+| Virtual addresses (Step 2) | Relocation, isolation between processes | What unit to translate? |
+| Pages (Steps 3–4) | A table entry per byte; fragmentation | A flat table for 128 TiB is 256 GiB |
+| Page table tree (Step 6) | Entries for the unused parts of the address space | Four reads per translation |
+| TLB (Step 7) | Walking the tree on every access | Reaches only a few MiB with 4 KiB pages |
+| Huge pages (Step 8) | TLB reach, and shorter walks | Need contiguous memory, waste more |
+| CR3 and PCID (Step 9) | Selecting and telling apart each process's tree | Stale entries on other cores, hence shootdowns |
+| Page faults (Step 10) | Letting a page be "not here" without the program noticing | Nothing: it's what Part 2 builds on |
 
 ## Part 2: what the translation makes possible
 
@@ -472,7 +644,7 @@ cat /proc/self/maps        # the cat process describing itself
 7ffd3ba62000-7ffd3ba64000 r-xp 00000000 00:00 0           [vdso]
 ```
 
-Each line gives the address range, permissions (`r`ead, `w`rite, e`x`ecute, `p`rivate or `s`hared), the offset in the file and the file mapped, if any. These ranges are the kernel's "records" from Step 8: a fault inside one of them is served, a fault outside all of them is a `SIGSEGV`.
+Each line gives the address range, permissions (`r`ead, `w`rite, e`x`ecute, `p`rivate or `s`hared), the offset in the file and the file mapped, if any. These ranges are the kernel's "records" from Step 10: a fault inside one of them is served, a fault outside all of them is a `SIGSEGV`.
 
 | Range | Holds | Grows |
 |---|---|---|
@@ -576,7 +748,7 @@ When the group reaches its limit, the kernel first reclaims the group's page cac
 **Symptom:** a process's virtual size is larger than RAM, and someone files a ticket. **Cause:** VSZ counts promised address ranges (thread stacks, mapped files, a JVM's reserved heap), not RAM. **Fix:** nothing; look at RSS, PSS or the cgroup's usage.
 
 ### 6. Slow under random access to a big data set
-**Symptom:** a service working on a large in-memory data set (tens of GiB) is slower than expected, and `perf stat -e dTLB-load-misses` shows a very high miss count. **Cause:** with 4 KiB pages the TLB covers only a few MiB, so almost every access to the data set pays a page table walk (Step 7). **Fix:** huge pages for that memory (explicit huge pages for software that supports them, such as databases, or `madvise` for transparent huge pages), keeping in mind the latency trade-offs in [[Memory pages]].
+**Symptom:** a service working on a large in-memory data set (tens of GiB) is slower than expected, and `perf stat -e dTLB-load-misses` shows a very high miss count. **Cause:** with 4 KiB pages the TLB covers only a few MiB, so almost every access to the data set pays a page table walk (Steps 7 and 8). **Fix:** huge pages for that memory (explicit huge pages for software that supports them, such as databases, or `madvise` for transparent huge pages), keeping in mind the latency trade-offs in [[Memory pages]].
 
 ### 7. RSS never goes down after a peak
 **Symptom:** a service's RSS grows to 3 GiB during a traffic peak and stays there for days. **Cause:** a real leak (memory still referenced, growing with every request), or **fragmentation**: freed objects sit in pages that still hold a few live ones, so the allocator can't hand those pages back to the kernel. **Fix:** a leak keeps growing under steady load, fragmentation plateaus. For fragmentation, an allocator that returns memory better (jemalloc, `MALLOC_ARENA_MAX` for many-threaded glibc programs) or periodic worker restarts; for a leak, heap profiling.
@@ -608,6 +780,12 @@ When the group reaches its limit, the kernel first reclaims the group's page cac
 > [!example]- Why is a flat page table impossible on x86-64, and how does the tree fix it?
 > 128 TiB / 4 KiB = 2³⁵ pages × 8 bytes = 256 GiB per process. The tree only creates tables for regions in use; an unused region is one empty entry near the top.
 
+> [!example]- A process has code at `0x400000` and its stack just below `0x7fffffffffff`. Which root table entries does it use, and what does that say about the size of its tree?
+> One root entry covers 512 GiB = 2³⁹ bytes, so the root index is the address divided by 2³⁹. `0x400000` (4 MiB) is far below 512 GiB: entry 0. The stack is at the top of the 128 TiB user half: entry 255. Entries 1 to 254 are empty with nothing below them, so the tree is a few dozen KiB, not 256 GiB.
+
+> [!example]- A program jumps randomly around 4 GiB of data. Why is it faster with 2 MiB pages?
+> With 4 KiB pages, 4 GiB is 2²⁰ ≈ 1 million pages, far beyond a TLB of about 2,048 entries, so almost every access misses and walks 4 levels. With 2 MiB pages it's 2,048 pages: they roughly fit, and each miss walks only 3 levels.
+
 > [!example]- Why does a 4-level page table give 48-bit addresses?
 > Each table is one 4 KiB page of 512 = 2⁹ entries, so each level uses 9 bits: 4 × 9 = 36 bits of page number, plus 12 bits of offset = 48.
 
@@ -626,6 +804,8 @@ When the group reaches its limit, the kernel first reclaims the group's page cac
 - The offset inside a page is never translated; only the page number is
 - 128 TiB of address space per process isn't 128 TiB of memory: almost all of it is unused and costs nothing
 - A TLB miss isn't a page fault: a miss is a table walk done by hardware; a fault is "not present" and needs the kernel
+- The page table tree is sparse, not free: every used region costs a table at each level on its path. What it saves is the tables under the unused regions
+- Huge page sizes aren't arbitrary: 2 MiB and 1 GiB are exactly what one level 3 and one level 2 entry cover
 - Allocating memory doesn't use RAM; touching it does. VSZ can exceed RAM harmlessly
 - "Free" memory is supposed to be low: watch **available**
 - Summing RSS across processes over-counts shared memory; use PSS
@@ -664,6 +844,11 @@ How big is a process's virtual address space on x86-64 Linux? :: 48-bit addresse
 How big would a flat page table be on x86-64? :: 2^35 pages × 8 bytes = 256 GiB per process
 Why is the page table a tree? :: Only regions in use get tables; an unused region is one empty entry near the top
 Why does each page table level use 9 bits? :: Each table is one 4 KiB page of 512 = 2^9 entries of 8 bytes
+How much address space does one entry cover at each level of the x86-64 tree? :: Level 4: 4 KiB, level 3: 2 MiB, level 2: 1 GiB, level 1 (root): 512 GiB (×512 per level)
+Which root entries cover user space on x86-64, and why? :: Entries 0 to 255: 128 TiB / 512 GiB per entry = 256; entries 256–511 are the kernel's half
+Is a sparse page table tree free? :: No: the root and every table on the path to a used page cost 4 KiB each, but only tens of KiB for a small process, not 256 GiB
+Does the MMU search a page table for an entry? :: No: each 9-bit index of the address is the position of the entry to read, one direct read per level
+What is a canonical address on x86-64? :: One whose bits 48–63 are copies of bit 47; any other 64-bit value is refused
 Where do 48-bit addresses come from on x86-64? :: 4 levels × 9 bits + 12 bits of offset = 48
 What points the MMU at a process's page table on x86? :: The CR3 register, changed on every switch to another process
 What is the TLB? :: The translation lookaside buffer: a small cache in each CPU core of recent page-to-frame translations
@@ -671,6 +856,9 @@ Why is the TLB needed? :: Without it every access would need 4 extra memory read
 Why is the TLB small? :: It's checked on every access within about one cycle, comparing all entries at once; more entries cost area, power and speed
 What is TLB reach? :: Entries × page size: about 8 MiB with 2,048 entries of 4 KiB, 4 GiB with 2 MiB pages
 Why do huge pages help big workloads? :: Each TLB entry covers 2 MiB or 1 GiB instead of 4 KiB, so far fewer TLB misses (and shorter table walks)
+Why are huge pages 2 MiB and 1 GiB? :: They're what one level 3 or level 2 entry covers: the entry points straight at the block and the walk stops early
+How many pages cover 4 GiB with 4 KiB pages, and with 2 MiB pages? :: 2^32 / 2^12 = 1,048,576 vs 2^32 / 2^21 = 2,048
+What do huge pages cost? :: 512 contiguous aligned free frames (hard on a fragmented machine), more waste per region, a longer first-touch pause
 TLB miss vs page fault? :: A TLB miss is a hardware table walk; a page fault is a "not present" entry that needs the kernel
 Why does switching processes cost more than switching threads? :: A new process has a different page table, so TLB entries don't apply; threads share one
 What is a TLB shootdown? :: Interrupting other cores to flush a stale translation after memory is unmapped in a multi-threaded process

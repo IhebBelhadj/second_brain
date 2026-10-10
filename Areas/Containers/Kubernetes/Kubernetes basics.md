@@ -304,7 +304,7 @@ This is the real difference with Swarm: Kubernetes is less "a container runner" 
 Writing YAML by hand stops scaling quickly. The usual tools:
 - **Helm**: packages a set of manifests as a **chart** with templates and a values file. `helm install`, `helm upgrade`, `helm rollback`. Most third-party software is installed this way
 - **Kustomize** (built into `kubectl apply -k`): a base set of manifests plus per-environment patches, no templating
-- **GitOps** (Argo CD, Flux): the manifests live in Git, and a controller **in the cluster** keeps the cluster equal to the repository. A deploy is a commit; drift is corrected automatically. The reconciliation idea, applied to deployment itself
+- **GitOps** (Argo CD, Flux): the manifests live in Git, and a controller **in the cluster** keeps the cluster equal to the repository. A deploy is a commit; drift is corrected automatically. The reconciliation idea, applied to deployment itself (see [[GitOps basics]])
 
 ## What Kubernetes costs
 
@@ -367,7 +367,7 @@ Every major cloud sells managed Kubernetes: EKS on AWS, GKE on Google Cloud, AKS
 - Thinking a managed service runs everything: it runs the control plane, not the add-ons and workloads
 
 ## Related
-- Concepts:: [[Container orchestration]], [[Deployment strategies]] (rolling, blue/green via Service selectors, canary with Argo Rollouts/Flagger)
+- Concepts:: [[Container orchestration]], [[GitOps basics]] (how the shop deploys, Stage 9), [[Deployment strategies]] (rolling, blue/green via Service selectors, canary with Argo Rollouts/Flagger)
 - Under the hood:: [[Kubernetes architecture]]
 - All of it on one app:: [[Kubernetes worked example]]
 - How to read and write the YAML:: [[Kubernetes manifest syntax]]

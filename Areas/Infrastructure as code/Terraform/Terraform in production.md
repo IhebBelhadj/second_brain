@@ -646,7 +646,7 @@ moved {
 - Uses:: [[Terraform providers]] (`allowed_account_ids`, `default_tags`, lock file), [[Terraform resources and data sources]] (`lifecycle`, `moved`, `import`)
 - Applied in:: [[Terraform worked example]], [[ECS production stack]]
 - AWS side:: [[Connecting GitHub Actions to AWS]], [[IAM]], [[AWS Organizations]], [[CloudTrail]], [[S3]], [[RDS]]
-- Same ideas, applications:: [[Deployment strategies]]
+- Same ideas, applications:: [[Deployment strategies]], [[GitOps basics]] (pulled and continuously reconciled instead of pushed on merge)
 - Area:: [[Infrastructure as code]]
 
 ## Flashcards

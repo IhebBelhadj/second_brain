@@ -195,7 +195,7 @@ After `free(p)`, the block goes back to the allocator for reuse, but `p` itself 
 ```c
 int *bad(void) {
     int x = 42;
-    return &x;            /* x dies here: the caller gets a dangling pointer */
+    return &x; /* x dies here: the caller gets a dangling pointer */
 }
 
 int *good(void) {

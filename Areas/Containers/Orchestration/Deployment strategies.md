@@ -308,6 +308,7 @@ At every step, the running version and the previous one both work with the curre
 ## Related
 - Where deploys happen:: [[Container orchestration]], [[Kubernetes]], [[Docker Swarm]], [[ECS]]
 - A full app with a migration Job:: [[Kubernetes worked example]]
+- Deciding what runs:: [[GitOps basics]] (Argo Rollouts and Flagger objects live in the config repo)
 - What gets deployed:: [[Docker image tags]] (deploy by digest, build once and promote)
 - Traffic splitting:: [[Load balancing]] (draining, health checks), [[Service mesh]] (weighted routing), [[DNS in production]] (weighted DNS), [[Reverse proxy]]
 - Graceful shutdown:: [[Inter-process communication]] (SIGTERM)

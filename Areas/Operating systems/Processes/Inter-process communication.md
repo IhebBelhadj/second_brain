@@ -73,7 +73,7 @@ The fd count is limited per process (`ulimit -n`, often 1,024 by default for she
 
 ## Build-up: two processes that need to talk
 
-Everything below happens on one Linux machine, between plain processes. The examples are small Python programs (Python's `os`, `signal` and `socket` modules are thin wrappers around the same system calls C uses), so each mechanism can be tried in a terminal and watched with `strace`, `ls -l /proc/<pid>/fd` and `ss`.
+Everything below happens on one Linux machine, between plain processes. The examples are small Python programs (Python's `os`, `signal` and `socket` modules are thin wrappers around the same system calls C uses), so each mechanism can be tried in a terminal and watched with `strace`, `ls -l /proc/PID/fd` and `ss`.
 
 ### Stage 0: separate memory, even for a parent and its child
 

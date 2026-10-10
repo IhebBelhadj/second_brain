@@ -182,7 +182,7 @@ A health check that's too strict (1-second timeout on an endpoint that queries t
 - Before this:: [[Docker]], [[Docker Compose]]
 - Products:: [[Docker Swarm]], [[Kubernetes]], [[ECS]]
 - Compared:: [[Compose vs Swarm vs Kubernetes]]
-- Deploying new versions:: [[Deployment strategies]]
+- Deploying new versions:: [[Deployment strategies]], [[GitOps basics]] (the reconciliation loop applied to deployment itself)
 - Before orchestrators:: [[Spring Cloud and Netflix OSS]] (discovery, balancing and config done inside the app)
 - Depends on:: [[Service discovery]], [[Load balancing]], [[Network interfaces]] (overlay networks)
 - Who reaches the cluster:: [[High availability networking]] (replicating managers and gateways, and where that recursion stops)

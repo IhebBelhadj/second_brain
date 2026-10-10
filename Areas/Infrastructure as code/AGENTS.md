@@ -9,6 +9,9 @@
 ```
 Infrastructure as code/
 ├── Infrastructure as code.md      topic index (the learning path)
+├── GitOps/                        Git as desired state, pulled by an agent (Argo CD, Flux)
+│   ├── GitOps.md                  sub-topic index
+│   └── GitOps basics.md           push vs pull, principles, repo layout, promotion, drift/self-heal/prune, rollback, secrets, multi-cluster, Argo CD vs Flux
 └── Terraform/                     Terraform from zero to production, in reading order
     ├── Terraform.md   sub-topic index
     ├── Terraform basics.md        the entry point: console → scripts → declarative, init/plan/apply/destroy, plan symbols, how it works, vs other tools
@@ -31,6 +34,7 @@ Every note in this area has `subtopic: <index name>` in its frontmatter, and is 
 | Sub-topic index | Lives in | Covers |
 |---|---|---|
 | `Terraform.md` | `Terraform/` | Terraform from the first `apply` to a team running it in production |
+| `GitOps.md` | `GitOps/` | Git as the desired state, pulled and reconciled by an agent: principles, workflow, Argo CD and Flux |
 
 ## Where a new note goes
 
@@ -38,6 +42,7 @@ Every note in this area has `subtopic: <index name>` in its frontmatter, and is 
 |---|---|
 | Terraform (any feature, workflow or practice) | `Terraform/`, named `Terraform <thing>` |
 | IaC ideas that aren't tied to one tool (declarative vs imperative, drift, immutable infrastructure) | Area root (create a `Foundations/` folder and sub-topic once there are 2+) |
+| GitOps (agents, workflows, Argo CD, Flux) | `GitOps/` |
 | Another tool (Pulumi, Ansible, CloudFormation/CDK) | Its own folder once it has 2+ notes |
 | An AWS service itself | The AWS area. [[Packer]] stays in `Areas/AWS/Compute/` |
 

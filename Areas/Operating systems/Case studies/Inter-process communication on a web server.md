@@ -59,7 +59,7 @@ Files still work for IPC when used carefully:
 - **inotify**: the kernel notifies the reader when the file changes, no polling
 - **PID (process ID) files** (`/run/nginx.pid`) and **lock files**: tiny files used as "who's running" markers
 
-For the export, the fix is the temp-file-and-rename pattern: each worker writes `export.json.<pid>.tmp`, then renames it to a unique final name in the spool directory, and the script processes and deletes whole files only.
+For the export, the fix is the temp-file-and-rename pattern: each worker writes `export.json.PID.tmp`, then renames it to a unique final name in the spool directory, and the script processes and deletes whole files only.
 
 ### Stage 2: pipes, a stream from one process to another
 
@@ -173,7 +173,7 @@ What's left is **network sockets** (TCP/UDP (User Datagram Protocol)), and every
 **Symptom:** the nightly script fails on malformed JSON, or some orders are exported twice. **Cause:** the script reads files the workers are still writing, or truncates after reading. **Fix:** the temp-file-and-rename handoff from Stage 1, processing and deleting whole files only, and an idempotent export (an order ID already exported is skipped).
 
 ### 5. "Too many open files" under load
-**Symptom:** nginx logs `accept4() failed (24: Too many open files)`, gunicorn workers fail to open sockets to PostgreSQL. **Cause:** each client connection, each upstream connection and each log file is a file descriptor, and the service's limit is the default 1,024. **Fix:** raise `LimitNOFILE=` in the systemd unit (and `worker_rlimit_nofile` in nginx), then check for leaks with `ls /proc/<pid>/fd | wc -l` over time.
+**Symptom:** nginx logs `accept4() failed (24: Too many open files)`, gunicorn workers fail to open sockets to PostgreSQL. **Cause:** each client connection, each upstream connection and each log file is a file descriptor, and the service's limit is the default 1,024. **Fix:** raise `LimitNOFILE=` in the systemd unit (and `worker_rlimit_nofile` in nginx), then check for leaks with `ls /proc/PID/fd | wc -l` over time.
 
 ### 6. PostgreSQL crashes in its container
 **Symptom:** `could not resize shared memory segment ... No space left on device` once the database gets busy in Docker. **Cause:** parallel queries use `/dev/shm`, limited to 64 MB in a container by default. **Fix:** `--shm-size=1g` (or `shm_size:` in Compose, an `emptyDir` with `medium: Memory` in Kubernetes).

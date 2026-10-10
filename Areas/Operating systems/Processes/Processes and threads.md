@@ -36,14 +36,14 @@ For every process (and every thread, see Stage 6) the Linux kernel keeps a struc
 
 | Part | What it holds | Where to look |
 |---|---|---|
-| Identity | PID, PPID, process group and session (see [[Signals]]) | `/proc/<pid>/status` (`Pid`, `PPid`) |
-| Address space | Page tables mapping its private virtual memory ([[Virtual memory]]) | `/proc/<pid>/maps` |
-| Open files | The file descriptor table: files, pipes, sockets ([[Inter-process communication]]) | `/proc/<pid>/fd/` |
-| Credentials | UID (user ID), GID (group ID), capabilities | `/proc/<pid>/status` (`Uid`, `Gid`, `Cap*`) |
-| Working directory and root | Where relative paths start | `/proc/<pid>/cwd`, `/proc/<pid>/root` |
-| Signal state | Handlers, blocked and pending signals | `/proc/<pid>/status` (`Sig*`) |
-| Scheduling state | Run state, priority, CPU it last ran on, time used | `/proc/<pid>/stat`, `/proc/<pid>/sched` |
-| Limits | Max open files, max processes… | `/proc/<pid>/limits` |
+| Identity | PID, PPID, process group and session (see [[Signals]]) | `/proc/PID/status` (`Pid`, `PPid`) |
+| Address space | Page tables mapping its private virtual memory ([[Virtual memory]]) | `/proc/PID/maps` |
+| Open files | The file descriptor table: files, pipes, sockets ([[Inter-process communication]]) | `/proc/PID/fd/` |
+| Credentials | UID (user ID), GID (group ID), capabilities | `/proc/PID/status` (`Uid`, `Gid`, `Cap*`) |
+| Working directory and root | Where relative paths start | `/proc/PID/cwd`, `/proc/PID/root` |
+| Signal state | Handlers, blocked and pending signals | `/proc/PID/status` (`Sig*`) |
+| Scheduling state | Run state, priority, CPU it last ran on, time used | `/proc/PID/stat`, `/proc/PID/sched` |
+| Limits | Max open files, max processes… | `/proc/PID/limits` |
 | Saved CPU registers | Where to resume when it gets the CPU back | (inside the kernel) |
 
 ```bash
@@ -330,8 +330,8 @@ When a limit is hit, `fork()`/`clone()` fail with `EAGAIN` ("Resource temporaril
 ### 4. A child process hangs right after `fork()` in a multithreaded program
 **Symptom:** a program that uses threads forks a helper (without `exec()`), and the child sometimes freezes forever, for example inside `malloc()` or a logging call. **Cause:** `fork()` copies only the **calling** thread. If another thread held a lock at that instant (the memory allocator's lock, a logging lock), the child gets the lock in its "held" state with no thread left to release it. **Fix:** in a multithreaded program, call `exec()` (or `posix_spawn()`) right after `fork()` and do nothing else in between beyond async-signal-safe calls; in Python, prefer the `spawn` or `forkserver` start methods of `multiprocessing` over `fork` in programs that already run threads.
 
-### 5. `<defunct>` processes accumulate
-**Symptom:** `ps` shows many `Z`/`<defunct>` entries with the same parent, and eventually the PID or task limit is reached. **Cause:** the parent never calls `wait()` for its children. **Fix:** fix the parent to reap children (a `SIGCHLD` handler or `waitpid(-1, WNOHANG)` in its loop); in containers, run a minimal init (tini) as PID 1 so orphans get reaped. Details in [[Signals]].
+### 5. Defunct processes accumulate
+**Symptom:** `ps` shows many `Z`/`[defunct]` entries with the same parent, and eventually the PID or task limit is reached. **Cause:** the parent never calls `wait()` for its children. **Fix:** fix the parent to reap children (a `SIGCHLD` handler or `waitpid(-1, WNOHANG)` in its loop); in containers, run a minimal init (tini) as PID 1 so orphans get reaped. Details in [[Signals]].
 
 ### 6. Too many processes in a process-per-connection server
 **Symptom:** a database using a process per connection is at high CPU and memory with 2,000 mostly idle connections from many application instances; new connections are refused at `max_connections`. **Cause:** every connection is a full process: its own memory, its own scheduling, its own entries in shared structures that every other process scans. Idle connections still cost. **Fix:** a connection pooler in front (PgBouncer for PostgreSQL) so a few dozen server processes serve thousands of client connections, and smaller pools in each application instance. Covered in [[PostgreSQL architecture]].
@@ -401,11 +401,11 @@ What does Linux load average count? :: Tasks running or runnable plus tasks in u
 High load average with idle CPUs means? :: Many tasks in D state, usually waiting on disk or NFS
 What is a context switch? :: The kernel saving one task's CPU state and loading another's on a CPU, switching page tables if the process changes
 Voluntary vs involuntary context switch? :: Voluntary: the task blocked and gave up the CPU. Involuntary: the scheduler preempted it (time slice over, higher priority task)
-Where do you see a process's context switch counts? :: /proc/<pid>/status (voluntary_ctxt_switches, nonvoluntary_ctxt_switches), pidstat -w
+Where do you see a process's context switch counts? :: `/proc/PID/status` (voluntary_ctxt_switches, nonvoluntary_ctxt_switches), `pidstat -w`
 What is a thread on Linux? :: A task created with clone() sharing its creator's address space, file descriptors and signal handlers (CLONE_VM, CLONE_FILES, CLONE_SIGHAND, CLONE_THREAD)
 What do threads of one process share? :: Address space (heap, globals, code), file descriptors, signal handlers, PID, credentials, working directory
 What does each thread own? :: Its stack, CPU registers, TID, signal mask, scheduling state, thread-local storage
-How do you list a process's threads? :: ps -eLf (LWP column), ls /proc/<pid>/task, top -H -p <pid>
+How do you list a process's threads? :: `ps -eLf` (LWP column), `ls /proc/PID/task`, `top -H -p PID`
 What happens to other threads when one thread segfaults? :: The whole process is killed, so all threads die
 What is the GIL? :: CPython's global interpreter lock: one thread runs Python bytecode at a time; threads help for I/O waits, processes for CPU work
 Processes vs threads in one line? :: Processes buy isolation (crash, memory, security); threads buy cheap sharing and cheaper switches

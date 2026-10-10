@@ -85,7 +85,7 @@ flowchart TB
 
 ## Build-up: start a server and look at it with OS tools
 
-The lab: a Debian or Ubuntu machine (a virtual machine is fine) with PostgreSQL 17 from the PostgreSQL project's packages, and `pgbench` (the benchmark tool shipped with it) to create load. The same can be done with `docker run postgres:17`, with the OS (operating system) tools run on the host against the container's processes (`docker top pg`, `/proc/<pid>/...` with the host PID (process ID)). All command output below is illustrative: the shape is real, the numbers are made up.
+The lab: a Debian or Ubuntu machine (a virtual machine is fine) with PostgreSQL 17 from the PostgreSQL project's packages, and `pgbench` (the benchmark tool shipped with it) to create load. The same can be done with `docker run postgres:17`, with the OS (operating system) tools run on the host against the container's processes (`docker top pg`, `/proc/PID/...` with the host PID (process ID)). All command output below is illustrative: the shape is real, the numbers are made up.
 
 ```bash
 sudo apt install postgresql-17 postgresql-contrib
@@ -253,7 +253,7 @@ With `try`, PostgreSQL silently falls back to normal pages if not enough huge pa
 
 **Applies:** [[Memory pages]] (application page vs kernel page, page cache, double buffering, dirty pages, torn pages).
 
-Tables and indexes are files (`base/<database OID (object identifier)>/<relfilenode>`) divided into **8 KiB pages**. A page is the unit PostgreSQL reads, caches, locks, writes and logs; it's two kernel pages and two filesystem blocks underneath.
+Tables and indexes are files (`base/DB_OID/RELFILENODE` (OID: object identifier, the database's number; RELFILENODE: the table's file number)) divided into **8 KiB pages**. A page is the unit PostgreSQL reads, caches, locks, writes and logs; it's two kernel pages and two filesystem blocks underneath.
 
 **Reading a page.** A query on `pgbench_accounts` needs block 1,207 of file `16397`:
 

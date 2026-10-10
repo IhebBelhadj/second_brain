@@ -85,7 +85,7 @@ node   0   1
   1:  21  10
 ```
 
-(Node 0 is nearly full while node 1 is mostly free: a process pinned to node 0 may reclaim or swap even though the machine has 60 GB free. `numastat -p <pid>` shows where a process's pages are.)
+(Node 0 is nearly full while node 1 is mostly free: a process pinned to node 0 may reclaim or swap even though the machine has 60 GB free. `numastat -p PID` shows where a process's pages are.)
 
 Free frames are handed out by the **buddy allocator**, which keeps free blocks of 1, 2, 4, … 1024 contiguous frames and splits or merges them. `/proc/buddyinfo` shows how many blocks of each size are free; when the large ones run out, memory is **fragmented**, and getting a huge page means moving pages around first (compaction):
 
@@ -324,7 +324,7 @@ Hugepagesize:       2048 kB
 - **The zero page.** Reading anonymous memory that was never written maps one shared, read-only page full of zeros. Only the first **write** allocates a real frame
 - **KSM (kernel samepage merging).** A kernel thread scans memory areas marked `MADV_MERGEABLE` and merges identical pages into one copy-on-write page. Used by hypervisors running many similar virtual machines
 
-### What `/proc/<pid>/smaps` says about each area
+### What `/proc/PID/smaps` says about each area
 
 For one process, `smaps` breaks every mapping down by these categories. The buffer pool of one `pagestore` server process:
 

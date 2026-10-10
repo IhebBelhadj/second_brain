@@ -58,7 +58,7 @@ CPUs provide instructions that read, modify and write a memory location as **one
 | **Test-and-set** (exchange) | Write a new value, return the old one | `xchg` |
 | **CAS (compare-and-swap)** | "If the value is still X, replace it with Y", and say whether it succeeded | `lock cmpxchg` |
 
-ARM CPUs offer the same through load-linked/store-conditional pairs or newer atomic instructions; languages hide the difference. In C11 (the 2011 C standard) they're in `<stdatomic.h>`:
+ARM CPUs offer the same through load-linked/store-conditional pairs or newer atomic instructions; languages hide the difference. In C11 (the 2011 C standard) they're in `stdatomic.h`:
 
 ```c
 // counter.c — gcc -O0 -pthread counter.c -o counter
@@ -386,7 +386,7 @@ The options:
 **Symptom:** counters slightly off, a slot handed to two workers, an inventory going negative, never reproducible on a laptop. **Cause:** an unprotected read-modify-write; on one core or with little load the interleaving is rare. **Fix:** an atomic operation for single values, a lock (or a database transaction with the right isolation) for multi-field updates. Thread sanitizers (`gcc -fsanitize=thread`) find data races in tests.
 
 ### 2. A service hangs with 0 % CPU
-**Symptom:** requests stop being answered, the process is alive, CPU idle, threads all sleeping. **Cause:** a deadlock: two code paths taking the same locks in different orders. **Fix:** dump every thread's stack (`gdb -p <pid>` then `thread apply all bt`, `py-spy dump --pid <pid>` for Python, `jstack` for Java) and look for threads waiting on locks held by each other. Then impose a lock order, or narrow the critical sections so one path doesn't need both locks.
+**Symptom:** requests stop being answered, the process is alive, CPU idle, threads all sleeping. **Cause:** a deadlock: two code paths taking the same locks in different orders. **Fix:** dump every thread's stack (`gdb -p PID` then `thread apply all bt`, `py-spy dump --pid PID` for Python, `jstack` for Java) and look for threads waiting on locks held by each other. Then impose a lock order, or narrow the critical sections so one path doesn't need both locks.
 
 ### 3. CPU at 100 %, throughput falling
 **Symptom:** adding cores or workers makes the program slower; `top` shows high user or system time; `perf` shows most samples in a spin loop or in the kernel's futex/spinlock code. **Cause:** heavy contention on one lock (or spinning while the holder is descheduled). **Fix:** shorter critical sections, finer or partitioned locks, per-worker data merged occasionally (per-CPU counters), sleeping locks instead of spinning for long sections.
@@ -459,7 +459,7 @@ What is a futex? :: A lock word in user memory; locking/unlocking is an atomic i
 Why does an uncontended mutex cost no system call? :: The futex fast path takes it with one atomic instruction; the kernel is only needed to sleep or wake
 How do two processes share a pthread mutex? :: Put it in shared memory (MAP_SHARED) and initialise it with PTHREAD_PROCESS_SHARED
 What is a semaphore? :: A counter with wait (decrement, sleep if below zero) and post (increment, wake); 1 = lock, N = at most N concurrent
-Where do POSIX named semaphores appear on Linux? :: As files in /dev/shm (sem.<name>); System V semaphores with ipcs -s
+Where do POSIX named semaphores appear on Linux? :: As files in `/dev/shm` (`sem.NAME`); System V semaphores with `ipcs -s`
 flock/fcntl locks: advisory or mandatory? :: Advisory: only processes that also request the lock are blocked
 What happens to flock locks when the process dies? :: The kernel releases them automatically
 What does a reader-writer lock allow? :: Many readers at once or a single writer

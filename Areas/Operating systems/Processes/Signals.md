@@ -265,7 +265,7 @@ The pending set is **one bit per signal**: a second `SIGUSR1` arriving while the
 
 ### Stage 8: children, zombies and orphans
 
-When a child process exits, the kernel can't throw it away completely: its parent may want its **exit status**. So the child becomes a **zombie** (state `Z`, shown as `<defunct>`): no memory, no open files, just a process table entry with the status, until the parent collects it with `wait()` / `waitpid()`. The kernel sends the parent `SIGCHLD` to say "a child changed state".
+When a child process exits, the kernel can't throw it away completely: its parent may want its **exit status**. So the child becomes a **zombie** (state `Z`, shown as `[defunct]`): no memory, no open files, just a process table entry with the status, until the parent collects it with `wait()` / `waitpid()`. The kernel sends the parent `SIGCHLD` to say "a child changed state".
 
 ```python
 # zombies.py: a parent that never waits
@@ -438,13 +438,13 @@ Two more traps around PID 1:
 ## Advanced problems
 
 ### 1. Ctrl-C does nothing
-**Symptom:** a program ignores Ctrl-C (or only reacts after a long delay); a second Ctrl-C doesn't help either. **Cause:** in Python, the handler runs between bytecode instructions in the main thread, so a long C-level call (a huge regex, `time.sleep` inside a C extension, a blocking `join()` on a thread) delays it; or the program installed its own handler or ignores `SIGINT`; or the work is in another process group that isn't the terminal's foreground group. **Fix:** check `SigIgn`/`SigCgt` in `/proc/<pid>/status`; in Python, use timeouts on blocking calls so the main thread returns to the interpreter; Ctrl-\ (`SIGQUIT`) or `kill -9` from another terminal as a last resort.
+**Symptom:** a program ignores Ctrl-C (or only reacts after a long delay); a second Ctrl-C doesn't help either. **Cause:** in Python, the handler runs between bytecode instructions in the main thread, so a long C-level call (a huge regex, `time.sleep` inside a C extension, a blocking `join()` on a thread) delays it; or the program installed its own handler or ignores `SIGINT`; or the work is in another process group that isn't the terminal's foreground group. **Fix:** check `SigIgn`/`SigCgt` in `/proc/PID/status`; in Python, use timeouts on blocking calls so the main thread returns to the interpreter; Ctrl-\ (`SIGQUIT`) or `kill -9` from another terminal as a last resort.
 
 ### 2. Children keep running after the parent is killed
-**Symptom:** `kill` on a script stops the script, but the workers it started keep running (or keep holding a port, making the restart fail). **Cause:** a signal goes to one process; children aren't signalled when their parent dies, they're re-parented to PID 1. **Fix:** signal the **process group** (`kill -TERM -<pgid>`), make the parent forward `SIGTERM` to its children and wait for them, use `prctl(PR_SET_PDEATHSIG, SIGTERM)` in children on Linux, or run it under systemd, which signals the whole control group.
+**Symptom:** `kill` on a script stops the script, but the workers it started keep running (or keep holding a port, making the restart fail). **Cause:** a signal goes to one process; children aren't signalled when their parent dies, they're re-parented to PID 1. **Fix:** signal the **process group** (`kill -TERM -PGID`), make the parent forward `SIGTERM` to its children and wait for them, use `prctl(PR_SET_PDEATHSIG, SIGTERM)` in children on Linux, or run it under systemd, which signals the whole control group.
 
 ### 3. Zombies pile up
-**Symptom:** `ps` shows hundreds of `<defunct>` processes; eventually `fork()` fails with "Resource temporarily unavailable" because the PID limit is reached. **Cause:** a parent that never calls `wait()`, or reaps only one child per `SIGCHLD` although several exited (signals don't queue), or a container whose PID 1 isn't an init. **Fix:** reap in a loop with `WNOHANG` until nothing is left; in containers, `--init`/`tini`. Killing the zombies does nothing; killing the **parent** makes PID 1 adopt and reap them.
+**Symptom:** `ps` shows hundreds of `[defunct]` processes; eventually `fork()` fails with "Resource temporarily unavailable" because the PID limit is reached. **Cause:** a parent that never calls `wait()`, or reaps only one child per `SIGCHLD` although several exited (signals don't queue), or a container whose PID 1 isn't an init. **Fix:** reap in a loop with `WNOHANG` until nothing is left; in containers, `--init`/`tini`. Killing the zombies does nothing; killing the **parent** makes PID 1 adopt and reap them.
 
 ### 4. The process freezes after a signal
 **Symptom:** a process hangs, 0 % CPU, after receiving `SIGUSR1` or `SIGHUP`; `gdb` or `py-spy` shows the handler waiting on a lock inside `malloc`, `printf` or a logging call. **Cause:** a handler calling functions that aren't async-signal-safe while the main code held the same lock. **Fix:** handlers only set a flag or write to a self-pipe; move the work (logging, reloading) into the main loop or a `signalfd` reader.
@@ -456,14 +456,14 @@ Two more traps around PID 1:
 **Symptom:** rare failures like `read: Interrupted system call` or `accept() failed: EINTR`, more frequent when a timer or a child process is involved. **Cause:** a signal with a handler interrupted a blocking call, which returned `EINTR`. **Fix:** install handlers with `SA_RESTART`, and retry on `EINTR` in calls it doesn't cover (`poll`, `select`, `epoll_wait`). Languages with their own runtimes (Python, Go) mostly retry for you.
 
 ### 7. `docker stop` always takes 10 seconds
-**Symptom:** every deploy waits the full grace period, logs show no shutdown message, the exit code is 137. **Cause:** `SIGTERM` never reaches the application: shell-form `CMD`, an entrypoint script without `exec`, or the app is PID 1 with no `SIGTERM` handler (the kernel ignores default actions for PID 1). **Fix:** exec form, `exec "$@"` in entrypoints, a real `SIGTERM` handler, or `--init`/`tini`. Check with `docker exec <c> cat /proc/1/status | grep SigCgt`.
+**Symptom:** every deploy waits the full grace period, logs show no shutdown message, the exit code is 137. **Cause:** `SIGTERM` never reaches the application: shell-form `CMD`, an entrypoint script without `exec`, or the app is PID 1 with no `SIGTERM` handler (the kernel ignores default actions for PID 1). **Fix:** exec form, `exec "$@"` in entrypoints, a real `SIGTERM` handler, or `--init`/`tini`. Check with `docker exec CONTAINER cat /proc/1/status | grep SigCgt`.
 
 ## Practice
 
 > [!example]- I send `kill -USR1` to a process 50 times in a loop and its handler counts only 4. Bug in the handler?
 > No: standard signals don't queue. While one `SIGUSR1` is pending, more are merged into it. Use real-time signals, or a real channel (pipe, socket) when counts matter.
 
-> [!example]- `/proc/<pid>/status` shows `SigIgn: 0000000000001000`. Which signal is ignored?
+> [!example]- `/proc/PID/status` shows `SigIgn: 0000000000001000`. Which signal is ignored?
 > Bit 12 is set, so signal 13: `SIGPIPE`.
 
 > [!example]- A container's process exits with status 143. And with 137?
@@ -511,9 +511,9 @@ Which two signals can't be caught, blocked or ignored? :: SIGKILL and SIGSTOP
 What signal does kill send by default? :: SIGTERM (15)
 When is a pending signal actually delivered? :: When the thread next returns from kernel mode to user mode (after a system call, an interrupt or being scheduled), if it isn't blocked
 Pending vs blocked signal sets? :: Pending: arrived but not delivered yet. Blocked (mask): signals the thread doesn't want delivered now; they stay pending
-Where can you see a process's blocked, ignored and caught signals? :: /proc/<pid>/status: SigBlk, SigIgn, SigCgt (bit n-1 = signal n)
+Where can you see a process's blocked, ignored and caught signals? :: `/proc/PID/status`: SigBlk, SigIgn, SigCgt (bit n-1 = signal n)
 Who may send a signal to a process? :: A process with the same real/effective UID as the target's real/saved UID, or with CAP_KILL (root)
-What does kill -0 <pid> do? :: Sends nothing; checks the process exists and that you may signal it
+What does `kill -0 PID` do? :: Sends nothing; checks the process exists and that you may signal it
 What does kill with a negative PID do? :: Signals every process in that process group
 sigaction vs signal()? :: sigaction is the portable modern API (mask during the handler, flags like SA_RESTART); signal() behaves differently across systems
 What is async-signal-safety? :: Whether a function may be called from a signal handler; printf, malloc and anything taking locks are not, write and _exit are

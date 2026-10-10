@@ -304,7 +304,7 @@ Each layer counts memory its own way, so "how much memory does `where` use?" has
 | Number | Layer | Where to read it | For `where` in Step 1 |
 |---|---|---|---|
 | **Allocated** | Allocator | the allocator's own statistics (`malloc_stats()` in glibc) | 4 bytes + 1 MiB asked, in a 32-byte chunk and a 1 MiB + 4 KiB block |
-| **Virtual size** (VSZ (virtual set size)) | Kernel: address ranges | `ps -o vsz`, `VmSize` in `/proc/<pid>/status` | All the ranges of the map: 132 KiB of heap, the 1 MiB + 4 KiB of `big`, the libraries… whether touched or not |
+| **Virtual size** (VSZ (virtual set size)) | Kernel: address ranges | `ps -o vsz`, `VmSize` in `/proc/PID/status` | All the ranges of the map: 132 KiB of heap, the 1 MiB + 4 KiB of `big`, the libraries… whether touched or not |
 | **Resident** (RSS (resident set size)) | Kernel: pages with a frame | `ps -o rss`, `VmRSS` | Only the pages touched: one heap page (the allocator wrote headers, the program wrote `*p`), **one** page of `big` (the allocator wrote its header, the program never touched the rest) |
 
 So `big` adds about 1 MiB to the virtual size and **4 KiB** to the resident size. The allocated, virtual and resident numbers of a process can each differ from the others by a large factor, and in both directions: a fragmented heap has more resident pages than live objects; a reserved but untouched region has a large virtual size and a tiny resident size. [[Virtual memory]] explains the kernel numbers in detail, including PSS (proportional set size) for shared pages.
@@ -315,7 +315,7 @@ So `big` adds about 1 MiB to the virtual size and **4 KiB** to the resident size
 |---|---|---|
 | Works with | Variables, objects, pointers, the language's allocator | Address ranges, page faults, frames, allocators themselves |
 | Asks | Is this pointer valid? Who owns this object and frees it? Can it outlive the function? Is memory leaking? | How are regions created and unmapped? Why is this process's RSS high? Why so many TLB misses? Is the allocator fragmenting? |
-| Tools | The language's profiler, sanitizers, Valgrind | `/proc/<pid>/maps` and `smaps`, `strace`, `perf`, allocator statistics |
+| Tools | The language's profiler, sanitizers, Valgrind | `/proc/PID/maps` and `smaps`, `strace`, `perf`, allocator statistics |
 
 A database engineer investigating TLB misses on a large hash table, an operations engineer investigating why a service's RSS never drops, and an application developer fixing a leak are looking at different layers of the same mechanism.
 

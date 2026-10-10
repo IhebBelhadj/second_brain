@@ -621,13 +621,13 @@ dmesg -T | grep -i -A1 "out of memory"
 [Sat Oct 10 03:12:44 2026] oom_reaper: reaped process 1846 (postgres), now anon-rss:0kB, file-rss:0kB, shmem-rss:2328kB
 ```
 
-The victim is the process with the highest **`oom_score`** (`/proc/<pid>/oom_score`, 0 to 1000), roughly its share of memory, shifted by **`oom_score_adj`** (-1000 means never kill this one, 1000 means kill it first; `OOMScoreAdjust=` in a systemd unit).
+The victim is the process with the highest **`oom_score`** (`/proc/PID/oom_score`, 0 to 1000), roughly its share of memory, shifted by **`oom_score_adj`** (-1000 means never kill this one, 1000 means kill it first; `OOMScoreAdjust=` in a systemd unit).
 
 ## Part 3: reading it on a real machine
 
 ### What's inside one address space
 
-Every process's address space has the same layout, visible in `/proc/<pid>/maps`, one line per range the process owns:
+Every process's address space has the same layout, visible in `/proc/PID/maps`, one line per range the process owns:
 
 ```bash
 cat /proc/self/maps        # the cat process describing itself
@@ -697,7 +697,7 @@ Private_Dirty:     13928 kB
 Swap:                  0 kB
 ```
 
-`pmap -x <pid>` shows the same per range, and `smem` prints PSS and USS for every process. [[PostgreSQL architecture]] uses exactly this to explain why its processes look huge.
+`pmap -x PID` shows the same per range, and `smem` prints PSS and USS for every process. [[PostgreSQL architecture]] uses exactly this to explain why its processes look huge.
 
 ### How much memory does the machine have left? (free vs available)
 
@@ -870,7 +870,7 @@ What is thrashing? :: The working set doesn't fit in RAM, so pages are constantl
 What is overcommit? :: Promising more memory than RAM + swap, since most programs never touch everything they allocate (vm.overcommit_memory)
 What does the OOM killer do? :: When no frame can be found, kills the process with the highest oom_score with SIGKILL
 How do you protect a process from the OOM killer? :: Lower its oom_score_adj (down to -1000), e.g. OOMScoreAdjust= in systemd
-Where do you see a process's address ranges? :: /proc/<pid>/maps (and pmap, /proc/<pid>/smaps_rollup)
+Where do you see a process's address ranges? :: `/proc/PID/maps` (and `pmap`, `/proc/PID/smaps_rollup`)
 VSZ vs RSS vs PSS vs USS? :: VSZ: all promised addresses. RSS: pages in RAM, shared counted fully. PSS: shared pages divided among sharers. USS: private pages only
 free vs available in free -h? :: free: frames holding nothing. available: what new programs can get without swapping, including reclaimable cache
 What is ASLR? :: Address space layout randomization: code, heap, libraries and stack placed at random addresses each run

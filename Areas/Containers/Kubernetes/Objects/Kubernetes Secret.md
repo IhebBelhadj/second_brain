@@ -126,6 +126,7 @@ Without encryption at rest, an etcd snapshot contains every Secret in clear. Enc
 - TLS certificates:: [[Kubernetes Ingress]], [[Certificates and PKI]], [[TLS]]
 - Concepts:: [[Encryption basics]], [[Workload identity (SPIFFE)]] (credentials without stored secrets)
 - In AWS:: [[Systems Manager]] (Parameter Store), *[[Secrets Manager]]*
+- Delivered by:: [[GitOps basics]] (why secrets can't go in Git as they are)
 - Overview:: [[Kubernetes]], [[Kubernetes worked example]]
 - Area:: [[Containers]]
 

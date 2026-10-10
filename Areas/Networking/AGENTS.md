@@ -12,7 +12,6 @@ Networking/
 ├── ACL.md                         allow/deny rule lists, stateless vs stateful
 ├── Ingress and egress.md          in vs out relative to a boundary, packet vs connection direction, north-south/east-west, egress control and fees
 ├── Network interfaces.md          NICs, virtual interfaces (bridge, veth, tun/tap, VLAN, VXLAN), namespaces, Docker, ENIs
-├── Inter-process communication.md  fds, files, pipes, FIFOs, signals, Unix sockets, shared memory
 ├── Sockets.md                     socket API, 5-tuple, ss, bind addresses, event loops, framing, TIME_WAIT/CLOSE_WAIT, port exhaustion
 ├── Service mesh.md                sidecar proxies + control plane, mTLS between services
 ├── Protocols/                     foundations and protocols
@@ -78,7 +77,7 @@ Every note in this area has `subtopic: <index name>` in its frontmatter, and is 
 | Sub-topic index | Lives in | Covers |
 |---|---|---|
 | `Networking › Protocols.md` | `Protocols/` | the layer model and the protocols on top of it: ICMP, HTTP, HTTP/2 and HTTP/3, WebSocket, OSPF, BGP |
-| `Networking › Host networking.md` | `(area root)` | where one machine meets the network: interfaces and namespaces, inter-process communication, sockets |
+| `Networking › Host networking.md` | `(area root)` | where one machine meets the network: interfaces and namespaces, sockets |
 | `Networking › Addressing.md` | `Addressing/` | IP addresses, subnetting and designing an address plan |
 | `Networking › DNS.md` | `DNS/` | name resolution, its security and running it in production |
 | `Networking › LAN.md` | `LAN/` | Layer 2: switches, ARP, VLANs, Spanning Tree |
@@ -103,6 +102,7 @@ A new note gets the `subtopic` of the folder it goes in (notes at the area root:
 | Proxies, load balancing, discovery, CDNs | `Traffic/` |
 | Timeouts, retries, circuit breakers, resilience libraries | `Resilience/` |
 | VPNs and tunnels | `VPN/` |
+| Processes on one machine: IPC, signals, memory, the kernel | The `Areas/Operating systems/` area |
 | Doesn't fit (troubleshooting, monitoring, automation) | Area root, or a new folder if 2+ notes will share it |
 
 The planned notes (roadmap) are the italic `*[[…]]*` links in `Networking.md`: when writing one, use that exact name so existing links resolve.

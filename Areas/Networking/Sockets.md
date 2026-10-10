@@ -43,7 +43,7 @@ aliases: [Socket, Network socket, Berkeley sockets, Socket API, Ephemeral ports,
 | `AF_UNIX` | A file path | | `SOCK_RAW` | Raw IP packets, build headers yourself (`ping`, needs privileges) |
 | `AF_PACKET` | An interface | | | Whole Ethernet frames (`tcpdump`) |
 
-`AF_UNIX` sockets are the local kind from [[Inter-process communication#Stage 4: Unix domain sockets, two-way local channels]]: same API, a path instead of IP:port.
+`AF_UNIX` sockets are the local kind from [[Inter-process communication#Stage 4: Unix domain sockets, two-way channels between any processes]]: same API, a path instead of IP:port.
 
 ## Build-up: an order-notification server
 

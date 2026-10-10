@@ -12,7 +12,7 @@ Each sub-topic has its own index with the same reading order, for studying one p
 - [[Networking › Protocols]]: the layer model and the protocols on top of it: ICMP, HTTP, HTTP/2 and HTTP/3, WebSocket, BGP
 - [[Networking › Addressing]]: IP addresses, subnetting and designing an address plan
 - [[Networking › DNS]]: name resolution, its security and running it in production
-- [[Networking › Host networking]]: where one machine meets the network: interfaces and namespaces, inter-process communication, sockets
+- [[Networking › Host networking]]: where one machine meets the network: interfaces and namespaces, sockets
 - [[Networking › LAN]]: Layer 2: switches, ARP, VLANs, Spanning Tree
 - [[Networking › Routing]]: Layer 3: routing tables, policy routing, NAT, overlapping ranges, high availability
 - [[Networking › Security]]: filtering (ACLs, ingress and egress) and securing traffic: encryption, PKI, TLS, mTLS, workload identity
@@ -52,7 +52,7 @@ flowchart TD
 
 ## 2. Where the machine meets the network
 - [[Network interfaces]]: physical NICs and virtual ones (loopback, bridge, veth, tun/tap, VLAN, VXLAN, WireGuard), network namespaces, how containers and VMs get connected
-- [[Inter-process communication]]: how processes on one machine talk: file descriptors, files (and the rename trick), pipes and FIFOs, signals (SIGTERM vs SIGKILL), Unix domain sockets (nginx → gunicorn, docker.sock), shared memory, and what's left across machines
+- Processes on one machine (pipes, signals, Unix sockets, shared memory) are in the [[Operating systems]] area: [[Inter-process communication]], [[Signals]]
 - [[Sockets]]: the kernel object behind every connection. The system calls (socket, bind, listen, accept, connect), the 5-tuple, `ss`, refused vs timed out, 127.0.0.1 vs 0.0.0.0, event loops and fd limits, byte streams vs messages, TIME_WAIT and CLOSE_WAIT, ephemeral port exhaustion, accept queue overflow
 
 ## 3. Local networks (Layer 2)

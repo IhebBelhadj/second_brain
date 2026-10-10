@@ -208,7 +208,7 @@ sequenceDiagram
 ```
 
 - **Deployment circuit breaker** with rollback: if new tasks keep failing to become healthy, ECS **stops the deployment and rolls back** to `:1` automatically, instead of looping forever
-- The app must handle **SIGTERM** (stop accepting, finish requests): see [[Inter-process communication#Stage 3: signals, a tap on the shoulder]]. And the target group's **deregistration delay** (default 300 s) should be shortened to something like 30 s, or deploys crawl
+- The app must handle **SIGTERM** (stop accepting, finish requests): see [[Signals]]. And the target group's **deregistration delay** (default 300 s) should be shortened to something like 30 s, or deploys crawl
 - Other strategies: **blue/green** (a whole new set of tasks, then switch the ALB listener, with a bake time to roll back instantly), canary/linear traffic shifting
 
 ### Stage 6: scaling the service

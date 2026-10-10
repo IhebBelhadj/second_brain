@@ -158,7 +158,7 @@ ls -ia /mnt/invoices /mnt/invoices/2026
 
 - The filesystem's root directory is always **inode 2** in ext4
 - `.` is an entry pointing at the directory itself, `..` at its parent
-- The `mv` didn't touch the PDF's data **at all**: it removed the entry `o-8812.pdf → 12` from directory 2 and added it to directory 130817. That's why a rename inside one filesystem is **instant** for a 50 GB file, and **atomic** (the trick behind safe config file updates in [[Inter-process communication#Stage 1: talking through a file]]). A move to **another** filesystem has to **copy** the data and delete the original
+- The `mv` didn't touch the PDF's data **at all**: it removed the entry `o-8812.pdf → 12` from directory 2 and added it to directory 130817. That's why a rename inside one filesystem is **instant** for a 50 GB file, and **atomic** (the trick behind safe config file updates in [[Inter-process communication#Stage 1: a file both processes know]]). A move to **another** filesystem has to **copy** the data and delete the original
 
 **Resolving a path, step by step.** `open("/mnt/invoices/2026/o-8812.pdf")`, once inside this filesystem:
 
@@ -257,7 +257,7 @@ sudo lsof +L1            # open files with link count 0
 # nginx 1234 www-data 5w REG 259,1 21474836480 0 131090 /var/log/nginx/access.log (deleted)
 ```
 
-Fix: restart/reload the process (or truncate through `/proc/1234/fd/5`). For log rotation, use `copytruncate` or signal the app to reopen its log (see [[Inter-process communication#Stage 3: signals, a tap on the shoulder]]).
+Fix: restart/reload the process (or truncate through `/proc/1234/fd/5`). For log rotation, use `copytruncate` or signal the app to reopen its log (see [[Signals]]).
 
 ### 3. ext4 is "full" at 95%
 

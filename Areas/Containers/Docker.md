@@ -159,7 +159,7 @@ docker build --secret id=pip_token,env=PIP_TOKEN -t shop-api:dev .
 
 ### Stage 5: running it properly
 
-**Signals and PID 1.** The first Dockerfile used the **shell form** `CMD gunicorn …`, which Docker runs as `/bin/sh -c "gunicorn …"`. The shell becomes PID 1 and **doesn't forward SIGTERM** to gunicorn. `docker stop` sends SIGTERM, nothing happens, and after 10 seconds Docker sends SIGKILL: in-flight requests are cut on every deploy. The **exec form** `ENTRYPOINT ["gunicorn", …]` makes gunicorn itself PID 1, so it gets SIGTERM and shuts down gracefully. (Why signals matter: [[Inter-process communication#Stage 3: signals, a tap on the shoulder]].) For apps that start child processes and don't reap them, `docker run --init` adds a tiny init (tini) as PID 1.
+**Signals and PID 1.** The first Dockerfile used the **shell form** `CMD gunicorn …`, which Docker runs as `/bin/sh -c "gunicorn …"`. The shell becomes PID 1 and **doesn't forward SIGTERM** to gunicorn. `docker stop` sends SIGTERM, nothing happens, and after 10 seconds Docker sends SIGKILL: in-flight requests are cut on every deploy. The **exec form** `ENTRYPOINT ["gunicorn", …]` makes gunicorn itself PID 1, so it gets SIGTERM and shuts down gracefully. (Why signals matter: [[Signals]].) For apps that start child processes and don't reap them, `docker run --init` adds a tiny init (tini) as PID 1.
 
 **Ports.** `EXPOSE 8000` is **documentation only**: it publishes nothing. `-p 8080:8000` publishes host port 8080 to container port 8000. Inside the container, the app must listen on `0.0.0.0`, not `127.0.0.1`: the container's loopback isn't the host's, so a `127.0.0.1` bind is unreachable through the published port (see [[Sockets#Stage 3: it works locally but not from outside]]).
 

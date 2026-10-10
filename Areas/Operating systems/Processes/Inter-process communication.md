@@ -173,17 +173,17 @@ A **pipe** is a buffer inside the kernel with a **write end** and a **read end**
 ```python
 import os
 
-r, w = os.pipe()                # two fds: r (read end), w (write end)
+r, w = os.pipe()     # two fds: r (read end), w (write end)
 pid = os.fork()
 
 if pid == 0:         # child: reader
     os.close(w)      # IMPORTANT: close the end I don't use
     with os.fdopen(r) as src:
-        for line in src:        # blocks until data arrives, ends at end-of-file
+        for line in src: # blocks until data arrives, ends at eof
             print("child got:", line.strip())
     os._exit(0)
 
-os.close(r)                     # parent: writer
+os.close(r)           # parent: writer
 with os.fdopen(w, "w") as dst:
     for i in range(3):
         dst.write(f"message {i}\n")

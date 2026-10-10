@@ -468,7 +468,7 @@ Runtimes have to know about the limit. A JVM (Java Virtual Machine) sizes its he
 ## Related
 - Uses:: [[Interrupts]] (page faults are CPU exceptions, TLB shootdowns are inter-processor interrupts), [[Signals]] (SIGSEGV, SIGKILL from the OOM killer)
 - Copy-on-write and shared memory between processes:: [[Inter-process communication]]
-- Processes:: *[[Processes and threads]]*
+- Processes:: [[Processes and threads]]
 - Files behind the page cache:: [[Partitions and filesystems]]
 - Containers and limits:: [[Docker]], [[Kubernetes Pod]]
 - In AWS:: [[CloudWatch agent]] (memory metrics)

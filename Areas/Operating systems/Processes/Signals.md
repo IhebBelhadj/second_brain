@@ -495,7 +495,7 @@ Two more traps around PID 1:
 - Core dumps can contain secrets
 
 ## Related
-- Part of:: *[[Processes and threads]]*
+- Part of:: [[Processes and threads]]
 - Communication between processes:: [[Inter-process communication]] (signals as the simplest mechanism), [[Inter-process communication on a web server]] (reloads and graceful deploys)
 - Where synchronous signals come from:: [[Interrupts]] (CPU exceptions, timer ticks, returning to user mode), [[Virtual memory]] (page faults → `SIGSEGV`, `SIGBUS`)
 - In containers:: [[Docker]] (PID 1, exec form, exit 137), [[Kubernetes Pod]] (preStop, grace period)

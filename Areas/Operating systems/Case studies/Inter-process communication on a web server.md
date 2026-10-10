@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-10
 topic: Operating systems
-subtopic: Operating systems › Processes
+subtopic: Operating systems › Case studies
 confidence: 1
 tags: [os, linux, ipc, web-server, example]
 aliases: [IPC on a web server, IPC in practice]

@@ -10,13 +10,17 @@ aliases: [Page, Page frame, Dirty pages, Page reclaim, Writeback, Anonymous memo
 # Memory pages
 
 > [!abstract] In one sentence
-> The kernel manages memory in fixed-size **pages** (4 KiB (kibibytes) on most machines): each one is either **anonymous** (a process's own data, which can only leave RAM (random-access memory) through swap) or **file-backed** (a copy of part of a file in the page cache), and either **clean** or **dirty**. Those two properties decide what the kernel can do with a page when it needs room: drop it, write it back, or swap it out. That's why a write is fast but not durable, why a backup can evict a database's hot data, and why databases care about page size and huge pages.
+> The kernel manages memory in fixed-size **pages** (4 KiB on most machines): each one is either **anonymous** or **file-backed** , and either **clean** or **dirty**. Those two properties decide what the kernel can do with a page when it needs room: drop it, write it back, or swap it out. That's why a write is fast but not durable, why a backup can evict a database's hot data, and why databases care about page size and huge pages.
+> 
+> **anonymous** : a process's own data, which can only leave RAM through swap
+> **file-backed**: a copy of part of a file in the page cache
+
 
 [[Virtual memory]] explains *why* memory is split into pages: address spaces, page tables, the MMU (memory management unit) and TLB (translation lookaside buffer), page faults, overcommit and the OOM (out of memory) killer. This note follows **one page** through its life: what the hardware records about it, what kind of page it is, how it gets dirty, written back and reclaimed, and what changes when a program has its own idea of what a page is.
 
 ## Build-up: a small storage engine and its pages
 
-A small program, `pagestore`, keeps key-value records in one data file, `store.dat`. Like real databases, it organizes the file in its own **8 KiB pages**: page 0 holds the header, page 1 onward hold records, and it reads, changes and writes whole pages. It runs on a Linux machine with 16 GiB (gibibytes) of RAM and a local NVMe (Non-Volatile Memory Express) SSD (solid-state drive). The questions it runs into are the subject of this note:
+A small program, `pagestore`, keeps key-value records in one data file, `store.dat`. Like real databases, it organizes the file in its own **8 KiB (kibibyte, 1,024 bytes) pages**: page 0 holds the header, page 1 onward hold records, and it reads, changes and writes whole pages. It runs on a Linux machine with 16 GiB (gibibytes) of RAM  and a local NVMe (Non-Volatile Memory Express) SSD. The questions it runs into are the subject of this note:
 - How big is a page for the kernel, and is it the same as my 8 KiB page?
 - When `write()` returns, where is my data?
 - Why does my data disappear from memory after someone runs a backup?

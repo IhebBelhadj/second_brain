@@ -10,7 +10,7 @@ aliases: [Paging, Page table, Page fault, TLB, Swap, OOM killer, Address space, 
 # Virtual memory
 
 > [!abstract] In one sentence
-> Every process sees its own private, contiguous range of memory addresses (its **virtual address space**), and the CPU's (central processing unit's) memory management unit translates each address, page by page, to wherever the kernel actually put that data in RAM (random-access memory), or to "not here yet": that one indirection gives isolation between processes, lazy allocation, sharing of libraries and files, copy-on-write after `fork()`, swap, and the OOM (out-of-memory) killer.
+> Every process sees its own private, contiguous range of memory addresses (its **virtual address space**), and the CPU's memory management unit translates each address, page by page, to wherever the kernel actually put that data in RAM (random-access memory), or to "not here yet": that one indirection gives isolation between processes, lazy allocation, sharing of libraries and files, copy-on-write after `fork()`, swap, and the OOM (out-of-memory) killer.
 
 ## Build-up: two programs, one address
 
@@ -27,7 +27,7 @@ int counter = 0;
 int main(int argc, char **argv) {
     counter = atoi(argv[1]);
     printf("pid %d: &counter = %p, counter = %d\n", getpid(), (void *)&counter, counter);
-    sleep(30);                         /* stay alive so both run at the same time */
+    sleep(30);    /* stay alive so both run at the same time */
     printf("pid %d: counter is still %d\n", getpid(), counter);
     return 0;
 }

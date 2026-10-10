@@ -85,6 +85,7 @@ flowchart TD
 - [[Certificate rotation]]: renewing certificates automatically (ACME, CA rotation)
 - [[Workload identity (SPIFFE)]]: identities for services without stored secrets
 - [[Service mesh]]: proxies + a control plane doing mTLS, authorization, retries and traffic splitting for every service
+    - [[Istio]]: the mesh in practice on the shop. istiod and xDS, installing with Helm (profiles), sidecar injection and traffic capture, startup/Job races and native sidecars, port naming, rolling out STRICT mTLS safely, AuthorizationPolicy (deny-all + allow, evaluation order) and JWT checks, the ingress gateway (Gateway API vs Istio Gateway), VirtualService vs DestinationRule for a canary, metrics/logs/tracing and the Telemetry API, the Sidecar resource and ambient mode (ztunnel, HBONE, waypoints), revision-based upgrades and the root CA, egress control with ServiceEntry, debugging with istioctl and response flags, and the classic failures (503 after STRICT, hanging Jobs, NR routes, memory in large meshes, the webhook blocking pods)
 - Application-level authentication (sessions, API keys, JWT, OAuth, OIDC, SSO, MFA) → its own area: [[Identity and access]]
 
 ## 7. Delivering traffic to services

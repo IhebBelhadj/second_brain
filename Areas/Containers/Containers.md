@@ -44,6 +44,7 @@ Read top to bottom. Links in *italics* are notes not written yet (the roadmap).
     - Cluster and tenancy: [[Kubernetes Namespace]] (scope, Pod Security admission, soft multi-tenancy) · [[Kubernetes Node]] (allocatable, conditions, affinity, taints and tolerations, drain, pressure eviction) · [[Kubernetes ResourceQuota and LimitRange]] (team budgets, defaults and bounds)
     - Scaling and availability: [[Kubernetes HorizontalPodAutoscaler]] (the formula, metrics, behaviour, VPA/KEDA/cluster autoscaler) · [[Kubernetes PodDisruptionBudget]] (eviction API, what it does and doesn't cover, why the HPA's minReplicas doesn't replace it)
     - Extending: [[Kubernetes CustomResourceDefinition]] (schemas, operators, versions, finalizers)
+- Service mesh (in the Networking area): [[Service mesh]], [[Istio]]
 - Not written yet: *[[Kubernetes networking]]* (CNI plugins, pod and Service ranges, Ingress and Gateway API in depth) · *[[Kubernetes storage]]* · *[[Helm]]*
 - AWS: [[ECS]], [[ECS tasks and task definitions]], [[ECS on Fargate vs EC2]], [[Kubernetes worked example on EKS]] (the worked example's shop on EKS: what changes and what AWS builds around it) (in the AWS area) · *[[EKS]]* (planned)
 

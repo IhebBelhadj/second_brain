@@ -381,6 +381,7 @@ Details: [[Proxies, load balancing and discovery in AWS]].
 - Patterns:: [[Resilience patterns]]
 - Replaces in app code:: [[Hystrix]], [[Resilience4j]], [[Polly]], [[Resilience libraries in other languages]]
 - Depends on:: [[Service mesh]], [[Load balancing]]
+- Istio itself:: [[Istio]] (install, mTLS, policies, debugging, upgrades)
 - Gateway API:: [[Kubernetes Ingress]]
 - History:: [[Spring Cloud and Netflix OSS]]
 - In AWS:: [[Proxies, load balancing and discovery in AWS]]

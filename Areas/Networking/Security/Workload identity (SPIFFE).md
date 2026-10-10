@@ -117,7 +117,7 @@ flowchart LR
 - Still putting long-lived IAM access keys on on-prem servers when Roles Anywhere exists
 
 ## Related
-- Used for:: [[mTLS]], [[Service mesh]]
+- Used for:: [[mTLS]], [[Service mesh]], [[Istio]]
 - Same idea with JWTs (CI jobs, pods → cloud credentials):: [[OpenID Connect#Stage 8: OIDC for machines]]
 - Built on:: [[Certificates and PKI]], [[Encryption basics]]
 - Lifecycle:: [[Certificate rotation]] (SVIDs rotate every hour or so)

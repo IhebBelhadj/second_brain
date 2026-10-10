@@ -52,7 +52,8 @@ Networking/
 │   ├── Proxies.md                 forward proxies, CONNECT, HTTP_PROXY, transparent, SOCKS, TLS inspection
 │   ├── Reverse proxy.md           TLS termination, X-Forwarded-For, PROXY protocol, 502/504, the family
 │   ├── Load balancing.md          L4/L7, algorithms, health checks, stickiness, LB HA, GSLB
-│   └── Service discovery.md       DNS vs registries, client/server-side, Kubernetes Services
+│   ├── Service discovery.md       DNS vs registries, client/server-side, Kubernetes Services
+│   └── Istio.md                   istiod, injection, STRICT mTLS rollout, AuthorizationPolicy, gateways, VirtualService/DestinationRule, ambient, upgrades, debugging
 ├── Resilience/                    surviving slow and failing dependencies
 │   ├── Resilience patterns.md     hub: timeouts, retries/backoff/jitter, circuit breakers, bulkheads, fallbacks, shedding, hedging, order, app → mesh history
 │   ├── Hystrix.md                 tutorial: HystrixCommand, isolation, properties, Spring Cloud, dashboard, migration

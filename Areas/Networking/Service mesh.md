@@ -166,7 +166,7 @@ spec:
 
 | Mesh | Proxy | Strengths |
 |---|---|---|
-| **Istio** | Envoy (sidecar or ambient) | Most features, biggest ecosystem, complex |
+| **[[Istio]]** | Envoy (sidecar or ambient) | Most features, biggest ecosystem, complex |
 | **Linkerd** | linkerd2-proxy (Rust) | Simple, light, secure by default (mTLS on install) |
 | **Consul service mesh** | Envoy | Works across Kubernetes, VMs and multiple platforms |
 | **Cilium service mesh** | eBPF + Envoy | Built into the Cilium CNI, sidecarless |
@@ -205,6 +205,7 @@ spec:
 - Certificates:: [[Certificate rotation]]
 - Differs from:: [[Load balancers]] (one central hop) and [[Security groups]] (IP/port rules, no identity)
 - Resilience in depth:: [[Resilience patterns]], [[Resilience in a service mesh]]
+- In practice:: [[Istio]] (install, rollout, policies, debugging, upgrades)
 - Before meshes:: [[Spring Cloud and Netflix OSS]] (the same jobs as Java libraries: Ribbon, Hystrix, Sleuth)
 
 ## Flashcards

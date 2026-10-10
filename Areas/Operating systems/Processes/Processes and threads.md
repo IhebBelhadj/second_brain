@@ -376,7 +376,7 @@ When a limit is hit, `fork()`/`clone()` fail with `EAGAIN` ("Resource temporaril
 ## Related
 - Talking between processes:: [[Inter-process communication]], [[Inter-process communication on a web server]]
 - Lifecycle events:: [[Signals]] (SIGCHLD, zombies, orphans, process groups)
-- Memory behind each process:: [[Virtual memory]], [[Memory pages]] (copy-on-write after fork)
+- Memory behind each process:: [[Virtual memory]], [[Memory pages]] (copy-on-write after fork), [[Program memory layout]] (one stack per thread, glibc arenas)
 - Shared data between threads:: [[Locks and synchronization]]
 - How the kernel takes the CPU back:: [[Interrupts]] (the timer interrupt), *[[CPU scheduling]]*
 - Event loops and sockets:: [[Sockets]], [[Reverse proxy]]

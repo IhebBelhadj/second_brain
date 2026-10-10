@@ -18,7 +18,8 @@ Operating systems/
 ├── Memory/
 │   ├── Operating systems › Memory.md      sub-topic index
 │   ├── Virtual memory.md          pages, page tables, MMU/TLB, page faults, COW, page cache, RSS/PSS, overcommit/OOM, swap, THP, cgroup limits
-│   └── Memory pages.md            PTE bits, anonymous vs file, dirty/writeback/fsync, reclaim/LRU, app page vs block (torn pages), huge pages, mlock
+│   ├── Memory pages.md            PTE bits, anonymous vs file, dirty/writeback/fsync, reclaim/LRU, app page vs block (torn pages), huge pages, mlock
+│   └── Program memory layout.md   a C program's regions in /proc/pid/maps, malloc → brk/mmap → page fault, chunks vs pages, stack growth, allocated/VSZ/RSS
 ├── Kernel/
 │   ├── Operating systems › Kernel.md      sub-topic index
 │   └── Interrupts.md              hardware IRQs, kernel mode, top/bottom halves, timer and preemption, exceptions, syscalls, NIC path, affinity

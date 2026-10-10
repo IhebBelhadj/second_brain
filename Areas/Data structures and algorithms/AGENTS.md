@@ -11,6 +11,7 @@ Data structures and algorithms/
 ├── Data structures and algorithms.md   topic index (the learning path)
 ├── Foundations/
 │   ├── Recursion.md                    problem-solving guide: function design, number of calls, combine, cost, memo, backtracking
+│   ├── Stack and heap.md               lifetimes, stack frames, heap and pointers, C declarations, costs, Python/Java/Go, lifetime bugs
 │   └── Number base conversion.md       division/Horner, hex/octal by bit groups, systems uses
 ├── Data structures/
 │   ├── Linked list.md                  singly/doubly/circular, two pointers, dummy head, bugs in my implementation
@@ -30,7 +31,7 @@ Every note in this area has `subtopic: <index name>` in its frontmatter, and is 
 
 | Sub-topic index | Lives in | Covers |
 |---|---|---|
-| `Data structures and algorithms › Foundations.md` | `Foundations/` | what everything else builds on: recursion, number bases |
+| `Data structures and algorithms › Foundations.md` | `Foundations/` | what everything else builds on: recursion, stack and heap memory, number bases |
 | `Data structures and algorithms › Data structures.md` | `Data structures/` | linked lists, hash tables, trees |
 | `Data structures and algorithms › Algorithms and problems.md` | `Algorithms/` | searching and sorting algorithms, and practice problems |
 

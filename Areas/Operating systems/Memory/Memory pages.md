@@ -416,6 +416,7 @@ VmFlags: rd wr sh mr mw me ms sd
 
 ## Related
 - Builds on:: [[Virtual memory]]
+- Up to the application:: [[Program memory layout]] (how malloc and the stack sit on these pages)
 - Page cache and the block layer:: [[Storage devices]], [[Partitions and filesystems]]
 - Durability, fsync and WAL:: [[Journaling]]
 - Shared memory between processes:: [[Inter-process communication]], [[Locks and synchronization]]

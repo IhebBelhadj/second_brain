@@ -816,7 +816,7 @@ When the group reaches its limit, the kernel first reclaims the group's page cac
 - Memory isn't in default EC2 CloudWatch metrics
 
 ## Related
-- Next:: [[Memory pages]] (one page's life: dirty, writeback, reclaim, huge pages)
+- Next:: [[Memory pages]] (one page's life: dirty, writeback, reclaim, huge pages), [[Program memory layout]] (the same machinery seen from a C program: regions, malloc, the stack)
 - Uses:: [[Interrupts]] (page faults are CPU exceptions, TLB shootdowns are inter-processor interrupts), [[Signals]] (SIGSEGV, SIGKILL from the OOM killer)
 - Copy-on-write and shared memory between processes:: [[Inter-process communication]], [[Processes and threads]]
 - Applied:: [[PostgreSQL architecture]] (shared memory, RSS vs PSS, huge pages, the OOM killer)

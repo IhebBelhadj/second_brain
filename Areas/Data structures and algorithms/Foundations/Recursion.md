@@ -425,6 +425,7 @@ Every recursive function can run with an **explicit stack**, which is what the c
 - Applied in:: [[Binary search tree]] (insert/search/delete), [[Depth-first search]] (traversals), [[Merge sort]] (divide and conquer), [[Linked list]] (recursive reversal)
 - Next:: *[[Backtracking]]*, *[[Dynamic programming]]*
 - Cost analysis:: *[[Big-O notation]]*
+- Where the frames live:: [[Stack and heap]] (stack frames, the 8 MiB limit, why deep recursion overflows)
 - Area:: [[Data structures and algorithms]]
 
 ## Flashcards

@@ -34,6 +34,7 @@ flowchart TD
 ## 1. Foundations
 - *[[Big-O notation]]*: measuring cost as the input grows. O(1), O(log n), O(n), O(n log n), O(n²), amortized cost, time vs space
 - [[Recursion]]: how to solve recursive problems. My 5-step method made precise (induction, termination), designing the function's parameters, how many calls (linear, divide and conquer, choices), the combine for count/exists/best/list, base cases, cost from the recursion tree, memoization, backtracking and pruning, worked examples, debugging
+- [[Stack and heap]]: how long a value must live decides where it lives. Lifetime vs virtual address vs physical frame, C's storage durations, why calls use a stack (frames, the stack pointer, LIFO), recursion and the 8 MiB limit (depth and big local arrays), why a heap (outliving the call, run-time sizes), pointer vs pointee, what survives a return and ownership, a table of C declarations (static, globals, BSS, char s[] vs char *s), costs side by side, Python/Java/Go (references, escape analysis), heap memory vs the heap data structure, and lifetime bugs (dangling pointers, use after free, double free, leaks, stack smashing and canaries)
 - [[Number base conversion]]: positional notation, division and Horner's rule, regrouping bits, fractions and why 0.1 isn't exact, two's complement and overflow, bit operations, endianness and network byte order
 - Not written yet: *[[Bit manipulation]]*
 

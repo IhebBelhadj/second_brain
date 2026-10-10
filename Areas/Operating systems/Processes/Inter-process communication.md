@@ -233,7 +233,7 @@ stop = False
 
 def on_term(signum, frame):
     global stop
-    stop = True                         # just set a flag: handlers should do as little as possible
+    stop = True                         # just set a flag: handlers should do as little as possibleial for Netflix's Java library (2012, maintenance since 2018): commands, thread vs semaphore isolation, properties, Spring Cloud annotations, the dashboard, 
 
 def on_hup(signum, frame):
     print("reloading configuration")

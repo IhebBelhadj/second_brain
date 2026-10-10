@@ -33,7 +33,10 @@ By the end of this note, every symbol in it reads as something specific. The bui
 Everything in a `.tf` file is a **block** or an **argument** inside a block.
 
 ```hcl
-resource "aws_vpc" "main" {        # block type, then labels, then the body
+
+ # block type, then labels, then the body
+resource "aws_vpc" "main" { 
+
   cidr_block           = "10.0.0.0/16"   # argument: name = expression
   enable_dns_hostnames = true
 

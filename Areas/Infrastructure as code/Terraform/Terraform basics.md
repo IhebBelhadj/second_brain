@@ -448,14 +448,14 @@ $ terraform graph | dot -Tsvg > graph.svg   # the dependency graph, rendered wit
 
 ## Terraform among the other tools
 
-| Tool | Style | Language | State | Scope |
-|---|---|---|---|---|
-| **Terraform** | Declarative | HCL | Its own state file (local or a remote backend) | Any API with a provider: every cloud, SaaS (software as a service), DNS, GitHub… |
-| **OpenTofu** | Declarative | HCL (same) | Same, plus client-side state encryption | Same; a community fork, drop-in compatible |
-| **CloudFormation** | Declarative | YAML (YAML Ain't Markup Language) or JSON | Kept by AWS (the "stack") | AWS only |
-| **AWS CDK** (Cloud Development Kit) | Declarative, written in code | TypeScript, Python… (generates CloudFormation) | CloudFormation stack | AWS only |
-| **Pulumi** | Declarative, written in code | TypeScript, Python, Go… | Pulumi service or a bucket | Many clouds |
-| **Ansible** | Mostly imperative tasks, made idempotent module by module | YAML playbooks | None (checks the target every run) | Configuring **inside** servers (packages, files, services); can call cloud APIs too |
+| Tool                                | Style                                                     | Language                                       | State                                          | Scope                                                                               |
+| ----------------------------------- | --------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------- |
+| **Terraform**                       | Declarative                                               | HCL                                            | Its own state file (local or a remote backend) | Any API with a provider: every cloud, SaaS (software as a service), DNS, GitHub…    |
+| **OpenTofu**                        | Declarative                                               | HCL (same)                                     | Same, plus client-side state encryption        | Same; a community fork, drop-in compatible                                          |
+| **CloudFormation**                  | Declarative                                               | YAML or JSON                                   | Kept by AWS (the "stack")                      | AWS only                                                                            |
+| **AWS CDK** (Cloud Development Kit) | Declarative, written in code                              | TypeScript, Python… (generates CloudFormation) | CloudFormation stack                           | AWS only                                                                            |
+| **Pulumi**                          | Declarative, written in code                              | TypeScript, Python, Go…                        | Pulumi service or a bucket                     | Many clouds                                                                         |
+| **Ansible**                         | Mostly imperative tasks, made idempotent module by module | YAML playbooks                                 | None (checks the target every run)             | Configuring **inside** servers (packages, files, services); can call cloud APIs too |
 
 A common split: Terraform builds the **infrastructure** (network, instances, databases, DNS), and something else configures **what runs inside** (a baked image from [[Packer]], containers, or Ansible).
 

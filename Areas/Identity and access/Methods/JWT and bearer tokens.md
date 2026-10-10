@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Identity and access
-subtopic: Identity and access › Methods
+subtopic: Authentication methods
 confidence: 1
 tags: [identity, authentication, jwt, tokens, bearer, cryptography]
 aliases: [JWT, JSON Web Token, Bearer token, Bearer tokens, Bearer authentication, JWS, JWE, JWKS, Opaque token, Token introspection, Claims]

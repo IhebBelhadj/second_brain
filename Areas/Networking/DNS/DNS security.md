@@ -2,7 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
-subtopic: Networking › DNS
+subtopic: DNS
 confidence: 1
 tags: [networking, dns, security]
 aliases: [DNSSEC, DoH, DoT, DNS spoofing, Cache poisoning, DNS tunneling, Subdomain takeover]
@@ -76,7 +76,7 @@ A validating resolver checks each step: the answer's RRSIG with the zone's DNSKE
 - **No privacy**: answers are signed, not encrypted
 - **Last mile**: most validation happens at the **recursive resolver**. The link between my laptop and the resolver isn't protected unless I validate locally or use DoT/DoH to a validating resolver
 - **Fragile operations**: signatures **expire**. Forget to re-sign, or break a key rollover (DS in the parent not matching the new KSK), and the whole domain returns SERVFAIL for every validating resolver. This has taken down entire TLDs and big companies
-- **Bigger answers** → more truncation and TCP fallback (see [[DNS#Advanced problems]])
+- **Bigger answers** → more truncation and TCP fallback (see [[DNS basics#Advanced problems]])
 - **NSEC zone walking**: NSEC's "nothing between A and B" lets anyone list every name in the zone. NSEC3 hashes the names to make that harder
 - Adoption is partial: many big domains still don't sign
 

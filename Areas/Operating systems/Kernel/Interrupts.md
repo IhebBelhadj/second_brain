@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-10
 topic: Operating systems
-subtopic: Operating systems › Kernel
+subtopic: Kernel
 confidence: 1
 tags: [os, linux, kernel, interrupts, cpu]
 aliases: [IRQ, Hardware interrupt, Softirq, Interrupt handler, CPU exceptions, Page fault exception]

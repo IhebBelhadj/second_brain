@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Identity and access
-subtopic: Identity and access › Protocols
+subtopic: Identity protocols
 confidence: 1
 tags: [identity, sso, saml, oidc, federation, enterprise]
 aliases: [SSO, Identity provider, IdP, Service provider, Federation, Identity federation, SAML, SAML 2.0, SAML assertion, SCIM, Single logout]

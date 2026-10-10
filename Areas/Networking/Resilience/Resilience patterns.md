@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-09
 topic: Networking
-subtopic: Networking › Resilience
+subtopic: Resilience
 confidence: 1
 tags: [networking, resilience, microservices, circuit-breaker, distributed-systems]
 aliases: [Circuit breaker, Circuit breakers, Bulkhead, Bulkheads, Exponential backoff, Jitter, Retry storm, Cascading failure, Load shedding, Fallback]

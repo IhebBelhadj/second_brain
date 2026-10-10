@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-10
 topic: Operating systems
-subtopic: Operating systems › Memory
+subtopic: Memory management
 confidence: 1
 tags: [os, linux, memory, virtual-memory]
 aliases: [Paging, Page table, Page fault, TLB, Swap, OOM killer, Address space, Demand paging]

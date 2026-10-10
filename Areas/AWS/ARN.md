@@ -2,7 +2,7 @@
 type: concept
 created: 2026-09-20
 topic: AWS
-subtopic: AWS › Foundations
+subtopic: AWS foundations
 confidence: 1
 tags: [aws]
 ---

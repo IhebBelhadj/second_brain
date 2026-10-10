@@ -2,7 +2,7 @@
 type: procedure
 created: 2026-09-20
 topic: AWS
-subtopic: AWS › Networking
+subtopic: VPC
 confidence: 2
 tags: [aws, networking]
 ---

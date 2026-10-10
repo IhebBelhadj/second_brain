@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-02
 topic: AWS
-subtopic: AWS › Integration
+subtopic: AWS integration
 confidence: 1
 tags: [aws, integration, sns, messaging]
 aliases: [Amazon SNS, Simple Notification Service, SNS topic, Fan-out, Pub/sub]

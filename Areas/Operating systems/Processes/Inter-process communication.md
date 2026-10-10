@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Operating systems
-subtopic: Operating systems › Processes
+subtopic: Processes
 confidence: 1
 tags: [os, linux, ipc]
 aliases: [IPC, Pipes, Named pipe, FIFO, Shared memory, Unix domain sockets, Unix socket, File descriptor, File descriptors]

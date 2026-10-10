@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-10
 topic: Data structures and algorithms
-subtopic: Data structures and algorithms › Foundations
+subtopic: Programming foundations
 confidence: 1
 tags: [dsa, memory, c, stack, heap]
 aliases: [Stack vs heap, Stack frame, Heap memory, Dangling pointer, Stack overflow]

@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
-subtopic: AWS › Storage and databases
+subtopic: AWS storage and databases
 confidence: 1
 tags: [aws, s3, storage, replication, disaster-recovery]
 aliases: [S3 Cross-Region Replication, CRR, Same-Region Replication, SRR, S3 Batch Replication, Replication Time Control, S3 RTC, Cross-account replication]

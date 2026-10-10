@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Identity and access
-subtopic: Identity and access › Methods
+subtopic: Authentication methods
 confidence: 1
 tags: [identity, authentication, tokens, oauth, refresh-token]
 aliases: [Access token, Access tokens, Refresh token, Refresh tokens, Refresh token rotation, Token rotation, Token lifetime, DPoP, Sender-constrained tokens]

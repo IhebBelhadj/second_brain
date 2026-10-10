@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
-subtopic: AWS › Compute
+subtopic: AWS compute
 confidence: 1
 tags: [aws, ec2, ami, packer, infrastructure-as-code, immutable-infrastructure]
 aliases: [HashiCorp Packer, Golden image, Golden AMI, AMI baking, Bake vs fry, Immutable infrastructure, EC2 Image Builder]

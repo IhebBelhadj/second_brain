@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Identity and access
-subtopic: Identity and access › Methods
+subtopic: Authentication methods
 confidence: 1
 tags: [identity, authentication, http, basic-auth, digest-auth]
 aliases: [Basic authentication, Basic auth, HTTP Basic, Digest authentication, Digest auth, HTTP Digest, htpasswd]

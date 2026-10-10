@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-09
 topic: Infrastructure as code
-subtopic: Infrastructure as code › Terraform
+subtopic: Terraform
 confidence: 1
 tags: [iac, terraform, state, backend, s3]
 aliases: [terraform.tfstate, Terraform backend, Terraform remote state, Terraform state locking, Terraform import, moved block, Terraform drift]

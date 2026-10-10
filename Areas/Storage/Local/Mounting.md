@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Storage
-subtopic: Storage › Local storage
+subtopic: Local storage
 confidence: 1
 tags: [storage, linux, filesystems, mount, vfs]
 aliases: [Mount, Mount point, Mount points, mount command, fstab, /etc/fstab, VFS, Virtual File System, Bind mount, Bind mounts, umount, FUSE]

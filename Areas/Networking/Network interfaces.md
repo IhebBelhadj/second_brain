@@ -2,7 +2,7 @@
 type: concept
 created: 2026-09-26
 topic: Networking
-subtopic: Networking › Host networking
+subtopic: Host networking
 confidence: 1
 tags: [networking, linux]
 ---

@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-10
 topic: Operating systems
-subtopic: Operating systems › Processes
+subtopic: Processes
 confidence: 1
 tags: [os, linux, processes, signals]
 aliases: [SIGTERM, SIGKILL, Signal handler, Process groups, Job control, Zombie process, Core dump]

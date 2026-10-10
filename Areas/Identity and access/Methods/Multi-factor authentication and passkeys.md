@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Identity and access
-subtopic: Identity and access › Methods
+subtopic: Authentication methods
 confidence: 1
 tags: [identity, authentication, mfa, totp, webauthn, passkeys, phishing]
 aliases: [MFA, 2FA, Two-factor authentication, Multi-factor authentication, TOTP, HOTP, One-time password, OTP, WebAuthn, FIDO2, Passkey, Passkeys, Security key, Phishing-resistant MFA]

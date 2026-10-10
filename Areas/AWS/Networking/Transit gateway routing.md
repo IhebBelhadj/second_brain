@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
-subtopic: AWS › Networking
+subtopic: VPC
 confidence: 1
 tags: [aws, networking, routing, hybrid]
 aliases: [TGW route table, TGW propagation, TGW association]

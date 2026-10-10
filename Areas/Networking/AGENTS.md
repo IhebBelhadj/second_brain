@@ -26,7 +26,7 @@ Networking/
 │   ├── IP addressing and subnetting.md   binary, masks, CIDR, special ranges, VLSM, summarization, practice
 │   └── IP address planning.md     hierarchical plans, aggregation, bit budgets, growth, reserved/avoided ranges, IPAM
 ├── DNS/
-│   ├── DNS.md                     resolution, roles, caching/TTL, records, glue, Linux resolver, dig
+│   ├── DNS basics.md              resolution, roles, caching/TTL, records, glue, Linux resolver, dig
 │   ├── DNS security.md            poisoning, DNSSEC, DoT/DoH, takeovers, tunneling, amplification, rebinding
 │   └── DNS in production.md       internal naming, split-horizon, hybrid forwarding, DNS LB, migrations, troubleshooting
 ├── LAN/                           Layer 2
@@ -61,7 +61,7 @@ Networking/
 │   ├── Resilience libraries in other languages.md   Go, Python, Node.js, gRPC, Failsafe, Sentinel, concurrency-limits, Finagle
 │   └── Resilience in a service mesh.md   Istio/Envoy/Linkerd timeouts, retries, budgets, outlier detection, what stays in the app
 └── VPN/
-    ├── VPN.md                     ingredients, client internals, site-to-site vs remote access, split tunnel, DNS, MTU
+    ├── VPN basics.md              ingredients, client internals, site-to-site vs remote access, split tunnel, DNS, MTU
     ├── Types of VPN.md            site-to-site → DMVPN → SD-WAN, ZTNA, mesh overlays, L2 VPNs, MPLS
     ├── IPsec and IKE.md           ESP, IKEv2, policy vs route-based, NAT-T, AWS Site-to-Site
     ├── IPsec vs TLS vs WireGuard vs SSH.md   which one when
@@ -76,16 +76,16 @@ Every note in this area has `subtopic: <index name>` in its frontmatter, and is 
 
 | Sub-topic index | Lives in | Covers |
 |---|---|---|
-| `Networking › Protocols.md` | `Protocols/` | the layer model and the protocols on top of it: ICMP, HTTP, HTTP/2 and HTTP/3, WebSocket, OSPF, BGP |
-| `Networking › Host networking.md` | `(area root)` | where one machine meets the network: interfaces and namespaces, sockets |
-| `Networking › Addressing.md` | `Addressing/` | IP addresses, subnetting and designing an address plan |
-| `Networking › DNS.md` | `DNS/` | name resolution, its security and running it in production |
-| `Networking › LAN.md` | `LAN/` | Layer 2: switches, ARP, VLANs, Spanning Tree |
-| `Networking › Routing.md` | `Routing/` | Layer 3: routing tables, policy routing, NAT, overlapping ranges, high availability |
-| `Networking › Security.md` | `Security/` | filtering (ACLs, ingress and egress) and securing traffic: encryption, PKI, TLS, mTLS, workload identity |
-| `Networking › Traffic.md` | `Traffic/` | delivering traffic to services: proxies, reverse proxies, load balancing, service discovery, service mesh |
-| `Networking › Resilience.md` | `Resilience/` | surviving slow and failing dependencies: the patterns, the libraries (Hystrix, Resilience4j, Polly, others) and the service mesh |
-| `Networking › VPN.md` | `VPN/` | joining networks: VPN types, IPsec, WireGuard and friends, nested VPNs |
+| `Network protocols.md` | `Protocols/` | the layer model and the protocols on top of it: ICMP, HTTP, HTTP/2 and HTTP/3, WebSocket, OSPF, BGP |
+| `Host networking.md` | `(area root)` | where one machine meets the network: interfaces and namespaces, sockets |
+| `IP addressing.md` | `Addressing/` | IP addresses, subnetting and designing an address plan |
+| `DNS.md` | `DNS/` | name resolution, its security and running it in production |
+| `Local area networks.md` | `LAN/` | Layer 2: switches, ARP, VLANs, Spanning Tree |
+| `Routing.md` | `Routing/` | Layer 3: routing tables, policy routing, NAT, overlapping ranges, high availability |
+| `Network security.md` | `Security/` | filtering (ACLs, ingress and egress) and securing traffic: encryption, PKI, TLS, mTLS, workload identity |
+| `Traffic management.md` | `Traffic/` | delivering traffic to services: proxies, reverse proxies, load balancing, service discovery, service mesh |
+| `Resilience.md` | `Resilience/` | surviving slow and failing dependencies: the patterns, the libraries (Hystrix, Resilience4j, Polly, others) and the service mesh |
+| `VPN.md` | `VPN/` | joining networks: VPN types, IPsec, WireGuard and friends, nested VPNs |
 
 A new note gets the `subtopic` of the folder it goes in (notes at the area root: see the table), and a line in that sub-topic index as well as in `Networking.md`.
 

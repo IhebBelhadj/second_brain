@@ -33,8 +33,8 @@ Every note in this area has `subtopic: <index name>` in its frontmatter, and is 
 
 | Sub-topic index | Lives in | Covers |
 |---|---|---|
-| `Storage › Local storage.md` | `Local/` | one machine's storage: devices, partitions, filesystems, inodes, journaling, mounting, booting |
-| `Storage › Network storage.md` | `Network storage/` | sharing storage over the network: how it works, NFS and SMB |
+| `Local storage.md` | `Local/` | one machine's storage: devices, partitions, filesystems, inodes, journaling, mounting, booting |
+| `Network storage.md` | `Network storage/` | sharing storage over the network: how it works, NFS and SMB |
 
 A new note gets the `subtopic` of the folder it goes in (notes at the area root: see the table), and a line in that sub-topic index as well as in `Storage.md`.
 

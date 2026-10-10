@@ -31,9 +31,9 @@ Every note in this area has `subtopic: <index name>` in its frontmatter, and is 
 
 | Sub-topic index | Lives in | Covers |
 |---|---|---|
-| `Data structures and algorithms › Foundations.md` | `Foundations/` | what everything else builds on: recursion, stack and heap memory, number bases |
-| `Data structures and algorithms › Data structures.md` | `Data structures/` | linked lists, hash tables, trees |
-| `Data structures and algorithms › Algorithms and problems.md` | `Algorithms/` | searching and sorting algorithms, and practice problems |
+| `Programming foundations.md` | `Foundations/` | what everything else builds on: recursion, stack and heap memory, number bases |
+| `Data structures.md` | `Data structures/` | linked lists, hash tables, trees |
+| `Algorithms.md` | `Algorithms/` | searching and sorting algorithms, and practice problems |
 
 A new note gets the `subtopic` of the folder it goes in (notes at the area root: see the table), and a line in that sub-topic index as well as in `Data structures and algorithms.md`.
 

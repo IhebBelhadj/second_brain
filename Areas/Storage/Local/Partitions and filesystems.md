@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Storage
-subtopic: Storage › Local storage
+subtopic: Local storage
 confidence: 1
 tags: [storage, filesystems, linux, partitions, foundations]
 aliases: [Filesystem, Filesystems, File system, Partition, Partitions, ext4, XFS, Hard link, Directory entry, mkfs]

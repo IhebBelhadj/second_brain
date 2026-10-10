@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
-subtopic: AWS › Networking
+subtopic: VPC
 confidence: 1
 tags: [aws, networking, vpn, hybrid]
 aliases: [AWS Site-to-Site VPN, Virtual private gateway, VGW, Customer gateway, VPN CloudHub]
@@ -12,7 +12,7 @@ aliases: [AWS Site-to-Site VPN, Virtual private gateway, VGW, Customer gateway, 
 > [!abstract] In one sentence
 > AWS Site-to-Site VPN is a managed pair of IPsec tunnels between my office's router (the **customer gateway**) and an AWS-side gateway (a **virtual private gateway** for one VPC, or a **transit gateway** for many), with BGP or static routes telling each side which networks are behind the other.
 
-The general idea (why there's a gateway at each end, what the tunnel does) is in [[VPN#Site-to-site vs remote access: where does the tunnel end?]]. The protocol is in [[IPsec and IKE]]. This note is about how AWS packages it and where it hurts.
+The general idea (why there's a gateway at each end, what the tunnel does) is in [[VPN basics#Site-to-site vs remote access: where does the tunnel end?]]. The protocol is in [[IPsec and IKE]]. This note is about how AWS packages it and where it hurts.
 
 ## The pieces
 
@@ -139,7 +139,7 @@ This is how a VPN can be the **backup for Direct Connect** without any extra con
 |---|---|---|
 | Tunnel flaps every hour | Phase 2 lifetime / rekey mismatch, or DPD too aggressive on my side | Match lifetimes from the generated config. Check the IKE logs |
 | Tunnel up, only **one** of my subnets reaches AWS | Policy-based device with several selectors: AWS only keeps one SA pair per tunnel | Route-based (VTI) config, or one `any/any` selector |
-| Small pings work, SSH hangs after login, HTTPS stalls | MTU: big packets + DF bit are dropped in the tunnel | Clamp TCP MSS to 1379 on the CGW → [[VPN#MTU]] |
+| Small pings work, SSH hangs after login, HTTPS stalls | MTU: big packets + DF bit are dropped in the tunnel | Clamp TCP MSS to 1379 on the CGW → [[VPN basics#MTU]] |
 | Works, then breaks during AWS maintenance | Only one tunnel configured | Configure both, use BGP |
 | Return traffic dropped by my firewall | Asymmetric routing: out on tunnel 1, back on tunnel 2 | Prepend/MED to make AWS prefer the same tunnel, or allow asymmetric state on the firewall |
 | Office reaches the VPC, not the **peered** VPC | VPC peering forbids edge-to-edge routing: a VGW can't be used to reach a peered VPC | [[Transit gateway]] |

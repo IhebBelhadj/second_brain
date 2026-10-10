@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Identity and access
-subtopic: Identity and access › Methods
+subtopic: Authentication methods
 confidence: 1
 tags: [identity, authentication, hmac, signing, webhooks, aws, sigv4]
 aliases: [HMAC, HMAC authentication, Request signing, Signed requests, Webhook signature, Webhook signatures, SigV4, Signature Version 4, AWS SigV4]

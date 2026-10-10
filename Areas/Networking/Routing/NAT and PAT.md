@@ -2,7 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
-subtopic: Networking › Routing
+subtopic: Routing
 confidence: 1
 tags: [networking, routing, nat, security]
 aliases: [NAT, PAT, NAPT, Masquerade, SNAT, DNAT, Port forwarding, CGNAT, UPnP, NAT-PMP]

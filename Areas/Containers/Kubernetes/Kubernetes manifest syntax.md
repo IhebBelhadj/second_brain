@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-06
 topic: Containers
-subtopic: Containers › Kubernetes
+subtopic: Kubernetes
 confidence: 1
 tags: [containers, kubernetes, yaml, syntax]
 aliases: [Kubernetes YAML, Kubernetes manifest, Kubernetes manifests, apiVersion, kubectl explain, Labels and selectors]
@@ -86,7 +86,7 @@ flowchart LR
     ST -. "kubectl get -o yaml" .-> ME(("me"))
 ```
 
-That's the whole of Kubernetes in one picture: `spec` is the desired state, `status` the actual state, and controllers keep closing the gap between them (see [[Kubernetes#The mental model: a giant state machine]]).
+That's the whole of Kubernetes in one picture: `spec` is the desired state, `status` the actual state, and controllers keep closing the gap between them (see [[Kubernetes basics#The mental model: a giant state machine]]).
 
 `kubectl get deployment web -n shop -o yaml` shows my four fields **plus** what the server added:
 

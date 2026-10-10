@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
-subtopic: AWS › Monitoring
+subtopic: AWS monitoring
 confidence: 1
 tags: [aws, monitoring, cloudwatch, observability]
 aliases: [Amazon CloudWatch, CloudWatch metrics, Custom metrics, Custom namespace, PutMetricData, Embedded Metric Format, EMF, Metrics Insights]

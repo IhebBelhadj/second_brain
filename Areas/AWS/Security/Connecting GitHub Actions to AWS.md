@@ -2,7 +2,7 @@
 type: procedure
 created: 2026-10-04
 topic: AWS
-subtopic: AWS › Security
+subtopic: AWS security
 tags: [aws, security, iam, sts, oidc, github, cicd]
 aliases: [GitHub OIDC to AWS, GitHub Actions OIDC, GitHub Actions to AWS, configure-aws-credentials, CI roles for GitHub]
 ---

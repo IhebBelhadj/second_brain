@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
-subtopic: Containers › Kubernetes
+subtopic: Kubernetes
 confidence: 1
 tags: [containers, orchestration, kubernetes, architecture, etcd]
 aliases: [Kubernetes components, Kubernetes control plane, kube-apiserver, etcd, kube-scheduler, kube-controller-manager, kubelet, kube-proxy, CNI, CRI, Container runtime]

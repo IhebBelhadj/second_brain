@@ -2,7 +2,7 @@
 type: procedure
 created: 2026-10-04
 topic: AWS
-subtopic: AWS › Security
+subtopic: AWS security
 tags: [aws, security, iam, sts, lambda]
 aliases: [STS walkthrough, AssumeRole walkthrough, Invoking a Lambda through an assumed role]
 ---

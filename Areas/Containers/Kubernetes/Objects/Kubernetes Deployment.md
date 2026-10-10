@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
-subtopic: Containers › Kubernetes
+subtopic: Kubernetes
 confidence: 1
 tags: [containers, kubernetes, kubernetes-object, workload, deployment]
 aliases: [Kubernetes Deployments, kubectl rollout, maxSurge, maxUnavailable]

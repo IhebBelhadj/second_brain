@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
-subtopic: Containers › Kubernetes
+subtopic: Kubernetes
 confidence: 1
 tags: [containers, kubernetes, kubernetes-object, extensibility, operators]
 aliases: [CustomResourceDefinition, CRD, CRDs, Custom resource, Operator, Kubernetes operator, Finalizer]

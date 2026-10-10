@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-01
 topic: AWS
-subtopic: AWS › Storage and databases
+subtopic: AWS storage and databases
 confidence: 1
 tags: [aws, databases, rds]
 aliases: [Amazon RDS, Relational Database Service, Aurora, Amazon Aurora, RDS Proxy, Multi-AZ, Read replica]

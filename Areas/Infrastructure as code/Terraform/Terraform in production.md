@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-09
 topic: Infrastructure as code
-subtopic: Infrastructure as code › Terraform
+subtopic: Terraform
 confidence: 1
 tags: [iac, terraform, cicd, production, gitops]
 aliases: [Terraform CI/CD, Terraform pipeline, Running Terraform in production, Terraform drift detection]

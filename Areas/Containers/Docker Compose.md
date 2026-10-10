@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
-subtopic: Containers › Images and containers
+subtopic: Docker
 confidence: 1
 tags: [containers, docker, compose, local-development]
 aliases: [Compose, docker compose, compose.yaml, docker-compose.yml]
@@ -253,7 +253,7 @@ Nothing in AWS (Amazon Web Services) runs a `compose.yaml` file as is. On a sing
 > Only the `worker` container, because its configuration changed. Compose compares the desired configuration with what's running and recreates only what differs. `api`, `db` and `cache` keep running.
 
 > [!example]- The API works from the laptop on `localhost:8080`, but the same file on a server makes it unreachable from other machines. Why?
-> The port is published as `127.0.0.1:8080:8000`, so only the host's loopback accepts it. On a server, publish on the right interface (`8080:8000` binds all interfaces), and remember that Docker's published ports bypass the host firewall (see [[Docker#1. A port published with `-p` ignores the host firewall]]).
+> The port is published as `127.0.0.1:8080:8000`, so only the host's loopback accepts it. On a server, publish on the right interface (`8080:8000` binds all interfaces), and remember that Docker's published ports bypass the host firewall (see [[Docker basics#1. A port published with `-p` ignores the host firewall]]).
 
 ## Easy to get wrong
 - Thinking `depends_on` waits for readiness: it waits for the container to **start**, unless `condition: service_healthy` is used

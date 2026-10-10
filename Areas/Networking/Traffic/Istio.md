@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-10
 topic: Networking
-subtopic: Networking › Traffic
+subtopic: Traffic management
 confidence: 1
 tags: [networking, service-mesh, istio, envoy, kubernetes]
 aliases: [istiod, istioctl, VirtualService, DestinationRule, Istio ambient mode, ztunnel]

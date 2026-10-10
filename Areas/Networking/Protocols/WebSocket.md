@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Networking
-subtopic: Networking › Protocols
+subtopic: Network protocols
 confidence: 1
 tags: [networking, http, protocols, web, realtime]
 aliases: [WebSockets, Websocket, ws, wss, WebSocket handshake, WebSocket frames]

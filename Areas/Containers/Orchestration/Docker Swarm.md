@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
-subtopic: Containers › Orchestration
+subtopic: Container orchestration
 confidence: 1
 tags: [containers, orchestration, docker, swarm]
 aliases: [Swarm, Swarm mode, docker stack, Docker stack, Routing mesh]

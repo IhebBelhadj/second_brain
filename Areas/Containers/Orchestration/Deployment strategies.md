@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
-subtopic: Containers › Orchestration
+subtopic: Container orchestration
 confidence: 1
 tags: [containers, orchestration, deployment, release, rollback]
 aliases: [Rolling update, Rolling deployment, Blue-green deployment, Blue/green deployment, Canary deployment, Canary release, A/B testing, Shadow deployment, Traffic mirroring, Recreate deployment, Feature flags, Expand and contract]

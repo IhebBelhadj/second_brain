@@ -32,8 +32,8 @@ Every note in this area has `subtopic: <index name>` in its frontmatter, and is 
 
 | Sub-topic index | Lives in | Covers |
 |---|---|---|
-| `Identity and access › Methods.md` | `Methods/` | authentication and authorization, every authentication method, and choosing between them |
-| `Identity and access › Protocols.md` | `Protocols/` | delegation and federation: OAuth 2.0, OpenID Connect, single sign-on |
+| `Authentication methods.md` | `Methods/` | authentication and authorization, every authentication method, and choosing between them |
+| `Identity protocols.md` | `Protocols/` | delegation and federation: OAuth 2.0, OpenID Connect, single sign-on |
 
 A new note gets the `subtopic` of the folder it goes in (notes at the area root: see the table), and a line in that sub-topic index as well as in `Identity and access.md`.
 

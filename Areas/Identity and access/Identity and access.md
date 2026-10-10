@@ -9,8 +9,8 @@ tags: [topic]
 
 ## Sub-topics
 Each sub-topic has its own index with the same reading order, for studying one part at a time (and a cleaner graph).
-- [[Identity and access › Methods]]: authentication and authorization, every authentication method, and choosing between them
-- [[Identity and access › Protocols]]: delegation and federation: OAuth 2.0, OpenID Connect, single sign-on
+- [[Authentication methods]]: authentication and authorization, every authentication method, and choosing between them
+- [[Identity protocols]]: delegation and federation: OAuth 2.0, OpenID Connect, single sign-on
 
 ## How to use this
 

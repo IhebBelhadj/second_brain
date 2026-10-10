@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
-subtopic: Containers › Kubernetes
+subtopic: Kubernetes
 confidence: 1
 tags: [containers, kubernetes, kubernetes-object, security, secrets]
 aliases: [Kubernetes Secrets, imagePullSecrets, External Secrets Operator, Sealed Secrets, Encryption at rest in Kubernetes]

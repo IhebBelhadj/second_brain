@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-09
 topic: Infrastructure as code
-subtopic: Infrastructure as code › Terraform
+subtopic: Terraform
 confidence: 1
 tags: [iac, terraform, providers, versioning]
 aliases: [Terraform provider, required_providers, .terraform.lock.hcl, Terraform lock file, Dependency lock file, Provider alias, Provider aliases]

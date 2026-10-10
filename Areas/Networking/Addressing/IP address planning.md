@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Networking
-subtopic: Networking › Addressing
+subtopic: IP addressing
 confidence: 1
 tags: [networking, ip, addressing, architecture, routing]
 aliases: [IP address plan, Address plan, CIDR planning, IPAM]

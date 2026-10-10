@@ -2,7 +2,7 @@
 type: compare
 created: 2026-09-27
 topic: AWS
-subtopic: AWS › Networking
+subtopic: VPC
 confidence: 1
 tags: [aws, networking, vpn, hybrid, architecture]
 ---
@@ -31,7 +31,7 @@ flowchart LR
     VGW == "IPsec" ==> FW["Company firewall"] --> VM["VM 10.0.0.50"]
 ```
 
-It needs the **company firewall admin** to configure an IPsec peer, and the company side must be reachable on UDP 500/4500. Everything else in this note is a way around one of those two requirements. Details: [[Site-to-Site VPN]], [[IPsec and IKE]], and why there's a gateway on each side: [[VPN#Site-to-site vs remote access: where does the tunnel end?]].
+It needs the **company firewall admin** to configure an IPsec peer, and the company side must be reachable on UDP 500/4500. Everything else in this note is a way around one of those two requirements. Details: [[Site-to-Site VPN]], [[IPsec and IKE]], and why there's a gateway on each side: [[VPN basics#Site-to-site vs remote access: where does the tunnel end?]].
 
 ---
 

@@ -2,7 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
-subtopic: Networking › LAN
+subtopic: Local area networks
 confidence: 1
 tags: [networking, lan, switching]
 aliases: [STP, RSTP, Broadcast storm]

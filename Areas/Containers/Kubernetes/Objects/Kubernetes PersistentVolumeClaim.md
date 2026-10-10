@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
-subtopic: Containers › Kubernetes
+subtopic: Kubernetes
 confidence: 1
 tags: [containers, kubernetes, kubernetes-object, storage]
 aliases: [PersistentVolumeClaim, PVC, PVCs, PersistentVolume, PV, Kubernetes PersistentVolume, Access modes, ReadWriteOnce, ReadWriteMany]

@@ -2,7 +2,7 @@
 type: compare
 created: 2026-09-27
 topic: AWS
-subtopic: AWS › Networking
+subtopic: VPC
 confidence: 1
 tags: [aws, networking, load-balancing, proxy, service-discovery]
 ---

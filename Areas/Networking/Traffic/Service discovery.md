@@ -2,7 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
-subtopic: Networking › Traffic
+subtopic: Traffic management
 confidence: 1
 tags: [networking, service-discovery, microservices, kubernetes]
 aliases: [Service registry, Client-side discovery, Server-side discovery, Consul]
@@ -32,7 +32,7 @@ Fine for a few stable servers. Every change is a manual edit and a reload: doesn
 ### 2. DNS
 Register each instance as an A record (or **SRV** record, which also carries the port) under the service's name, with a short TTL. Clients just resolve `orders.internal.example.com`.
 - ✅ Every language and tool already speaks DNS
-- ❌ **Caching**: clients and runtimes keep stale IPs (see [[DNS#Caching and TTL]]). A removed instance keeps getting traffic
+- ❌ **Caching**: clients and runtimes keep stale IPs (see [[DNS basics#Caching and TTL]]). A removed instance keeps getting traffic
 - ❌ No health information unless the DNS server itself does health checks
 - ❌ Most clients ignore SRV records, so ports must be fixed
 

@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
-subtopic: AWS › Monitoring
+subtopic: AWS monitoring
 confidence: 1
 tags: [aws, monitoring, cloudwatch, ec2]
 aliases: [Amazon CloudWatch agent, Unified CloudWatch agent, CWAgent, amazon-cloudwatch-agent]

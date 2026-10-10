@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-10
 topic: Operating systems
-subtopic: Operating systems › Processes
+subtopic: Processes
 confidence: 1
 tags: [os, linux, processes, threads]
 aliases: [Process, Thread, fork, exec, Context switch, Process states, Process-per-connection]

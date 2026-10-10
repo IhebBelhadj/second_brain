@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: AWS
-subtopic: AWS › Compute
+subtopic: AWS compute
 confidence: 1
 tags: [aws, compute, containers, ecs, ec2, fargate, ci-cd, infrastructure-as-code, terraform, github-actions, secrets, route53, acm]
 aliases: [ECS in production, Production ECS, ECS CI/CD, GitHub Actions to ECS, Deploying ECS from GitHub]

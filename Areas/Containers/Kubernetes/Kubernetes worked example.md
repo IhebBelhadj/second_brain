@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
-subtopic: Containers › Kubernetes
+subtopic: Kubernetes
 confidence: 1
 tags: [containers, kubernetes, example, yaml]
 aliases: [Kubernetes e-commerce example, Kubernetes objects by example]
@@ -68,7 +68,7 @@ Cluster
 └── shop          ← our application
 ```
 
-This gives **logical** isolation: names are unique per namespace, and RBAC, quotas and NetworkPolicies are scoped to it. It isn't a security wall on its own (see [[Kubernetes#Stage 7: scaling, limits and isolation between teams]]).
+This gives **logical** isolation: names are unique per namespace, and RBAC, quotas and NetworkPolicies are scoped to it. It isn't a security wall on its own (see [[Kubernetes basics#Stage 7: scaling, limits and isolation between teams]]).
 
 ## 2. ConfigMap
 
@@ -277,7 +277,7 @@ That's why a StatefulSet makes more sense for a database than a Deployment, whos
 > - **`PGDATA` in a subdirectory**: a freshly formatted disk often contains a `lost+found` folder, and PostgreSQL's initialisation refuses a non-empty data directory. Pointing `PGDATA` one level down avoids it
 > - **`serviceName` expects a headless Service**: it's what gives each replica its own DNS name (`postgres-0.postgres.shop.svc.cluster.local`). With one replica, the normal Service of step 8 is enough for the backend, but a replicated database needs a headless Service (`clusterIP: None`) so replicas and clients can address a specific member
 >
-> And a StatefulSet doesn't make PostgreSQL highly available: `replicas: 3` would be three independent databases. Replication and failover need an operator (see [[Kubernetes#Stage 8: extending the API (what nothing else has)]]).
+> And a StatefulSet doesn't make PostgreSQL highly available: `replicas: 3` would be three independent databases. Replication and failover need an operator (see [[Kubernetes basics#Stage 8: extending the API (what nothing else has)]]).
 
 ## 8. PostgreSQL Service
 
@@ -861,7 +861,7 @@ kubectl -n shop rollout status deployment/backend
 kubectl -n shop describe pod <name>      # events: scheduling, image pulls, probe failures
 ```
 
-In practice the folder becomes a Helm chart or a Kustomize base with per-environment overlays, deployed by a GitOps tool (see [[Kubernetes#Stage 9: how the shop actually deploys]]).
+In practice the folder becomes a Helm chart or a Kustomize base with per-environment overlays, deployed by a GitOps tool (see [[Kubernetes basics#Stage 9: how the shop actually deploys]]).
 
 ## The mental model
 

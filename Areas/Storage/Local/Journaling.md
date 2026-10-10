@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Storage
-subtopic: Storage › Local storage
+subtopic: Local storage
 confidence: 1
 tags: [storage, filesystems, journaling, crash-consistency, databases, wal]
 aliases: [Journal, Journaling filesystem, Write-ahead log, Write-ahead logging, WAL, Crash consistency, Redo log, Copy-on-write, JBD2]

@@ -9,16 +9,16 @@ tags: [topic]
 
 ## Sub-topics
 Each sub-topic has its own index with the same reading order, for studying one part at a time (and a cleaner graph).
-- [[Networking › Protocols]]: the layer model and the protocols on top of it: ICMP, HTTP, HTTP/2 and HTTP/3, WebSocket, BGP
-- [[Networking › Addressing]]: IP addresses, subnetting and designing an address plan
-- [[Networking › DNS]]: name resolution, its security and running it in production
-- [[Networking › Host networking]]: where one machine meets the network: interfaces and namespaces, sockets
-- [[Networking › LAN]]: Layer 2: switches, ARP, VLANs, Spanning Tree
-- [[Networking › Routing]]: Layer 3: routing tables, policy routing, NAT, overlapping ranges, high availability
-- [[Networking › Security]]: filtering (ACLs, ingress and egress) and securing traffic: encryption, PKI, TLS, mTLS, workload identity
-- [[Networking › Traffic]]: delivering traffic to services: proxies, reverse proxies, load balancing, service discovery, service mesh
-- [[Networking › Resilience]]: surviving slow and failing dependencies: the patterns, the libraries (Hystrix, Resilience4j, Polly, others) and the service mesh
-- [[Networking › VPN]]: joining networks: VPN types, IPsec, WireGuard and friends, nested VPNs
+- [[Network protocols]]: the layer model and the protocols on top of it: ICMP, HTTP, HTTP/2 and HTTP/3, WebSocket, BGP
+- [[IP addressing]]: IP addresses, subnetting and designing an address plan
+- [[DNS]]: name resolution, its security and running it in production
+- [[Host networking]]: where one machine meets the network: interfaces and namespaces, sockets
+- [[Local area networks]]: Layer 2: switches, ARP, VLANs, Spanning Tree
+- [[Routing]]: Layer 3: routing tables, policy routing, NAT, overlapping ranges, high availability
+- [[Network security]]: filtering (ACLs, ingress and egress) and securing traffic: encryption, PKI, TLS, mTLS, workload identity
+- [[Traffic management]]: delivering traffic to services: proxies, reverse proxies, load balancing, service discovery, service mesh
+- [[Resilience]]: surviving slow and failing dependencies: the patterns, the libraries (Hystrix, Resilience4j, Polly, others) and the service mesh
+- [[VPN]]: joining networks: VPN types, IPsec, WireGuard and friends, nested VPNs
 
 ## How to use this
 
@@ -42,7 +42,7 @@ flowchart TD
 - [[ICMP]]: the control and error messages behind `ping` and `traceroute` (and why blocking all of it breaks things)
 - [[IP addressing and subnetting]]: what an address is in binary, masks and prefixes, the mental method, special ranges, VLSM design, summarization, planning a real address scheme, with practice exercises
     - [[IP address planning]]: designing the plan itself. One aligned block per group so routes and firewall rules aggregate, a hierarchy of bits (environment vs region first), sizing for growth, reserved ranges, ranges to avoid, IPAM as the source of truth
-- [[DNS]]: why it's a delegated tree, the three roles (stub, recursive, authoritative), a lookup step by step, caching and TTL, records, glue, how Linux resolves, reading `dig`
+- [[DNS basics]]: why it's a delegated tree, the three roles (stub, recursive, authoritative), a lookup step by step, caching and TTL, records, glue, how Linux resolves, reading `dig`
     - [[DNS security]]: cache poisoning and Kaminsky, DNSSEC's chain of trust, DoT/DoH, hijacking, subdomain takeover, tunneling, amplification, rebinding
     - [[DNS in production]]: internal naming, split-horizon, hybrid forwarding, DNS load balancing and its limits, safe record changes, running servers, a troubleshooting method
 - [[HTTP]]: the request/response protocol on top of TCP. Message anatomy, methods (safe/idempotent), status codes, HTTP/1.0 vs 1.1 persistent connections, Content-Length vs chunked, head-of-line blocking and 6 connections per host, the Host header, polling/long polling/SSE/WebSocket, keep-alive 502s
@@ -101,7 +101,7 @@ flowchart TD
     - [[Resilience in a service mesh]]: the same patterns as proxy configuration (Istio, Envoy, Linkerd): timeouts, retries and budgets, Envoy "circuit breakers" vs outlier detection, fault injection, what stays in the app, migrating without multiplying retries
 
 ## 8. Joining networks (VPNs and their alternatives)
-- [[VPN]]: the three ingredients, how a client works (tun, routes, DNS), site-to-site vs remote access, split vs full tunnel, WireGuard, MTU
+- [[VPN basics]]: the three ingredients, how a client works (tun, routes, DNS), site-to-site vs remote access, split vs full tunnel, WireGuard, MTU
 - [[Types of VPN]]: site-to-site → DMVPN → SD-WAN, remote access → ZTNA, mesh overlays and NAT hole punching, L2 VPNs, MPLS. Each one as the fix for the previous one's problem
 - [[IPsec and IKE]]: ESP, IKEv2 exchanges, policy- vs route-based, NAT-T, MTU, troubleshooting
 - [[IPsec vs TLS vs WireGuard vs SSH]]: which one to use when
@@ -123,7 +123,7 @@ Every concept above shows up here under a product name. The general idea is in t
 - [[Connecting AWS to a private network]]: the managed VPN and eight workarounds, and where each one breaks (sections 4 and 8 applied)
 - [[Load balancers]]: ALB/NLB setup, target groups, health checks
 - [[Proxies, load balancing and discovery in AWS]]: every concept from section 7 mapped to its AWS product (ALB, NLB, GWLB, CloudFront, API Gateway, Global Accelerator, Cloud Map, Service Connect, VPC Lattice, egress control)
-- [[Route 53]]: DNS as a managed service (applies [[DNS]] and [[DNS in production]])
+- [[Route 53]]: DNS as a managed service (applies [[DNS basics]] and [[DNS in production]])
 - [[AWS WAF]]: Layer 7 filtering
 - [[Systems Manager]]: managing private instances with no inbound port, through an agent that dials out ([[Outbound-initiated connections]] applied)
 

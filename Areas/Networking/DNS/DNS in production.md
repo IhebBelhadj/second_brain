@@ -2,7 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
-subtopic: Networking › DNS
+subtopic: DNS
 confidence: 1
 tags: [networking, dns, operations]
 aliases: [Split-horizon DNS, Split DNS, Conditional forwarding, DNS load balancing, DNS migration]
@@ -68,7 +68,7 @@ flowchart LR
 Details that trip people up:
 - The forwarding target must be **reachable**: routes through the tunnel, firewall rules for UDP **and TCP** 53, and the security rules on the resolver's side
 - Some cloud resolvers can't be reached from outside their network directly: they need an **inbound endpoint** (an IP inside the network that accepts forwarded queries). In AWS that's Route 53 Resolver inbound/outbound endpoints (see [[Route 53]], [[Connecting AWS to a private network]])
-- For **remote-access VPN** users, the same idea is **split DNS** on the client: only `corp.example.com` goes to the company resolver (see [[VPN#DNS: the part everyone forgets]])
+- For **remote-access VPN** users, the same idea is **split DNS** on the client: only `corp.example.com` goes to the company resolver (see [[VPN basics#DNS: the part everyone forgets]])
 
 ## DNS for load balancing and failover
 
@@ -121,7 +121,7 @@ Trade-off: short TTLs = faster changes, but more queries and **total dependence 
 | Recursive resolver | Unbound, BIND, PowerDNS Recursor | Only for my networks, never open to the internet (see [[DNS security#6. DNS as a DDoS weapon: amplification]]) |
 | Caching forwarder | dnsmasq, systemd-resolved, CoreDNS | Local caches on hosts and nodes, home routers |
 | Directory-integrated | Active Directory DNS | Windows domains depend on it (SRV records to find domain controllers) |
-| Kubernetes | CoreDNS | `service.namespace.svc.cluster.local` names, the `ndots:5` trap (see [[DNS#3. Every lookup is slow in containers]]) |
+| Kubernetes | CoreDNS | `service.namespace.svc.cluster.local` names, the `ndots:5` trap (see [[DNS basics#3. Every lookup is slow in containers]]) |
 
 Design rules:
 - **Separate authoritative and recursive** roles: a server answering the internet for my zones shouldn't also recurse for anyone

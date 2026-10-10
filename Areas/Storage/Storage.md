@@ -9,8 +9,8 @@ tags: [topic]
 
 ## Sub-topics
 Each sub-topic has its own index with the same reading order, for studying one part at a time (and a cleaner graph).
-- [[Storage › Local storage]]: one machine's storage: devices, partitions, filesystems, inodes, journaling, mounting, booting
-- [[Storage › Network storage]]: sharing storage over the network: how it works, NFS and SMB
+- [[Local storage]]: one machine's storage: devices, partitions, filesystems, inodes, journaling, mounting, booting
+- [[Network storage]]: sharing storage over the network: how it works, NFS and SMB
 
 ## How to use this
 

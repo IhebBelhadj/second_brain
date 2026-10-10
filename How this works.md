@@ -55,7 +55,7 @@ Creating a note in a folder applies its template automatically.
 |---|---|
 | **Source** | A book, course, article or video |
 | **Topic** | The index page for a subject |
-| **Subtopic** | The index page for one part of a subject, named `<Subject> › <Part>` |
+| **Subtopic** | The index page for one part of a subject, named after that part (`Kubernetes`, `DNS`) |
 | **Project** | Something with a deadline |
 | **Daily** / **Weekly** | The journal and the review |
 | **Practice** | A practice test, problem set or exercise session |
@@ -70,13 +70,13 @@ Insert one manually with `Alt+T` or `<Space>t`.
 
 ```yaml
 topic: <subject>    # what subject this belongs to
-subtopic: <subject> › <part>   # which part of it, once the subject is big enough to split
+subtopic: <part>    # which part of it, once the subject is big enough to split
 confidence: 1       # 1 = can't explain it, 5 = could teach it
 ```
 
 `topic` groups your notes — set it to whatever you're studying, and a **Topic** note of the same name collects them automatically.
 
-`subtopic` does the same one level down. When a subject grows past a few dozen notes, split it: one **Subtopic** note per part (usually one per subfolder), named `<Subject> › <Part>` so it never clashes with a note's name, tagged `#subtopic`. The topic note links its subtopics, each subtopic links its notes, and the graph clusters around them. Query them with `WHERE subtopic = "Networking › DNS"` or `FROM #subtopic`.
+`subtopic` does the same one level down. When a subject grows past a few dozen notes, split it: one **Subtopic** note per part (usually one per subfolder), named after the part itself (`Kubernetes`, `DNS`, `Data structures`), tagged `#subtopic`. If a note with that name already exists, it becomes the index and its content moves to a note like `Kubernetes basics`. The topic note links its subtopics, each subtopic links its notes, and the graph clusters around them. Query them with `WHERE subtopic = "DNS"` or `FROM #subtopic`.
 
 `confidence` is what drives everything. [[Home]] sorts your study queue by it, lowest first. Rate honestly and you never have to decide what to study next.
 

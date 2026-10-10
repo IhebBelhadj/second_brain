@@ -10,9 +10,9 @@ aliases: [DSA]
 
 ## Sub-topics
 Each sub-topic has its own index with the same reading order, for studying one part at a time (and a cleaner graph).
-- [[Data structures and algorithms › Foundations]]: what everything else builds on: recursion, number bases
-- [[Data structures and algorithms › Data structures]]: linked lists, hash tables, trees
-- [[Data structures and algorithms › Algorithms and problems]]: searching and sorting algorithms, and practice problems
+- [[Programming foundations]]: what everything else builds on: recursion, number bases
+- [[Data structures]]: linked lists, hash tables, trees
+- [[Algorithms]]: searching and sorting algorithms, and practice problems
 
 ## How to use this
 

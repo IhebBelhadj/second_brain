@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Storage
-subtopic: Storage › Local storage
+subtopic: Local storage
 confidence: 1
 tags: [storage, boot, uefi, bios, linux, windows, foundations]
 aliases: [Boot process, BIOS, UEFI, Legacy boot, EFI system partition, ESP, EFI image, EFI executable, Bootloader, GRUB, Secure Boot, shim, initramfs, efibootmgr, NVRAM boot entries, BCD]

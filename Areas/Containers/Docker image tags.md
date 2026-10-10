@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Containers
-subtopic: Containers › Images and containers
+subtopic: Docker
 confidence: 1
 tags: [containers, docker, tagging, deployment, registry]
 aliases: [Docker tags, Image tags, Image tag, Image digest, Digest pinning, latest tag, Immutable tags, Image promotion, docker tag]
@@ -277,7 +277,7 @@ flowchart LR
     class X bad
 ```
 
-Everything that differs between environments (database host, secrets, feature flags) comes from configuration at **run time**, never from a different build (see [[Docker#Stage 6: from my laptop to production]]).
+Everything that differs between environments (database host, secrets, feature flags) comes from configuration at **run time**, never from a different build (see [[Docker basics#Stage 6: from my laptop to production]]).
 
 ### Stage 9: deploy the digest, not the tag
 
@@ -329,7 +329,7 @@ Checking out the 1.4.1 commit and building it again does **not** give back the 1
 
 ### 5. One tag, several CPU architectures
 
-A tag can point at a **multi-platform index**: one entry per architecture (built with `buildx --platform linux/amd64,linux/arm64`, see [[Docker#Stage 7: laptops on ARM, servers on x86]]).
+A tag can point at a **multi-platform index**: one entry per architecture (built with `buildx --platform linux/amd64,linux/arm64`, see [[Docker basics#Stage 7: laptops on ARM, servers on x86]]).
 
 ```bash
 docker buildx imagetools inspect $IMAGE:1.4.2

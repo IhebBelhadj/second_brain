@@ -2,7 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
-subtopic: Networking › VPN
+subtopic: VPN
 confidence: 1
 tags: [networking, security, vpn, architecture]
 ---
@@ -49,7 +49,7 @@ flowchart LR
     FW1 == "IPsec tunnel over the internet" ==> FW2
 ```
 
-(Why there's a gateway on *each* side, and why nobody "asks" the gateway where things are: [[VPN#Site-to-site vs remote access: where does the tunnel end?]].)
+(Why there's a gateway on *each* side, and why nobody "asks" the gateway where things are: [[VPN basics#Site-to-site vs remote access: where does the tunnel end?]].)
 
 The key property: **the endpoints of the tunnel are gateways, not users.** That makes it invisible to users, but it also means it authenticates *the office*, not *the person*. Anyone plugged into the Sfax LAN is "in".
 

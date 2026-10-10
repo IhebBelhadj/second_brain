@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
-subtopic: AWS › Compute
+subtopic: AWS compute
 confidence: 1
 tags: [aws, compute, containers, ecs, fargate]
 aliases: [Amazon ECS, Elastic Container Service, ECS service, ECS cluster, ECR, Elastic Container Registry, ECS Exec]

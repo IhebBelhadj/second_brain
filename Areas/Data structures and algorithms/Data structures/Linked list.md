@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-02
 topic: Data structures and algorithms
-subtopic: Data structures and algorithms › Data structures
+subtopic: Data structures
 confidence: 1
 tags: [dsa, data-structures, linked-list]
 aliases: [Linked lists, Singly linked list, Doubly linked list, Circular linked list, Fast and slow pointers, Floyd's cycle detection, Sentinel node, LRU cache]

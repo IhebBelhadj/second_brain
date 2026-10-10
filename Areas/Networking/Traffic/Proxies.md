@@ -2,7 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
-subtopic: Networking › Traffic
+subtopic: Traffic management
 confidence: 1
 tags: [networking, proxy, http, security]
 aliases: [Proxy, Forward proxy, Transparent proxy, SOCKS, HTTP CONNECT, HTTP_PROXY, TLS inspection]

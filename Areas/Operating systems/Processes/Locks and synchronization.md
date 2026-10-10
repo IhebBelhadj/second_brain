@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-10
 topic: Operating systems
-subtopic: Operating systems › Processes
+subtopic: Processes
 confidence: 1
 tags: [os, linux, concurrency, locks]
 aliases: [Mutex, Spinlock, Semaphore, Futex, Race condition, Deadlock, Atomic operations, Critical section]

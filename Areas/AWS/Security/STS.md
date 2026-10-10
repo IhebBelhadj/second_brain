@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: AWS
-subtopic: AWS › Security
+subtopic: AWS security
 confidence: 1
 tags: [aws, security, iam, sts]
 aliases: [AWS STS, Security Token Service, AssumeRole, Assuming a role, Role assumption, Temporary credentials, Trust policy, Role trust policy, External ID]

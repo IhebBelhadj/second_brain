@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-09
 topic: Networking
-subtopic: Networking › Resilience
+subtopic: Resilience
 confidence: 1
 tags: [networking, resilience, java, netflix, circuit-breaker]
 aliases: [Netflix Hystrix, HystrixCommand, Hystrix Dashboard, Turbine]

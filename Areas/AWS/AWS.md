@@ -9,13 +9,13 @@ tags: [topic]
 
 ## Sub-topics
 Each sub-topic has its own index with the same reading order, for studying one part at a time (and a cleaner graph).
-- [[AWS › Foundations]]: the ground rules: Regions and Availability Zones, ARNs (Amazon Resource Names), naming, the service map and how services connect
-- [[AWS › Networking]]: every AWS networking note in 5 stages, with prerequisites and a question → note table
-- [[AWS › Storage and databases]]: where data lives: S3, EFS, replication, RDS
-- [[AWS › Compute]]: what runs my code: EC2, Auto Scaling, load balancers, Lambda, Lightsail, ECS, EKS, Packer
-- [[AWS › Integration]]: services talking without waiting for each other: SQS, SNS, EventBridge, Step Functions
-- [[AWS › Monitoring]]: is it working and how I operate it: CloudWatch, its agent, logs and alarms, Systems Manager
-- [[AWS › Security]]: every AWS security, identity and audit note in 5 stages, with prerequisites and a question → note table
+- [[AWS foundations]]: the ground rules: Regions and Availability Zones, ARNs (Amazon Resource Names), naming, the service map and how services connect
+- [[VPC]]: every AWS networking note in 5 stages, with prerequisites and a question → note table
+- [[AWS storage and databases]]: where data lives: S3, EFS, replication, RDS
+- [[AWS compute]]: what runs my code: EC2, Auto Scaling, load balancers, Lambda, Lightsail, ECS, EKS, Packer
+- [[AWS integration]]: services talking without waiting for each other: SQS, SNS, EventBridge, Step Functions
+- [[AWS monitoring]]: is it working and how I operate it: CloudWatch, its agent, logs and alarms, Systems Manager
+- [[AWS security]]: every AWS security, identity and audit note in 5 stages, with prerequisites and a question → note table
 
 ## Start here
 1. [[AWS services overview]]: the big table of every service category, so I know what exists
@@ -27,7 +27,7 @@ Each sub-topic has its own index with the same reading order, for studying one p
 Full reading path, prerequisites and a "which note answers…" table → [[AWS networking]]
 
 **One VPC**
-- [[VPC]]: my private network. Subnets, route tables, internet gateway, NAT
+- [[VPC basics]]: my private network. Subnets, route tables, internet gateway, NAT
 - [[Security groups]]: the firewall on each resource, and how it differs from NACLs
 - [[VPC IP address planning]]: why every VPC CIDR should come from a plan. AWS rules (/16–/28, 5 reserved, no resizing), one block per environment, how it shrinks VPC/TGW/BGP/SG rules, a standard subnet layout, AWS IPAM pools, EKS pod ranges
 - [[Bastion host]]: how I get into servers sitting in a private subnet

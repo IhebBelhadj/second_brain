@@ -2,7 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
-subtopic: Networking › Protocols
+subtopic: Network protocols
 confidence: 1
 tags: [networking, protocol, security, osi, tcp-ip]
 aliases: [OSI model, TCP/IP model, Ethernet frame, Encapsulation]

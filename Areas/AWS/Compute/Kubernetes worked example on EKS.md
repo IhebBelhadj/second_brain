@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-06
 topic: AWS
-subtopic: AWS › Compute
+subtopic: AWS compute
 confidence: 1
 tags: [aws, compute, containers, kubernetes, eks, example]
 aliases: [Shop on EKS, EKS worked example, AWS Load Balancer Controller, EBS CSI driver, EKS Pod Identity, eksctl, EKS access entries]
@@ -62,7 +62,7 @@ What changes compared with a cluster I run myself:
 | Pod access to cloud APIs (Application Programming Interfaces) | Keys in a Secret | **EKS Pod Identity**: an IAM role per ServiceAccount, no keys |
 
 > [!tip] The pattern behind all of it
-> EKS is the [[Kubernetes#The mental model: a giant state machine|state machine]] with extra controllers whose "corrective action" is an AWS API call. I declare an Ingress, and the Load Balancer Controller reconciles it into an ALB, listeners, rules and target groups. I declare a PVC, and the EBS CSI driver reconciles it into a volume. Debugging is the same too: if the AWS resource doesn't appear, read the **events** of the Kubernetes object, then the controller's logs.
+> EKS is the [[Kubernetes basics#The mental model: a giant state machine|state machine]] with extra controllers whose "corrective action" is an AWS API call. I declare an Ingress, and the Load Balancer Controller reconciles it into an ALB, listeners, rules and target groups. I declare a PVC, and the EBS CSI driver reconciles it into a volume. Debugging is the same too: if the AWS resource doesn't appear, read the **events** of the Kubernetes object, then the controller's logs.
 
 ## Build-up
 

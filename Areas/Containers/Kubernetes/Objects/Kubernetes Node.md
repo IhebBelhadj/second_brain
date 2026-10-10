@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
-subtopic: Containers › Kubernetes
+subtopic: Kubernetes
 confidence: 1
 tags: [containers, kubernetes, kubernetes-object, scheduling, nodes]
 aliases: [Kubernetes nodes, Taints and tolerations, Taint, Toleration, kubectl drain, Node affinity, Allocatable]

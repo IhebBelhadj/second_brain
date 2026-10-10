@@ -10,21 +10,21 @@
 Operating systems/
 ├── Operating systems.md           topic index (the learning path)
 ├── Processes/                     processes and how they talk
-│   ├── Operating systems › Processes.md   sub-topic index
+│   ├── Processes.md   sub-topic index
 │   ├── Processes and threads.md   program vs process, fork/exec, states, context switches, threads, concurrency models, limits
 │   ├── Inter-process communication.md     process level: fork/copy-on-write, fds, files, pipes, FIFOs, signals, Unix sockets, shared memory
 │   ├── Signals.md                 kernel delivery, default actions, handlers, masks, process groups/terminal, PID 1, stop sequences
 │   └── Locks and synchronization.md   races, atomics, spinlocks, futex/mutex, cross-process locks, RW locks, deadlocks, contention
 ├── Memory/
-│   ├── Operating systems › Memory.md      sub-topic index
+│   ├── Memory management.md      sub-topic index
 │   ├── Virtual memory.md          pages, page tables, MMU/TLB, page faults, COW, page cache, RSS/PSS, overcommit/OOM, swap, THP, cgroup limits
 │   ├── Memory pages.md            PTE bits, anonymous vs file, dirty/writeback/fsync, reclaim/LRU, app page vs block (torn pages), huge pages, mlock
 │   └── Program memory layout.md   a C program's regions in /proc/pid/maps, malloc → brk/mmap → page fault, chunks vs pages, stack growth, allocated/VSZ/RSS
 ├── Kernel/
-│   ├── Operating systems › Kernel.md      sub-topic index
+│   ├── Kernel.md      sub-topic index
 │   └── Interrupts.md              hardware IRQs, kernel mode, top/bottom halves, timer and preemption, exceptions, syscalls, NIC path, affinity
 └── Case studies/                  real software read through the concepts above
-    ├── Operating systems › Case studies.md   sub-topic index
+    ├── Operating system case studies.md   sub-topic index
     ├── Inter-process communication on a web server.md   nginx/gunicorn/PostgreSQL/cron on one host, failures
     └── PostgreSQL architecture.md processes, shared memory and pages, locks, signals and IPC inside PostgreSQL
 ```
@@ -35,10 +35,10 @@ Every note in this area has `subtopic: <index name>` in its frontmatter, and is 
 
 | Sub-topic index | Lives in | Covers |
 |---|---|---|
-| `Operating systems › Processes.md` | `Processes/` | processes and threads, how they talk (IPC, signals), how they share safely (locks) |
-| `Operating systems › Memory.md` | `Memory/` | virtual memory, the life of a page, the page cache, the OOM killer |
-| `Operating systems › Kernel.md` | `Kernel/` | where the kernel meets the CPU and devices: interrupts, system calls |
-| `Operating systems › Case studies.md` | `Case studies/` | real software read through the concepts: a web server's processes, PostgreSQL |
+| `Processes.md` | `Processes/` | processes and threads, how they talk (IPC, signals), how they share safely (locks) |
+| `Memory management.md` | `Memory/` | virtual memory, the life of a page, the page cache, the OOM killer |
+| `Kernel.md` | `Kernel/` | where the kernel meets the CPU and devices: interrupts, system calls |
+| `Operating system case studies.md` | `Case studies/` | real software read through the concepts: a web server's processes, PostgreSQL |
 
 A new note gets the `subtopic` of the folder it goes in, and a line in that sub-topic index as well as in `Operating systems.md`.
 

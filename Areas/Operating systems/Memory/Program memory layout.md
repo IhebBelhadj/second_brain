@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-10
 topic: Operating systems
-subtopic: Operating systems › Memory
+subtopic: Memory management
 confidence: 1
 tags: [os, linux, memory, c]
 aliases: [Memory layout, Process memory layout, Memory allocator, malloc]

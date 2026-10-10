@@ -2,7 +2,7 @@
 type: concept
 created: 2026-09-26
 topic: AWS
-subtopic: AWS › Networking
+subtopic: VPC
 confidence: 1
 tags: [aws, networking, dns]
 aliases: [Amazon Route 53, Hosted zone, Alias record, Route 53 Resolver, Routing policy]

@@ -2,7 +2,7 @@
 type: concept
 created: 2026-09-27
 topic: Networking
-subtopic: Networking › Addressing
+subtopic: IP addressing
 confidence: 1
 tags: [networking, ip, subnetting, addressing]
 aliases: [Subnetting, CIDR, Subnet mask, IPv4 address, VLSM, Route summarization]

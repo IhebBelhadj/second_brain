@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-09
 topic: Networking
-subtopic: Networking › Resilience
+subtopic: Resilience
 confidence: 1
 tags: [networking, resilience, service-mesh, envoy, istio, linkerd]
 aliases: [Outlier detection, Retry budget, Fault injection, Envoy circuit breaking]

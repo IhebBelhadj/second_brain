@@ -10,8 +10,8 @@
 Infrastructure as code/
 ├── Infrastructure as code.md      topic index (the learning path)
 └── Terraform/                     Terraform from zero to production, in reading order
-    ├── Infrastructure as code › Terraform.md   sub-topic index
-    ├── Terraform.md               the entry point: console → scripts → declarative, init/plan/apply/destroy, plan symbols, how it works, vs other tools
+    ├── Terraform.md   sub-topic index
+    ├── Terraform basics.md        the entry point: console → scripts → declarative, init/plan/apply/destroy, plan symbols, how it works, vs other tools
     ├── Terraform language syntax.md          HCL: blocks, types, expressions, for/splat, functions, dynamic blocks, file layout
     ├── Terraform variables, locals and outputs.md   inputs (types, validation, sensitive), tfvars and precedence, locals, outputs
     ├── Terraform resources and data sources.md      references and the graph, count/for_each, lifecycle, replacement, provisioners, data sources
@@ -30,7 +30,7 @@ Every note in this area has `subtopic: <index name>` in its frontmatter, and is 
 
 | Sub-topic index | Lives in | Covers |
 |---|---|---|
-| `Infrastructure as code › Terraform.md` | `Terraform/` | Terraform from the first `apply` to a team running it in production |
+| `Terraform.md` | `Terraform/` | Terraform from the first `apply` to a team running it in production |
 
 ## Where a new note goes
 

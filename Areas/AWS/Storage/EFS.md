@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
-subtopic: AWS › Storage and databases
+subtopic: AWS storage and databases
 confidence: 1
 tags: [aws, storage, efs, nfs, file-storage]
 aliases: [Amazon EFS, Elastic File System, EFS mount helper, amazon-efs-utils, EFS access point, EFS access points, Mount target]

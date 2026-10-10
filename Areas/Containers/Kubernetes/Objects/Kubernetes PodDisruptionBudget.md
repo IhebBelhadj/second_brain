@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Containers
-subtopic: Containers › Kubernetes
+subtopic: Kubernetes
 confidence: 1
 tags: [containers, kubernetes, kubernetes-object, availability, maintenance]
 aliases: [PodDisruptionBudget, PDB, PDBs, Eviction API, Voluntary disruption]
@@ -197,7 +197,7 @@ minAvailable: 2
 - **HPA**: normally keep between 3 and 20 pods depending on load
 - **PDB**: if Kubernetes needs to voluntarily disrupt them, don't take availability below 2
 
-They're **complementary, not redundant**. The HPA is the **thermostat**: keep capacity within these limits depending on demand. The PDB is the **safety constraint during maintenance**: even while things are being rearranged, don't take too much capacity offline at once. `minReplicas` and `minAvailable` look similar in the YAML, but they act at different points in Kubernetes' control system (see [[Kubernetes#The mental model: a giant state machine]]): one sets the desired state, the other guards the path that removes pods.
+They're **complementary, not redundant**. The HPA is the **thermostat**: keep capacity within these limits depending on demand. The PDB is the **safety constraint during maintenance**: even while things are being rearranged, don't take too much capacity offline at once. `minReplicas` and `minAvailable` look similar in the YAML, but they act at different points in Kubernetes' control system (see [[Kubernetes basics#The mental model: a giant state machine]]): one sets the desired state, the other guards the path that removes pods.
 
 > [!tip] Choosing the PDB number with an HPA
 > With the HPA moving between 3 and 20, a fixed `minAvailable: 2` allows 18 evictions at once when scaled to 20. `maxUnavailable: 1` (or a percentage such as `maxUnavailable: 20%`) follows the current size better (Stage 3). And keep the PDB below `minReplicas`: `minAvailable: 3` with `minReplicas: 3` allows zero evictions when traffic is low, and drains block.

@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-09
 topic: Infrastructure as code
-subtopic: Infrastructure as code › Terraform
+subtopic: Terraform
 confidence: 1
 tags: [iac, terraform, resources, data-sources, meta-arguments]
 aliases: [Terraform resource, Terraform resources, Terraform data source, Terraform data sources, count vs for_each, Terraform meta-arguments, Terraform lifecycle, Terraform dependency graph]

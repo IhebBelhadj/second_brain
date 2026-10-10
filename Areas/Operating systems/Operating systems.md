@@ -10,10 +10,10 @@ aliases: [OS, Operating system]
 
 ## Sub-topics
 Each sub-topic has its own index with the same reading order, for studying one part at a time (and a cleaner graph).
-- [[Operating systems › Processes]]: processes and threads, how they talk (IPC, signals) and how they share safely (locks)
-- [[Operating systems › Memory]]: virtual memory, the life of a page, the page cache, the OOM killer
-- [[Operating systems › Kernel]]: where the kernel meets the CPU and devices: interrupts, system calls
-- [[Operating systems › Case studies]]: real software read through the concepts: a web server's processes, PostgreSQL
+- [[Processes]]: processes and threads, how they talk (IPC, signals) and how they share safely (locks)
+- [[Memory management]]: virtual memory, the life of a page, the page cache, the OOM killer
+- [[Kernel]]: where the kernel meets the CPU and devices: interrupts, system calls
+- [[Operating system case studies]]: real software read through the concepts: a web server's processes, PostgreSQL
 
 ## How to use this
 

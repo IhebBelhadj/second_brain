@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Networking
-subtopic: Networking › Routing
+subtopic: Routing
 confidence: 1
 tags: [networking, high-availability, bgp, anycast, ecmp, redundancy]
 aliases: [Anycast, ECMP, Equal-cost multi-path, Single point of failure, SPOF, Floating IP, Gateway for the gateways]

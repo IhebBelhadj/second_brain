@@ -9,17 +9,17 @@
 ```
 Containers/
 ├── Containers.md                  topic index (the learning path)
-├── Docker.md                      images/layers/cache, Dockerfile order, secrets, multi-stage, PID 1, ports, volumes, deploy flow, multi-arch, traps
+├── Docker basics.md               images/layers/cache, Dockerfile order, secrets, multi-stage, PID 1, ports, volumes, deploy flow, multi-arch, traps
 ├── Docker image tags.md           tags vs digests, latest, moving tags, immutability, deploy by digest, promotion, base pinning, multi-arch, retention
 ├── Docker Compose.md              compose.yaml, project network/DNS, depends_on + healthchecks, overrides/profiles/.env, watch, single-host limits
 ├── Orchestration/                 vendor-neutral orchestration concepts and Swarm
-│   ├── Container orchestration.md desired state, reconciliation loop, jobs of an orchestrator, control plane/workers, Raft quorum, products
+│   ├── Container orchestration basics.md desired state, reconciliation loop, jobs of an orchestrator, control plane/workers, Raft quorum, products
 │   ├── Docker Swarm.md            managers/workers, services/tasks, routing mesh, overlay networks, stacks, rolling updates, secrets, limits
 │   ├── Compose vs Swarm vs Kubernetes.md   compare: scope, features, ecosystem, when to choose each
 │   ├── Deployment strategies.md   recreate, rolling, blue/green, canary, A/B, shadow, feature flags, expand/contract
 │   └── Spring Cloud and Netflix OSS.md   Eureka/Ribbon/Hystrix/Zuul/Config era, 2016 VM architecture, what replaced each piece (Kubernetes, mesh, AWS)
 └── Kubernetes/                    Kubernetes itself (vendor-neutral; EKS goes in the AWS area)
-    ├── Kubernetes.md              the objects: pods, Deployments, probes, Services/Ingress, config, storage/StatefulSets, autoscaling, RBAC, CRDs/operators
+    ├── Kubernetes basics.md       the objects: pods, Deployments, probes, Services/Ingress, config, storage/StatefulSets, autoscaling, RBAC, CRDs/operators
     ├── Kubernetes architecture.md components under the hood: etcd, API server, controllers, scheduler, kubelet/CRI/CNI/CSI, kube-proxy, CoreDNS
     ├── Kubernetes manifest syntax.md   apiVersion/kind/metadata/spec/status, YAML types, API groups, labels/selectors, PodSpec, units, ports, kubectl explain
     ├── Kubernetes worked example.md   e-commerce shop with every common object in YAML, step by step, and the mental model
@@ -43,9 +43,9 @@ Every note in this area has `subtopic: <index name>` in its frontmatter, and is 
 
 | Sub-topic index | Lives in | Covers |
 |---|---|---|
-| `Containers › Images and containers.md` | `(area root)` | building, tagging and running images on one host: Docker, tags, Compose |
-| `Containers › Orchestration.md` | `Orchestration/` | running containers on many machines: orchestration concepts, Swarm, comparisons, deployment strategies, the Spring Cloud era |
-| `Containers › Kubernetes.md` | `Kubernetes/` | Kubernetes itself: the model, the architecture, manifest syntax, a worked example and every object type |
+| `Docker.md` | `(area root)` | building, tagging and running images on one host: Docker, tags, Compose |
+| `Container orchestration.md` | `Orchestration/` | running containers on many machines: orchestration concepts, Swarm, comparisons, deployment strategies, the Spring Cloud era |
+| `Kubernetes.md` | `Kubernetes/` | Kubernetes itself: the model, the architecture, manifest syntax, a worked example and every object type |
 
 A new note gets the `subtopic` of the folder it goes in (notes at the area root: see the table), and a line in that sub-topic index as well as in `Containers.md`.
 

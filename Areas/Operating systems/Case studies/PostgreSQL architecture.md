@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-10
 topic: Operating systems
-subtopic: Operating systems › Case studies
+subtopic: Operating system case studies
 confidence: 1
 tags: [os, linux, postgresql, database, case-study]
 aliases: [PostgreSQL, Postgres, postmaster, shared_buffers, PostgreSQL internals]

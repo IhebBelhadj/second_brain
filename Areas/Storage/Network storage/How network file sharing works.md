@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Storage
-subtopic: Storage › Network storage
+subtopic: Network storage
 confidence: 1
 tags: [storage, network-storage, nfs, smb, internals]
 aliases: [NFS internals, NFS protocol, NFS file handle, File handle, Close-to-open consistency, NFS delegation, NFS lease]

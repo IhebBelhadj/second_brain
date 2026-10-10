@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Networking
-subtopic: Networking › Host networking
+subtopic: Host networking
 confidence: 1
 tags: [networking, linux, os, tcp, sockets]
 aliases: [Socket, Network socket, Berkeley sockets, Socket API, Ephemeral ports, Ephemeral port, TIME_WAIT, CLOSE_WAIT, Listen backlog, epoll]

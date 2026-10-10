@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-04
 topic: Storage
-subtopic: Storage › Local storage
+subtopic: Local storage
 confidence: 1
 tags: [storage, partitions, gpt, mbr, linux, windows, foundations]
 aliases: [GPT, GUID Partition Table, MBR, Master Boot Record, Partition table, Partition tables, Protective MBR, PARTUUID, Partition type GUID, Extended partition, Logical partition]

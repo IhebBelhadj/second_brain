@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: Networking
-subtopic: Networking › VPN
+subtopic: VPN
 confidence: 1
 tags: [networking, vpn, routing, architecture]
 aliases: [Chained VPNs, VPN inside a VPN, Tunnel in a tunnel, Double VPN]
@@ -55,7 +55,7 @@ A packet `10.1.0.20 → 10.20.1.20` (branch → cloud) needs four things to be t
 | Cloud gateway | `10.1.0.0/16 → tunnel to HQ` (the **return path**) | The cloud only knows about HQ's `10.0.0.0/16` |
 | HQ gateway | `10.1.0.0/16 → tunnel to branch` | ✅ Exists |
 
-Same for remote users: the cloud must route `10.99.0.0/24` back to HQ, and the VPN client's **split tunnel list** must include `10.20.0.0/16`, or the laptop sends cloud traffic to its home internet (→ [[VPN#Split tunnel vs full tunnel]]).
+Same for remote users: the cloud must route `10.99.0.0/24` back to HQ, and the VPN client's **split tunnel list** must include `10.20.0.0/16`, or the laptop sends cloud traffic to its home internet (→ [[VPN basics#Split tunnel vs full tunnel]]).
 
 **Fix:** announce routes end to end. With static routing that's a route on every gateway for every remote prefix, and it doesn't scale. With BGP on the tunnels, HQ re-announces what it learns: the cloud learns `10.1.0.0/16` and `10.99.0.0/24` from HQ, the branch learns `10.20.0.0/16`. Summaries help: if the company plans `10.0.0.0/12` for everything on-prem, the cloud needs one route.
 
@@ -96,7 +96,7 @@ Each VPN pushes DNS for its own domain. The branch's resolver forwards `corp.exa
 | Inner IPsec (ESP tunnel mode + NAT-T UDP) | ~60–80 bytes | ~1330 |
 | Inner TCP payload (MSS) | 40 bytes of IP+TCP | ~1290 |
 
-If either VPN assumes 1500, big packets get fragmented or, with the DF bit, silently dropped when ICMP "fragmentation needed" is filtered somewhere: **small things work, big transfers hang** (see [[VPN#MTU]] and [[ICMP]]).
+If either VPN assumes 1500, big packets get fragmented or, with the DF bit, silently dropped when ICMP "fragmentation needed" is filtered somewhere: **small things work, big transfers hang** (see [[VPN basics#MTU]] and [[ICMP]]).
 
 **Fix:** set each tunnel interface's MTU to what's actually left, and clamp TCP MSS on the innermost tunnel. Test with `ping -M do -s 1300 10.0.0.50` and lower the size until it passes.
 
@@ -104,11 +104,11 @@ If either VPN assumes 1500, big packets get fragmented or, with the DF bit, sile
 
 The inner VPN client opens its connection to the company gateway's **public** IP `203.0.113.10`. If the outer VPN is full tunnel, that traffic goes into the outer tunnel: what I want. But when the inner VPN comes up, it may install its own default route, and now the packets to `203.0.113.10` try to go **into the inner tunnel itself**: a routing loop, the inner tunnel dies a few seconds after connecting.
 
-**Fix:** a host route for the outer and inner gateways' public IPs via the correct underlay (most clients add this automatically for their own server, not for the other VPN's), or [[Policy-based routing]] with marks, or one VPN per network namespace (→ [[VPN#Several VPNs at once]]).
+**Fix:** a host route for the outer and inner gateways' public IPs via the correct underlay (most clients add this automatically for their own server, not for the other VPN's), or [[Policy-based routing]] with marks, or one VPN per network namespace (→ [[VPN basics#Several VPNs at once]]).
 
 ### Problem 3: TCP inside TCP
 
-If both tunnels use TCP (e.g. an SSL VPN inside an SSH tunnel), each layer retransmits on loss, and the retransmissions multiply: throughput collapses on any lossy link ("TCP meltdown", see [[VPN#TCP over TCP ("TCP meltdown")]]). Prefer UDP for at least the outer layer (WireGuard, IPsec with NAT-T, DTLS).
+If both tunnels use TCP (e.g. an SSL VPN inside an SSH tunnel), each layer retransmits on loss, and the retransmissions multiply: throughput collapses on any lossy link ("TCP meltdown", see [[VPN basics#TCP over TCP ("TCP meltdown")]]). Prefer UDP for at least the outer layer (WireGuard, IPsec with NAT-T, DTLS).
 
 ### Problem 4: double encryption, single point of trust
 

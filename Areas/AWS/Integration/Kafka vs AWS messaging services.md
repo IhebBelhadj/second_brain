@@ -2,7 +2,7 @@
 type: compare
 created: 2026-10-02
 topic: AWS
-subtopic: AWS › Integration
+subtopic: AWS integration
 confidence: 1
 tags: [aws, integration, messaging, kafka, compare]
 aliases: [Kafka vs SQS, Kafka vs Kinesis]

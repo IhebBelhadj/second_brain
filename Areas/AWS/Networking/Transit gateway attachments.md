@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-03
 topic: AWS
-subtopic: AWS › Networking
+subtopic: VPC
 confidence: 1
 tags: [aws, networking, routing, hybrid]
 aliases: [TGW attachment, VPC attachment, VPN attachment]
@@ -226,7 +226,7 @@ The useful question isn't "what protocol is the attachment?" but **"what network
 | **Peering** | Another TGW (other region or account) | AWS backbone, encrypted between regions | **None**: static routes only | Nothing | 8 500 |
 | **Connect** | An SD-WAN / virtual router appliance | **GRE** tunnels, carried over a VPC or DX "transport" attachment | **BGP** between the TGW and the appliance (a Connect peer) | Prefixes learned by BGP | 8 500 |
 
-Packets bigger than the attachment's MTU are dropped at the TGW, which is why a VPC → VPN path behaves like a 1 500-byte (or smaller) network even if both VPCs use jumbo frames (→ [[VPN#MTU]]).
+Packets bigger than the attachment's MTU are dropped at the TGW, which is why a VPC → VPN path behaves like a 1 500-byte (or smaller) network even if both VPCs use jumbo frames (→ [[VPN basics#MTU]]).
 
 ```mermaid
 flowchart TB

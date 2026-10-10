@@ -2,7 +2,7 @@
 type: concept
 created: 2026-10-09
 topic: Networking
-subtopic: Networking › Protocols
+subtopic: Network protocols
 confidence: 1
 tags: [networking, routing, ospf, protocol, link-state]
 aliases: [Open Shortest Path First, OSPFv2, OSPFv3, Link-state routing, OSPF areas]

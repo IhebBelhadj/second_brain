@@ -86,11 +86,77 @@ The open question is the **granularity**: what unit of memory does the translati
 
 There are three obvious choices, and the first two fail:
 
-**Translate every byte separately.** The kernel would need a table entry for every byte: "byte 0x404034 of process 7101 is at physical byte X". An entry holding a physical address is 8 bytes. So the table describing a process's memory would be eight times bigger than the memory itself. Impossible.
+**Translate every byte separately.** The kernel would keep a table with one entry per byte, saying where that byte really is. Say a process's virtual bytes from `0x1000` onwards are stored at physical address `0x2000` onwards:
+
+| Virtual address | Physical address |
+|---|---|
+| `0x1000` | `0x2000` |
+| `0x1001` | `0x2001` |
+| `0x1002` | `0x2002` |
+| `0x1003` | `0x2003` |
+| … | … |
+
+An entry holding a physical address takes 8 bytes (a 64-bit number). So describing 4,096 bytes of memory takes 4,096 × 8 = 32,768 bytes of table: the table would be **eight times bigger than the memory it describes**. Impossible.
+
+Look at the table again, though: it's almost entirely redundant. Consecutive virtual bytes sit at consecutive physical bytes, so every row is just "the first row, plus 1, plus 2, plus 3…". Only the first row carries information. That observation is the whole idea of pages, below.
 
 **Translate a whole program as one block.** Give each process a single **base** (where its block starts in RAM) and a **limit** (how long it is). The CPU adds the base to every address and checks it against the limit. That's cheap and it solves relocation and isolation, and early machines did exactly this. But the block must still be contiguous in RAM, so fragmentation stays, and the whole block must be in RAM, so "not enough RAM" stays too. Growing a process (more heap) means finding a bigger hole and copying everything.
 
-**Translate fixed-size chunks.** Cut every virtual address space into chunks of one fixed size, called **pages**, and cut physical RAM into slots of the same size, called **page frames**. For each process the kernel keeps a **page table**: for each virtual page, which frame holds it, if any. This fixes everything the other two couldn't:
+**Translate fixed-size chunks.** Cut every virtual address space into chunks of one fixed size, called **pages**, and cut physical RAM into slots of the same size, called **page frames**. For each process the kernel keeps a **page table**: for each virtual page, which frame holds it, if any.
+
+The trick is that the bytes **inside** a page stay together and in order: the 4,096 bytes of a virtual page are the 4,096 bytes of one frame, in the same order. So only the **start** of each page needs translating, never the individual bytes. A toy example with 4 KiB pages, numbered from address 0 (a real process leaves page 0 unmapped, so that a null pointer crashes instead of reading something):
+
+| Virtual page | Its bytes (virtual) | Stored in frame | Its bytes (physical) |
+|---|---|---|---|
+| page 0 | `0x0000`–`0x0fff` (0–4,095) | frame 7 | `0x7000`–`0x7fff` (28,672–32,767) |
+| page 1 | `0x1000`–`0x1fff` (4,096–8,191) | frame 2 | `0x2000`–`0x2fff` (8,192–12,287) |
+
+```mermaid
+flowchart LR
+    subgraph V["Virtual memory of the process (contiguous)"]
+        direction TB
+        V0["page 0<br/>0x0000 – 0x0fff"]
+        V1["page 1<br/>0x1000 – 0x1fff"]
+    end
+    subgraph PT["Page table: 2 entries"]
+        direction TB
+        E0["page 0 → frame 7"]
+        E1["page 1 → frame 2"]
+    end
+    subgraph R["Physical RAM (frames in any order)"]
+        direction TB
+        F2["frame 2<br/>0x2000 – 0x2fff"]
+        FX["frames 3 to 6<br/>other processes, or free"]
+        F7["frame 7<br/>0x7000 – 0x7fff"]
+    end
+    V0 --> E0 --> F7
+    V1 --> E1 --> F2
+    E0 ~~~ FX
+    classDef virt fill:#e2efda,stroke:#548235,color:#1b1b1b
+    classDef table fill:#ddebf7,stroke:#2f5597,color:#1b1b1b
+    classDef frame fill:#fff2cc,stroke:#bf9000,color:#1b1b1b
+    classDef other fill:#ededed,stroke:#7f7f7f,color:#1b1b1b
+    class V0,V1 virt
+    class E0,E1 table
+    class F2,F7 frame
+    class FX other
+```
+
+Three things to see here:
+- **Two entries describe 8,192 bytes**, where the byte-by-byte table needed 8,192 entries
+- **The frames are not next to each other, nor in order**: page 0 is in frame 7 and page 1 in frame 2. The process still sees one contiguous range `0x0000`–`0x1fff`. Contiguity only has to hold inside a page, never between pages
+- **The frame's start address is just its number × 4,096**: frame 2 starts at 2 × 4,096 = 8,192 = `0x2000`. So an entry only needs to store the frame number
+
+How much smaller the table gets:
+
+| | Entries for 4 KiB of memory | Table size for 4 KiB | Table size for 1 GiB |
+|---|---|---|---|
+| Byte by byte | 4,096 | 4,096 × 8 = 32 KiB | 8 GiB |
+| Page by page | 1 | 1 × 8 = 8 bytes | 2¹⁸ pages × 8 = 2 MiB |
+
+One entry instead of 4,096: the table is **4,096 times smaller**, about 0.2% of the memory it describes.
+
+Pages fix everything the other two choices couldn't:
 - **Any free frame fits any page**, because they're all the same size. Physical memory never has "holes too small": a process whose pages are scattered across RAM still sees one contiguous range of addresses
 - **The table is per page, not per byte**, so it's thousands of times smaller than the memory it describes
 - **Each page can be somewhere different**: in RAM, on disk, not allocated yet, or shared with another process. That's what makes laziness, swap and sharing possible later
@@ -129,7 +195,38 @@ With pages, the MMU doesn't translate a whole address. It splits it in two:
 - the **page number**: which page the address is in. This part is translated through the page table
 - the **offset**: the position of the byte inside its page. This part is copied unchanged, since a page is moved as a whole
 
-Pages are a power of two in size, so the split is just a cut between bits. With 4 KiB pages, 4,096 = 2¹² bytes per page, so the **lowest 12 bits** of an address are the offset and everything above is the page number. In hexadecimal, 12 bits are exactly the last 3 digits:
+Pages are a power of two in size, so the split is just a cut between bits. With 4 KiB pages, 4,096 = 2¹² bytes per page, so the offset needs 12 bits (positions 0 to 4,095): the **lowest 12 bits** of an address are the offset and everything above is the page number. In hexadecimal, 12 bits are exactly the last 3 digits.
+
+**The toy example from Step 3.** The process reads virtual address `0x1003`:
+1. **Split**: `0x1 | 003`, so page 1, offset 3 (the fourth byte of the page)
+2. **Look up the page**: the page table says page 1 is in frame 2
+3. **Find the frame's start**: frame 2 starts at 2 × 4,096 = 8,192 = `0x2000`
+4. **Add the offset back**: `0x2000 + 0x003` = **`0x2003`**
+
+```mermaid
+flowchart LR
+    VA["virtual address<br/>0x1003"] --> PN["page number<br/>0x1"]
+    VA --> OFF["offset<br/>0x003"]
+    PN --> PT["page table<br/>page 1 → frame 2"]
+    PT --> FS["frame 2 starts at<br/>2 × 4,096 = 0x2000"]
+    FS --> SUM["0x2000 + 0x003"]
+    OFF -- "copied unchanged" --> SUM
+    SUM --> PA["physical address<br/>0x2003"]
+    classDef virt fill:#e2efda,stroke:#548235,color:#1b1b1b
+    classDef part fill:#ededed,stroke:#7f7f7f,color:#1b1b1b
+    classDef table fill:#ddebf7,stroke:#2f5597,color:#1b1b1b
+    classDef phys fill:#fff2cc,stroke:#bf9000,color:#1b1b1b
+    class VA virt
+    class PN,OFF,SUM part
+    class PT table
+    class FS,PA phys
+```
+
+Only the page number went through the table. Offset 3 has no entry of its own: it's carried across as is, which is exactly why the byte-by-byte table of Step 3 isn't needed. The same holds for every byte of the page: `0x1000` → `0x2000`, `0x1fff` → `0x2fff`.
+
+Since the frame's start is its number × 4,096, "number × 4,096 + offset" is the same as writing the frame number and then the 3 offset digits next to it: frame `0x2` and offset `003` give `0x2003`. No addition is really needed, only gluing bits together, which is why the hardware can do it instantly.
+
+**The real address from Step 1** works the same way:
 
 ```text
 virtual address   0x404034
@@ -214,7 +311,7 @@ A program that jumps around a few GiB of data (a database's cache, a big hash ta
 The TLB also explains two costs that look strange otherwise:
 - **Switching processes costs more than switching threads.** A new process means a new page table, so the TLB's entries belong to the wrong address space. CPUs tag entries with an address-space number (PCID (process-context identifier) on x86) to avoid flushing everything, but the new process still starts with few useful entries. Threads of one process share one page table, so their entries stay valid ([[Processes and threads]])
 - **TLB shootdowns.** When a multi-threaded process unmaps memory, other cores running its threads may still hold the old translation. The kernel interrupts them to flush it and waits for them ([[Interrupts]]). Programs that map and unmap memory constantly across many threads pay for it
-
+21
 ### Step 8: when the translation says "not here" (page faults)
 
 An entry in the tree can say **not present**. When the MMU meets one, it can't finish the access, so it stops the instruction and raises a **page fault**: a CPU exception that runs the kernel's fault handler ([[Interrupts]] explains how exceptions enter the kernel). The kernel then decides, based on its own records of which address ranges the process is allowed to use:
@@ -502,6 +599,9 @@ When the group reaches its limit, the kernel first reclaims the group's page cac
 > [!example]- Why can't the translation work byte by byte, or on the whole program as one block?
 > Byte by byte, the table would need an 8-byte entry per byte: eight times bigger than the memory. One block per program needs a contiguous hole in RAM (fragmentation) and the whole program in RAM. Fixed-size pages fit any free frame, keep the table small, and let each page live anywhere.
 
+> [!example]- With 4 KiB pages, page 1 is in frame 2 and page 3 in frame 9. What are the physical addresses of `0x1abc` and `0x3010`?
+> Split off the last 3 hex digits (the offset) and replace the page number with the frame number. `0x1 | abc` → frame 2 → `0x2abc`. `0x3 | 010` → frame 9 → `0x9010`.
+
 > [!example]- With 4 KiB pages, what are the page number and offset of address `0x7f3a2c1b5e`?
 > 4 KiB = 2¹², so the lowest 12 bits (the last 3 hex digits) are the offset: `0xb5e`. The page number is `0x7f3a2c1`.
 
@@ -551,6 +651,10 @@ When the group reaches its limit, the kernel first reclaims the group's page cac
 Why can two processes use the same address for different data? :: Addresses are virtual; each process's page table maps the same virtual page to a different physical frame
 What four problems does address translation solve? :: Relocation, isolation between processes, fragmentation of RAM, and needing the whole program in RAM
 Why not translate memory byte by byte? :: The table would need an 8-byte entry per byte, eight times bigger than the memory itself
+Why does a page need only one table entry, not one per byte? :: Its bytes stay contiguous and in order inside one frame, so only the page's start is translated; the offset is carried over unchanged
+How much smaller is a per-page table than a per-byte one, with 4 KiB pages? :: 4,096 times: one 8-byte entry per 4,096 bytes instead of 4,096 entries (32 KiB)
+Do the frames of consecutive virtual pages have to be next to each other in RAM? :: No: page 0 can be in frame 7 and page 1 in frame 2; contiguity only holds inside a page
+Translate 0x1003 if page 1 is in frame 2 (4 KiB pages) :: Page 1, offset 0x003; frame 2 starts at 2 × 4,096 = 0x2000; 0x2000 + 0x003 = 0x2003
 Why not translate each program as one block (base + limit)? :: It still needs a contiguous hole in RAM (fragmentation) and the whole program in RAM
 Why translate in fixed-size pages? :: Any free frame fits any page, the table is per page (small), and each page can be in RAM, on disk, shared or not allocated, with its own permissions
 Page vs page frame? :: A page is a fixed-size block of virtual memory; a frame is a block of physical RAM of the same size

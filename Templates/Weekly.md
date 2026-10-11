@@ -20,7 +20,7 @@ tags: []
 ```dataview
 TABLE WITHOUT ID file.link AS Note, topic, confidence AS Conf
 FROM ""
-WHERE confidence <= 2
+WHERE confidence AND confidence <= 2 AND file.name != "AGENTS" AND file.name != "CLAUDE"
 SORT confidence ASC
 LIMIT 10
 ```

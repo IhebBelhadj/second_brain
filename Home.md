@@ -1,6 +1,7 @@
 ---
 type: home
-tags: []
+tags:
+  - index
 ---
 # Home
 
@@ -8,7 +9,7 @@ tags: []
 ```dataview
 TABLE WITHOUT ID file.link AS Note, topic AS Topic, confidence AS Conf
 FROM ""
-WHERE confidence <= 2
+WHERE confidence AND confidence <= 2 AND file.name != "AGENTS" AND file.name != "CLAUDE"
 SORT confidence ASC
 LIMIT 15
 ```
@@ -70,6 +71,6 @@ SORT topic ASC, file.name ASC
 ```dataview
 LIST
 FROM "Notes" OR "Areas"
-WHERE length(file.inlinks) = 0 AND length(file.outlinks) = 0
+WHERE length(file.inlinks) = 0 AND length(file.outlinks) = 0 AND file.name != "AGENTS" AND file.name != "CLAUDE"
 LIMIT 10
 ```

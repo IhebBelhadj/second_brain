@@ -22,7 +22,7 @@ An **Obsidian vault** of study notes. The owner is working toward **systems engi
 |---|---|---|
 | `Home.md` | Dashboard: Dataview queries (weakest notes, inbox, projects, topics, sub-topics). Don't hand-edit the queries | |
 | `How this works.md` | The owner's own manual for the system: folders, templates, properties. Read it before restructuring anything | |
-| `Areas/` | Subjects built up over time, **one folder per subject** with a topic index | **Where almost everything is**: `Networking/`, `AWS/`, `Storage/`, `Messaging/`, `Containers/`, `Identity and access/`, `Infrastructure as code/`, `Operating systems/`, `Data structures and algorithms/` |
+| `Areas/` | Subjects built up over time, **one folder per subject** with a topic index | **Where almost everything is**: `Networking/`, `AWS/`, `Storage/`, `Messaging/`, `Containers/`, `Identity and access/`, `Infrastructure as code/`, `Operating systems/`, `Data structures and algorithms/`, `AI agents/` |
 | `Inbox/` | Undecided captures | Nearly empty |
 | `Journal/` | Daily/weekly notes | Empty |
 | `Notes/` | The owner's own ideas | Empty |
@@ -47,6 +47,7 @@ An **Obsidian vault** of study notes. The owner is working toward **systems engi
 | Infrastructure as code | `Areas/Infrastructure as code/AGENTS.md` | `Areas/Infrastructure as code/Infrastructure as code.md` | Infrastructure defined in code: **Terraform** from zero to production (syntax, state, modules, environments, testing, CI/CD), and **GitOps** (Argo CD, Flux). Examples use the AWS provider; AWS service details stay in the AWS area |
 | Operating systems | `Areas/Operating systems/AGENTS.md` | `Areas/Operating systems/Operating systems.md` | What the kernel does for processes on one machine (Linux): IPC, signals, virtual memory, interrupts. Network sockets stay in Networking, disks in Storage, namespaces/cgroups in Containers |
 | Data structures and algorithms | `Areas/Data structures and algorithms/AGENTS.md` | `Areas/Data structures and algorithms/Data structures and algorithms.md` | Data structures, algorithms, techniques and practice problems, with Python code. Ordered as a learning path |
+| AI agents | `Areas/AI agents/AGENTS.md` | `Areas/AI agents/AI agents.md` | Working with AI coding agents (Claude Code): context, a fresh agent per phase with a handoff file, subagents, workflow scripts, headless `claude -p` |
 
 A new subject gets its own `Areas/<Subject>/` folder with an index note `<Subject>.md` (type `topic`, from `Templates/Topic.md`), its own `AGENTS.md` and `CLAUDE.md`, and a row in the table above.
 
